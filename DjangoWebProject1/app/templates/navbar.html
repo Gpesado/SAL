@@ -1,0 +1,65 @@
+<html ng-cloak ng-app>
+<head>
+    <link rel="stylesheet" href="/static/js/angular/angular-csp.css"/>
+    <link rel="stylesheet" href="/static/js/bootstrap/dist/css/bootstrap.min.css"/>
+</head>
+<body>
+<div class="navbar navbar-fixed-bottom" ng-controller="NavbarController as vm"
+ng-init="user='{{user.username}}'">
+{% verbatim %}
+<div ng-show="user" class="navbar-form navbar-right">
+<input type="submit" class="btn btn-default" ng-click="logout()"
+value="logout {{user}}"/>
+</div>
+<div ng-hide="user">
+<form id="id_auth_form" class="navbar-form navbar-right"
+ng-submit="login()">
+<div class="form-group">
+<input ng-model="username" required name="username"
+type="text" placeholder="username" class="form-control">
+</div>
+<div class="form-group">
+<input ng-model="password" required name="password" type="password"
+placeholder="password" class="form-control">
+</div>
+<div class="btn-group">
+<input type="submit" class="btn btn-default" value="login">
+<input type="submit" class="btn btn-default" value="register"
+ng-click="register($event)">
+</div>
+</form>
+</div>
+</div>
+</body>
+<script src="/static/js/jquery/jquery.js"></script>
+<script src="/static/js/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/static/js/angular/angular.min.js"></script>
+<script src="/static/js/angular-resource/angular-resource.min.js"></script>
+<script src="/static/js/autofill-event/src/autofill-event.js"></script>
+<script src="/static/js/app.js"></script>
+</html>
+{% endverbatim %}
+<!--<nav class="cyan lighten-3" ng-controller="NavbarController as vm">
+  <div class="nav-wrapper container">
+    <a href="/" class="brand-logo">django-angular</a>
+    <a href="#" data-activates="mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    <ul class="right hide-on-med-and-down">
+      <li><a href="/">Home</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="javascript:void(0)" ng-click="vm.logout()" >Logout</a></li>
+      {% else %}
+        <li><a href="/login">Login</a></li>
+        <li><a href="/register">Register</a></li>
+      {% endif %}
+    </ul>
+    <ul class="side-nav" id="mobile">
+      <li><a href="/">Home</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="javascript:void(0)" ng-click="vm.logout()">Logout</a></li>
+      {% else %}
+        <li><a href="/login">Login</a></li>
+        <li><a href="/register">Register</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>-->

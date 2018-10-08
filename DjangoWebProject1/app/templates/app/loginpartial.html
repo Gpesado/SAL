@@ -1,0 +1,21 @@
+{% if user.is_authenticated %}
+<form id="logoutForm" action="/logout" method="post" class="navbar-right">
+    {% csrf_token %}
+    <ul class="nav navbar-nav navbar-right">
+        <li><span class="navbar-brand">Hola {{ user.username }}!</span></li>
+        <li><a href="{% url 'registrarUsuario' %}">Registrar Usuario</a></li>
+        <li><a href="{% url 'usuarios' %}">Ver Usuarios</a></li>
+        <li><a href="{% url 'vistaTecnico' %}">Vista de Tecnico</a></li>
+        <li><a href="{% url 'vistaAdministracion' %}">Vista de Administracion</a></li>
+        <li><a href="{% url 'vistaVisualizador' %}">Vista de Visualizador</a></li>
+        <li><a href="javascript:document.getElementById('logoutForm').submit()">Cerrar Sesion</a></li>
+    </ul>
+</form>
+
+{% else %}
+
+<ul class="nav navbar-nav navbar-right">
+    <li><a href="{% url 'login' %}">Log in</a></li>
+</ul>
+
+{% endif %}

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html ng-app="django-angular">
+<head>
+  <title>django-angular</title>
+
+  <base href="/" />
+    {% load staticfiles %}
+  <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon" />
+
+  {% include 'stylesheets.html' %}
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+
+<body>
+  {% include 'navbar.html' %}
+
+  <div class="ng-view" layout="column" layout-margin></div>
+
+  {% include 'javascripts.html' %}
+</body>
+</html>

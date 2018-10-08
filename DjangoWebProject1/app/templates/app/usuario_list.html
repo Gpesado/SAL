@@ -1,0 +1,26 @@
+﻿{% extends 'app/layout.html' %}
+
+{% block content %}
+    <h1>Lista de Usuarios</h1>
+
+    
+    <ul>
+
+      {% for usuario in is_active  %}
+      <li>
+        <a href="{{ usuario.get_absolute_url }}">{{ usuario.username }}</a> - {{usuario.last_name}},&nbsp; {{usuario.first_name}}
+      </li>
+      {% endfor %}
+
+    </ul>
+<h1>Lista de Usuarios Inactivos</h1>
+    <ul>
+
+      {% for usuario in not_is_active  %}
+      <li>
+        <a href="{{ usuario.get_absolute_url }}">{{ usuario.username }}</a> - {{usuario.last_name}},&nbsp; {{usuario.first_name}}
+      </li>
+      {% endfor %}
+
+    </ul>      
+{% endblock %}

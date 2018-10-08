@@ -1,0 +1,13 @@
+{% extends 'app/layout.html' %}
+
+{% block content %}
+<div>
+    <h3> Bienvenido a la ventana de Tecnico!</h3>
+</div>
+<div class="navbar-collapse collapse">
+    <ul class="nav navbar-nav">
+        <li><a href="{% url 'agregarFalla' %}">AGREGAR FALLA</a></li>
+        <li><a href="{% url 'agregarOrdenReparacion' %}">AGREGAR ORDEN DE REPARACION</a></li>
+        <li><a href="{% url 'observacion_Orden_Reparacion' %}">AGREGAR OBSERVACION - ORDEN DE OBSERVACION</a></li>
+    </ul>
+{% endblock %}

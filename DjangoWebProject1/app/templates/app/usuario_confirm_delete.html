@@ -1,0 +1,16 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+
+<h1>Eliminar Usuario</h1>
+
+<p>Seguro desea eliminar al usuario: {{ usuario.username }}?</p>
+
+<form action="" method="POST">
+  {% csrf_token %}
+  <input type="submit" action="" value="Si, eliminar." class="btn btn-default"/>
+    <a href="{{ usuario.get_success_url }}" class="btn btn-default">Cancelar</a>
+
+</form>
+
+{% endblock %}

@@ -1,0 +1,59 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <h4>Register</h4>
+    <div class="well">
+      <form role="form" ng-submit="vm.register()">
+        <div class="row">
+          <div class="col s4">
+            <div class="form-group">
+              <label for="register__username">Username</label>
+              <input type="text" class="form-control" id="register__username" ng-model="vm.username" placeholder="ex. swagmasta420" />
+            </div>
+          </div>
+          <div class="col s4">
+            <div class="form-group">
+              <label for="register__name">Name</label>
+              <input type="text" class="form-control" id="register__name" ng-model="vm.name" placeholder="ex. Jack" />
+            </div>
+          </div>
+          <div class="col s4">
+            <div class="form-group">
+              <label for="register__surname">Surname</label>
+              <input type="text" class="form-control" id="register__surname" ng-model="vm.surname" placeholder="ex. Kangaroo" />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s6">
+            <div class="form-group">
+              <label for="register__email" style="color: {{email_field_color}};">Email</label>
+              <input type="email" class="form-control" id="register__email" ng-model="vm.email" placeholder="ex. django-angular@mail.com" />
+            </div>
+
+            <div class="form-group">
+              <label for="register__password" style="color: {{pass_field_color}};">Password</label>
+              <input type="password" class="form-control" id="register__password" ng-model="vm.password" placeholder="ex. Blaziken024" />
+            </div>
+
+            <button type="submit" ng-disabled="!vm.email || !vm.email2 || !vm.username || !vm.password || !vm.password2 || !vm.name || !vm.surname" id="register" class="btn">Confirm Email</button>
+          </div>
+          <div class="col s6">
+            <div class="form-group">
+              <label for="register__email2" style="color: {{email_field_color}};">Re-enter email</label>
+              <input type="email" class="form-control" id="register__email2" ng-model="vm.email2" placeholder="ex. django-angular@mail.com" />
+            </div>
+
+            <div class="form-group">
+              <label for="register__password2" style="color: {{pass_field_color}};">Re-enter password</label>
+              <input type="password" class="form-control" id="register__password2" ng-model="vm.password2" placeholder="ex. Blaziken024" />
+            </div>
+
+            <div ng-messages="label.$error">
+              <div ng-message="unique" style="color: red;">{{error_message}}</div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

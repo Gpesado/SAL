@@ -1,0 +1,13 @@
+﻿{% extends 'app/layout.html' %}
+
+{% block content %}
+  <h1>Usuario: {{ usuario.username }}</h1>
+<form method="put" >
+  <p><strong>Apellido:</strong> {{ usuario.last_name }}</p> 
+  <p><strong>Nombre:</strong> {{ usuario.first_name }}</p>  
+  <p><strong>Mail:</strong> {{ usuario.email }}</p>  
+    {% if usuario.is_active  %}
+        <a href="{{ usuario.get_delete_url }}" class="btn btn-default">Eliminar</a>
+    {% endif %}
+    </form>
+{% endblock %}

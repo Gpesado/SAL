@@ -1,0 +1,31 @@
+{% load compress %}
+{% load staticfiles %}
+
+{% compress js %}
+<script type="text/javascript" src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'bower_components/bootstrap/dist/js/bootstrap.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'bower_components/materialize/dist/js/materialize.min.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'bower_components/angular/angular.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/angular-route/angular-route.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/angular-cookies/angular-cookies.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'javascripts/django-angular.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/django-angular.config.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/django-angular.routes.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'javascripts/auth/auth.module.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/auth/services/auth.service.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/auth/controllers/register.controller.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/auth/controllers/login.controller.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'javascripts/layout/layout.module.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/layout/controllers/navbar.controller.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'javascripts/home/home.module.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/home/controllers/home.controller.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/home/services/home.service.js' %}"></script>
+
+{% endcompress %}

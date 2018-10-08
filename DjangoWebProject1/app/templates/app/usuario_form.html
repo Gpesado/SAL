@@ -1,0 +1,16 @@
+
+{% extends "app/layout.html" %}
+
+{% block content %}
+<h1>Usuario: {{ usuario.username }}</h1>
+<form action="" method="post">
+    {% csrf_token %}
+    <table>
+    {{ form.as_p }}
+    </table>
+    <input type="submit" value="Confirmar" class="btn btn-default" />
+    {% if  usuario.is_active  %}
+        <a href="{{ usuario.get_delete_url }}" class="btn btn-default">Eliminar</a>
+    {% endif %}
+</form>
+{% endblock %}
