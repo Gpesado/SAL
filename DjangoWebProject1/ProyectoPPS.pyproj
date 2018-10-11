@@ -58,6 +58,7 @@
     <Folder Include="app\static\app\" />
     <Folder Include="app\static\app\content\" />
     <Folder Include="app\static\app\fonts\" />
+    <Folder Include="app\static\app\localizacion\" />
     <Folder Include="app\static\app\scripts\" />
     <Folder Include="app\static\images\" />
     <Folder Include="app\static\javascripts\" />
@@ -79,6 +80,16 @@
     <Folder Include="ProyectoPPS\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\static\app\content\bootstrap.min.css.map" />
+    <Content Include="app\static\app\content\jquery-ui.css" />
+    <Content Include="app\static\app\content\jquery.dataTables.min.css" />
+    <Content Include="app\static\app\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="app\static\app\localizacion\es_ES.json" />
+    <Content Include="app\static\app\scripts\books.js" />
+    <Content Include="app\static\app\scripts\jquery-3.1.1.min.js" />
+    <Content Include="app\static\app\scripts\jquery-ui.js" />
+    <Content Include="app\static\app\scripts\jquery.dataTables.min.js" />
+    <Content Include="app\static\app\scripts\jquery.js" />
     <Content Include="app\static\images\favicon.ico" />
     <Content Include="app\static\javascripts\auth\auth.module.js" />
     <Content Include="app\static\javascripts\auth\controllers\login.controller.js" />
@@ -108,12 +119,15 @@
     <Content Include="app\templates\app\agregar_observador_grupo_led.html" />
     <Content Include="app\templates\app\agregar_tecnico_grupo_led.html" />
     <Content Include="app\templates\app\base.html" />
+    <Content Include="app\templates\app\header.html" />
     <Content Include="app\templates\app\layout_login.html" />
     <Content Include="app\templates\app\observacion_Orden_Reparacion.html" />
     <Content Include="app\templates\app\password_reset_form.html" />
+    <Content Include="app\templates\app\usuario.html" />
     <Content Include="app\templates\app\usuario_confirm_delete.html">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="app\templates\app\usuario_create.html" />
     <Content Include="app\templates\app\usuario_list.html" />
     <Content Include="app\templates\app\registrar_usuario.html" />
     <Content Include="app\templates\app\usuario_edit.html" />
@@ -126,6 +140,8 @@
     <Content Include="app\templates\index.html" />
     <Content Include="app\templates\javascripts.html" />
     <Content Include="app\templates\navbar.html" />
+    <Content Include="app\templates\registration\logged_out.html" />
+    <Content Include="app\templates\registration\login.html" />
     <Content Include="app\templates\registration\password_reset_complete.html">
       <SubType>Code</SubType>
     </Content>

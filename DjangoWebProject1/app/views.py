@@ -4,19 +4,27 @@ from app.models import Usuario
 from app.forms import RegisterUserForm
 from app.permissions import IsAccountOwner
 from app.serializers import AccountSerializer
-from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render
 from django.http import HttpRequest
 from django.template import RequestContext
 from datetime import datetime
-from django.shortcuts import redirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from .forms import *
 from django.utils import timezone
 from django.views.generic.list import ListView
-from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
+from django.views.generic import FormView, TemplateView, RedirectView, DetailView
+from django.urls import reverse_lazy, reverse
+from django.http import JsonResponse
+from django.template.loader import render_to_string
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth import REDIRECT_FIELD_NAME, login as auth_login, logout as auth_logout
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.debug import sensitive_post_parameters
+from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib.auth.decorators import login_required
+
 
 def home(request):
     """Renders the home page."""
@@ -170,19 +178,25 @@ def usuario_new(request):
                 return redirect('usuario_update', pk=usuario.pk)
     else:
         form = RegisterUserForm()
-    return render(request, 'app/registrar_usuario.html', {'form': form})
+    return render(request, 'app/usuario_create.html', {'form': form})
 
-def usuario_edit(request, pk):
-        usuario = get_object_or_404(Usuario, pk=pk)
-        if request.method == "POST":
-            form = UsuarioForm(request.POST, instance=post)
-            if form.is_valid():
-                usuario = form.save(commit=False)
-                usuario.save()
-                return redirect('usuario_edit', pk=usuario.pk)
-        else:
-            form = UsuarioForm(instance=post)
-        return render(request, 'app/usuario_edit.html', {'form': form})
+
+def usuario_create(request):
+    if request.method == 'POST':
+        form = RegisterUserForm(request.POST)
+    else:
+        form = RegisterUserForm()
+    return save_book_form(request, form, 'app/usuario_create.html')
+
+
+def usuario_update(request, pk):
+    usuario = get_object_or_404(Usuario, pk=pk)
+    if request.method == 'POST':
+        form = RegisterUserForm(request.POST, instance=usuario)
+    else:
+        form = RegisterUserForm(instance=usuario)
+    return save_book_form(request, form, 'app/usuario_update.html')
+
 
 def usuario_delete(request, pk, template_name='app/usuario_confirm_delete.html'):
     usuario= get_object_or_404(Usuario, pk=pk)    
@@ -192,39 +206,33 @@ def usuario_delete(request, pk, template_name='app/usuario_confirm_delete.html')
         return redirect('usuarios')
     return render(request, template_name, {'object':usuario})
 
-def usuario_detail_view(request,pk):
-    try:
-        book_id=Usuario.objects.get(pk=pk)
-    except Usuario.DoesNotExist:
-        raise Http404("Usuario no existe")
 
-    #book_id=get_object_or_404(Book, pk=pk)
-    
-    return render(
-        request,
-        'app/Usuario_edit.html',
-        context={'book':book_id,}
-    )
+
+def save_book_form(request, form, template_name):
+    data = dict()
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            data['form_is_valid'] = True
+            books = Usuario.objects.all()
+            data['html_book_list'] = render_to_string('app/usuarios.html', {
+                'usuarios': books
+            })
+        else:
+            data['form_is_valid'] = False
+    context = {'form': form}
+    data['html_form'] = render_to_string(template_name, context, request=request)
+    return JsonResponse(data)
 
 
 class UsuarioListView(ListView):
-    model = Usuario
-    #context_object_name = 'usuario_list'
-    #queryset = Usuario.objects.filter(is_active=True)
+    model = Usuario    
     context_object_name = 'usuarios'
-    def get_context_data(self, *args, **kwargs):
-        context = super(UsuarioListView, self).get_context_data(*args, **kwargs)
+    template_name = 'usuario_list.html'    
+    paginate_by = 10
+    queryset = Usuario.objects.all()  # Default: Model.objects.all()
 
-        context['is_active'] = Usuario.objects.filter(is_active=True)
-        context['not_is_active'] = Usuario.objects.filter(is_active=False)
 
-        return context
-    #template_name = 'app/usuario_detail.html'
-
-class UsuarioUpdate(UpdateView):
-    model = Usuario
-    fields = ['first_name', 'last_name', 'email']
-    success_url = reverse_lazy('usuarios')
 
 class UsuarioDelete(DeleteView):
     model = Usuario
@@ -282,37 +290,88 @@ def validateData(data):
         }, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 
-class LoginView(views.APIView):
-    def post(self, request, format=None):
-        username = request.data.get('username', None)
+#class LoginView(views.APIView):
+#    def post(self, request, format=None):
+#        username = request.data.get('username', None)
 
-        if Usuario.objects.filter(username=username).exists() == False:
-            return Response({
-                'status': 'Bad request',
-                'message': 'Invalid username.'
-            }, status=status.HTTP_400_BAD_REQUEST)
+#        if Usuario.objects.filter(username=username).exists() == False:
+#            return Response({
+#                'status': 'Bad request',
+#                'message': 'Invalid username.'
+#            }, status=status.HTTP_400_BAD_REQUEST)
 
-        password = request.data.get('password', None)
+#        password = request.data.get('password', None)
 
-        Usuario = authenticate(username=username, password=password)
+#        Usuario = authenticate(username=username, password=password)
 
-        if Usuario is not None:
-            login(request, Usuario)
-            serialized = AccountSerializer(Usuario)
+#        if Usuario is not None:
+#            login(request, Usuario)
+#            serialized = AccountSerializer(Usuario)
 
-            return Response(serialized.data)
+#            return Response(serialized.data)
+#        else:
+#            return Response({
+#                'status': 'Unauthorized',
+#                'message': 'Invalid password.'
+#            }, status=status.HTTP_401_UNAUTHORIZED)
+
+#class LogoutView(views.APIView):
+#    permission_classes = (permissions.IsAuthenticated,)
+
+#    def post(self, request, format=None):
+#        logout(request)
+
+#        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+
+def index(request):
+    return render(request,'app/index.html')
+@login_required
+def special(request):
+    return HttpResponse("You are logged in !")
+@login_required
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('index'))
+def register(request):
+    registered = False
+    if request.method == 'POST':
+        user_form = BootstrapAuthenticationForm(data=request.POST)
+        
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save()
+            user.set_password(user.password)
+            user.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            if 'profile_pic' in request.FILES:
+                print('found it')
+                profile.profile_pic = request.FILES['profile_pic']
+            profile.save()
+            registered = True
         else:
-            return Response({
-                'status': 'Unauthorized',
-                'message': 'Invalid password.'
-            }, status=status.HTTP_401_UNAUTHORIZED)
-
-class LogoutView(views.APIView):
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def post(self, request, format=None):
-        logout(request)
-
-        return Response({}, status=status.HTTP_204_NO_CONTENT)
-
-
+            print(user_form.errors,profile_form.errors)
+    else:
+        user_form = BootstrapAuthenticationForm()
+        
+    return render(request,'app/registration.html',
+                          {'user_form':user_form,
+                           'profile_form':profile_form,
+                           'registered':registered})
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user:
+            if user.is_active:
+                login(request,user)
+                return HttpResponseRedirect(reverse('index'))
+            else:
+                return HttpResponse("Your account was inactive.")
+        else:
+            print("Someone tried to login and failed.")
+            print("They used username: {} and password: {}".format(username,password))
+            return HttpResponse("Invalid login details given")
+    else:
+        return render(request, 'app/login.html', {})

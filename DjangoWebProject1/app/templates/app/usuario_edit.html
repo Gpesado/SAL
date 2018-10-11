@@ -1,13 +1,26 @@
-﻿{% extends 'app/layout.html' %}
+﻿<form method="post" action="{% url 'usuario_update' form.instance.pk %}" class="js-book-update-form">
+  {% csrf_token %}
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">Edición Usuario</h4>
+  </div>
+  <div class="modal-body">
+    {% load widget_tweaks %}
 
-{% block content %}
-  <h1>Usuario: {{ usuario.username }}</h1>
-<form method="put" >
-  <p><strong>Apellido:</strong> {{ usuario.last_name }}</p> 
-  <p><strong>Nombre:</strong> {{ usuario.first_name }}</p>  
-  <p><strong>Mail:</strong> {{ usuario.email }}</p>  
-    {% if usuario.is_active  %}
-        <a href="{{ usuario.get_delete_url }}" class="btn btn-default">Eliminar</a>
-    {% endif %}
-    </form>
-{% endblock %}
+{% for field in form %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {% render_field field class="form-control" %}
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+  </div>
+{% endfor %}
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+  </div>
+</form>

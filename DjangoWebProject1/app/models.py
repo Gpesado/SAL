@@ -1,7 +1,9 @@
 from django.db import models
 
 from django.contrib.auth.models import AbstractUser
-from django.core.urlresolvers import reverse
+from django.urls import reverse
+class Rol (models.Model):
+    nombre = models.CharField(max_length=35)
 
 #LOGGING
 class Usuario(AbstractUser):    
@@ -22,8 +24,9 @@ class Usuario(AbstractUser):
     def __str__(self):
         return "{0} {1} ({2})".format(self.first_name,self.last_name,self.username)
     
-class Rol (models.Model):
-    nombre = models.CharField(max_length=35)
+    roles = models.ManyToManyField(Rol)
+
+
     
 class Usuarios_has_rol(models.Model):
     usuario = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)

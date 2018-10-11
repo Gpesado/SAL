@@ -1,26 +1,88 @@
-﻿{% extends 'app/layout.html' %}
+﻿{% extends 'app/base.html' %}
+
+{% load static %}
+
+{% block javascript %}
+  <script src="{% static 'app/scripts/books.js' %}"></script>
+{% endblock %}
 
 {% block content %}
-    <h1>Lista de Usuarios</h1>
+  <h1 class="page-header">Usuarios</h1>
 
-    
-    <ul>
+  <p>
+    <button type="button" class="btn btn-primary js-create-book" data-url="{% url 'usuario_create' %}">
+      <span class="glyphicon glyphicon-plus"></span>
+      Nuevo Usuario
+    </button>
+  </p>
 
-      {% for usuario in is_active  %}
-      <li>
-        <a href="{{ usuario.get_absolute_url }}">{{ usuario.username }}</a> - {{usuario.last_name}},&nbsp; {{usuario.first_name}}
-      </li>
-      {% endfor %}
+  <table class="table" id="book-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Usuario</th>
+        <th>Apellido</th>
+        <th>Nombre</th>
+        <th>Activo</th>
+        <th>Email</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for usuario in usuarios %}
+  <tr>
+    <td>{{ usuario.pk }}</td>
+    <td>{{ usuario.username }}</td>
+    <td>{{ usuario.last_name }}</td>
+    <td>{{ usuario.first_name }}</td>
+    <td>{{ usuario.is_active }}</td>
+    <td>{{ usuario.email }}</td>
+    <td style="width: 150px">
+      <button type="button"
+              class="btn btn-warning btn-sm js-update-book"
+              data-url="{% url 'usuario_update' usuario.pk %}">
+        <span class="glyphicon glyphicon-pencil"></span> Editar
+      </button>
+      <button type="button"
+              class="btn btn-danger btn-sm js-delete-book"
+              data-url="{% url 'usuario_delete' usuario.pk %}">
+        <span class="glyphicon glyphicon-trash"></span> Eliminar
+      </button>
+    </td>
+  </tr>
+{% empty %}
+  <tr>
+    <td colspan="8" class="text-center bg-warning">No book</td>
+  </tr>
+{% endfor %}
+    </tbody>
+  </table>
+{% if is_paginated %}
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+      <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in paginator.page_range %}
+      {% if page_obj.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+      <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+  <div class="modal fade" id="modal-book">
+    <div class="modal-dialog">
+      <div class="modal-content">
 
-    </ul>
-<h1>Lista de Usuarios Inactivos</h1>
-    <ul>
-
-      {% for usuario in not_is_active  %}
-      <li>
-        <a href="{{ usuario.get_absolute_url }}">{{ usuario.username }}</a> - {{usuario.last_name}},&nbsp; {{usuario.first_name}}
-      </li>
-      {% endfor %}
-
-    </ul>      
+      </div>
+    </div>
+  </div>
 {% endblock %}

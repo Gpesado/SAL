@@ -17,7 +17,7 @@ Including another URLconf
 from rest_framework_nested import routers
 from django.conf.urls import url, include
 from django.contrib import admin
-from app.views import AccountViewSet, LoginView, LogoutView
+from app.views import AccountViewSet
 from django.views.generic import TemplateView
 from datetime import datetime
 from django.conf.urls import url
@@ -25,7 +25,8 @@ import django.contrib.auth.views
 import app.forms
 import app.views
 from django.contrib.auth import views as auth_views
-
+from django.contrib import admin
+from django.urls import path, include
 
 
 router = routers.SimpleRouter()
@@ -38,49 +39,22 @@ accounts_router = routers.NestedSimpleRouter(
 
 urlpatterns = [
 
-    url(r'^admin/', admin.site.urls),
-    url(r'^home$', app.views.home, name='home'),    
-    
+    path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
+     path('', TemplateView.as_view(template_name='app/index.html'), name='home'),
     #urls Usuario (CREATE/DELETE/LIST)
-    url(r'^registrarUsuario$', app.views.usuario_new, name='registrarUsuario'),
+    url(r'^usuario/create$', app.views.usuario_create, name='usuario_create'),
     url(r'^usuario/(?P<pk>\d+)/delete/$', app.views.usuario_delete, name='usuario_delete'),
-    url(r'^usuario/(?P<pk>\d+)/update/$', app.views.UsuarioUpdate.as_view(), name='usuario_update'),
+    url(r'^usuario/(?P<pk>\d+)/update/$', app.views.usuario_update, name='usuario_update'),
     url(r'^usuarios/$', app.views.UsuarioListView.as_view(), name='usuarios'),
 
     url(r'^usuario/(?P<pk>\d+)$', app.views.UsuarioDetailView.as_view(), name='usuario_edit'),
 
     #urls Reset de Password
-    url(r'^password_reset$',
-        django.contrib.auth.views.password_reset,
-        {
-            'template_name': 'app/password_reset_form.html',
 
-        },
-        name='password_reset'),
-    url(r'^password_reset/done/$', django.contrib.auth.views.password_reset_done, name='password_reset_done'),
-    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-        auth_views.password_reset_confirm, name='password_reset_confirm'),
-    url(r'^reset/done/$', auth_views.password_reset_complete, name='password_reset_complete'),
-    
+
     #Login/Logout
-    url(r'^$',
-        django.contrib.auth.views.login,
-        {
-            'template_name': 'app/login.html',
-            'authentication_form': app.forms.BootstrapAuthenticationForm,
-            'extra_context':
-            {
-                'title': 'Log in',
-                'year': datetime.now().year,
-            }
-        },
-        name='login'),
-    url(r'^logout$',
-        django.contrib.auth.views.logout,
-        {
-            'next_page': '/',
-        },
-        name='logout'),
+    
 
     url(r'^tecnico/agregarFalla/$', app.views.agregarFalla, name='agregarFalla'),
     url(r'^tecnico/agregarOrdenReparacion/$', app.views.agregarOrdenReparacion, name='agregarOrdenReparacion'),
