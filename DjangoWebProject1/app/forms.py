@@ -96,7 +96,14 @@ class RegisterUserForm(forms.ModelForm):
 
         class Meta:
             model = Usuario
-            fields = ('first_name', 'last_name', 'username','password', 'email')
+            fields = ('first_name', 'last_name', 'username','password', 'email', 'roles')
             help_texts = {
                 'username': None,
             }
+
+class RolForm(forms.ModelForm):
+
+        class Meta:
+            model = Rol
+            fields = ('nombre',)
+            

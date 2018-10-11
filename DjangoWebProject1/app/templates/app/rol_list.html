@@ -7,12 +7,12 @@
 {% endblock %}
 
 {% block content %}
-  <h1 class="page-header">Usuarios</h1>
+  <h1 class="page-header">Roles</h1>
 
   <p>
-    <button type="button" class="btn btn-primary js-create-book" data-url="{% url 'usuario_create' %}">
+    <button type="button" class="btn btn-primary js-create-book" data-url="{% url 'rol_create' %}">
       <span class="glyphicon glyphicon-plus"></span>
-      Nuevo Usuario
+      Nuevo Rol
     </button>
   </p>
 
@@ -20,32 +20,24 @@
     <thead>
       <tr>
         <th>#</th>
-        <th>Usuario</th>
-        <th>Apellido</th>
-        <th>Nombre</th>
-        <th>Activo</th>
-        <th>Email</th>
+        <th>Nombre</th>        
         <th></th>
       </tr>
     </thead>
     <tbody>
-      {% for usuario in usuarios %}
+      {% for rol in roles %}
   <tr>
-    <td>{{ usuario.pk }}</td>
-    <td>{{ usuario.username }}</td>
-    <td>{{ usuario.last_name }}</td>
-    <td>{{ usuario.first_name }}</td>
-    <td>{{ usuario.is_active }}</td>
-    <td>{{ usuario.email }}</td>
+    <td>{{ rol.pk }}</td>
+    <td>{{ rol.nombre }}</td>
     <td style="width: 150px">
       <button type="button"
               class="btn btn-warning btn-sm js-update-book"
-              data-url="{% url 'usuario_update' usuario.pk %}">
+              data-url="{% url 'rol_update' rol.pk %}">
         <span class="glyphicon glyphicon-pencil"></span> Editar
       </button>
       <button type="button"
               class="btn btn-danger btn-sm js-delete-book"
-              data-url="{% url 'usuario_delete' usuario.pk %}">
+              data-url="{% url 'rol_delete' rol.pk %}">
         <span class="glyphicon glyphicon-trash"></span> Eliminar
       </button>
     </td>

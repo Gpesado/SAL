@@ -5,6 +5,9 @@ from django.urls import reverse
 class Rol (models.Model):
     nombre = models.CharField(max_length=35)
 
+    def __str__(self):
+        return "{0}".format(self.nombre)
+
 #LOGGING
 class Usuario(AbstractUser):    
 
@@ -24,6 +27,7 @@ class Usuario(AbstractUser):
     def __str__(self):
         return "{0} {1} ({2})".format(self.first_name,self.last_name,self.username)
     
+    roles = models.ManyToManyField(Rol)
 
 
     

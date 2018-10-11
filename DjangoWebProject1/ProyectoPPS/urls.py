@@ -47,9 +47,13 @@ urlpatterns = [
     url(r'^usuario/(?P<pk>\d+)/delete/$', app.views.usuario_delete, name='usuario_delete'),
     url(r'^usuario/(?P<pk>\d+)/update/$', app.views.usuario_update, name='usuario_update'),
     url(r'^usuarios/$', app.views.UsuarioListView.as_view(), name='usuarios'),
-
     url(r'^usuario/(?P<pk>\d+)$', app.views.UsuarioDetailView.as_view(), name='usuario_edit'),
 
+    #urls Rol
+    url(r'^rol/create$', app.views.rol_create, name='rol_create'),
+    url(r'^rol/(?P<pk>\d+)/delete/$', app.views.rol_delete, name='rol_delete'),
+    url(r'^rol/(?P<pk>\d+)/update/$', app.views.rol_update, name='rol_update'),
+    url(r'^roles/$', app.views.RolListView.as_view(), name='roles'),
     #urls Reset de Password
 
 

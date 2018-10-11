@@ -124,12 +124,16 @@
     <Content Include="app\templates\app\observacion_Orden_Reparacion.html" />
     <Content Include="app\templates\app\password_reset_form.html" />
     <Content Include="app\templates\app\usuario.html" />
+    <Content Include="app\templates\app\rol_confirm_delete.html" />
     <Content Include="app\templates\app\usuario_confirm_delete.html">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="app\templates\app\rol_create.html" />
     <Content Include="app\templates\app\usuario_create.html" />
+    <Content Include="app\templates\app\rol_list.html" />
     <Content Include="app\templates\app\usuario_list.html" />
     <Content Include="app\templates\app\registrar_usuario.html" />
+    <Content Include="app\templates\app\rol_update.html" />
     <Content Include="app\templates\app\usuario_update.html" />
     <Content Include="app\templates\app\usuario_form.html">
       <SubType>Code</SubType>

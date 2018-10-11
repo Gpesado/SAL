@@ -168,25 +168,12 @@ def vistaAdministracion(request):
 def vistaVisualizador(request):
     return render(request,'app/vistaVisualizador.html')
 
-def usuario_new(request):
-    if request.method == "POST":
-            form = RegisterUserForm(request.POST)
-            if form.is_valid():
-                usuario = form.save(commit=False)
-                
-                usuario.save()
-                return redirect('usuario_update', pk=usuario.pk)
-    else:
-        form = RegisterUserForm()
-    return render(request, 'app/usuario_create.html', {'form': form})
-
-
 def usuario_create(request):
     if request.method == 'POST':
         form = RegisterUserForm(request.POST)
     else:
         form = RegisterUserForm()
-    return save_book_form(request, form, 'app/usuario_create.html')
+    return save_usuario_form(request, form, 'app/usuario_create.html')
 
 
 def usuario_update(request, pk):
@@ -195,7 +182,7 @@ def usuario_update(request, pk):
         form = RegisterUserForm(request.POST, instance=usuario)
     else:
         form = RegisterUserForm(instance=usuario)
-    return save_book_form(request, form, 'app/usuario_update.html')
+    return save_usuario_form(request, form, 'app/usuario_update.html')
 
 
 def usuario_delete(request, pk):
@@ -206,7 +193,7 @@ def usuario_delete(request, pk):
         usuario.save()
         data['form_is_valid'] = True
         usuarios = Usuario.objects.all()
-        data['html_book_list'] = render_to_string('app/usuario_list.html', {
+        data['html_usuario_list'] = render_to_string('app/usuario_list.html', {
             'app': usuarios
         })
     else:
@@ -216,15 +203,15 @@ def usuario_delete(request, pk):
 
 
 
-def save_book_form(request, form, template_name):
+def save_usuario_form(request, form, template_name):
     data = dict()
     if request.method == 'POST':
         if form.is_valid():
             form.save()
             data['form_is_valid'] = True
-            books = Usuario.objects.all()
-            data['html_book_list'] = render_to_string('app/usuario_list.html', {
-                'app': books
+            usuarios = Usuario.objects.all()
+            data['html_usuario_list'] = render_to_string('app/usuario_list.html', {
+                'app': usuarios
             })
         else:
             data['form_is_valid'] = False
@@ -251,6 +238,81 @@ class UsuarioDetailView(DetailView):
     model = Usuario
     template_name = 'app/usuario_update.html'
     
+
+def rol_create(request):
+    if request.method == 'POST':
+        form = RolForm(request.POST)
+    else:
+        form = RolForm()
+    return save_rol_form(request, form, 'app/rol_create.html')
+
+
+def rol_update(request, pk):
+    rol = get_object_or_404(Rol, pk=pk)
+    if request.method == 'POST':
+        form = RolForm(request.POST, instance=rol)
+    else:
+        form = RolForm(instance=rol)
+    return save_rol_form(request, form, 'app/rol_update.html')
+
+
+def usuario_delete(request, pk):
+    rol = get_object_or_404(Rol, pk=pk)
+    data = dict()
+    if request.method == 'POST':
+        
+        rol.save()
+        data['form_is_valid'] = True
+        roles = Rol.objects.all()
+        data['html_rol_list'] = render_to_string('app/rol_list.html', {
+            'app': roles
+        })
+    else:
+        context = {'rol': rol}
+        data['html_form'] = render_to_string('app/rol_confirm_delete.html', context, request=request)
+    return JsonResponse(data)
+
+def rol_delete(request, pk):
+    rol = get_object_or_404(Rol, pk=pk)
+    data = dict()
+    if request.method == 'POST':
+        
+        rol.delete()
+        data['form_is_valid'] = True
+        roles = Rol.objects.all()
+        data['html_rol_list'] = render_to_string('app/rol_list.html', {
+            'app': roles
+        })
+    else:
+        context = {'rol': rol}
+        data['html_form'] = render_to_string('app/rol_confirm_delete.html', context, request=request)
+    return JsonResponse(data)
+
+def save_rol_form(request, form, template_name):
+    data = dict()
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            data['form_is_valid'] = True
+            roles = Rol.objects.all()
+            data['html_rol_list'] = render_to_string('app/rol_list.html', {
+                'app': roles
+            })
+        else:
+            data['form_is_valid'] = False
+    context = {'form': form}
+    data['html_form'] = render_to_string(template_name, context, request=request)
+    return JsonResponse(data)
+
+
+class RolListView(ListView):
+    model = Rol
+    context_object_name = 'roles'
+    template_name = 'rol_list.html'    
+    paginate_by = 10
+    queryset = Rol.objects.all()  # Default: Model.objects.all()
+
+
 
 class AccountViewSet(viewsets.ModelViewSet):
     lookup_field = 'username'
