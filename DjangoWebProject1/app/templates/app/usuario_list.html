@@ -35,9 +35,13 @@
     <td>{{ usuario.username }}</td>
     <td>{{ usuario.last_name }}</td>
     <td>{{ usuario.first_name }}</td>
-    <td>{{ usuario.is_active }}</td>
+    {% if usuario.is_active %}
+      <td>ACTIVO</td>
+    {% else %}
+      <td>INACTIVO</td>
+    {% endif %}
     <td>{{ usuario.email }}</td>
-    <td style="width: 150px">
+    <td style="width: 180px">
       <button type="button"
               class="btn btn-warning btn-sm js-update-book"
               data-url="{% url 'usuario_update' usuario.pk %}">
