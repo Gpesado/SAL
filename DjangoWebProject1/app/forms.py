@@ -96,7 +96,7 @@ class RegisterUserForm(forms.ModelForm):
 
         class Meta:
             model = Usuario
-            fields = ('first_name', 'last_name', 'username','password', 'email', 'roles')
+            fields = ('first_name', 'last_name', 'username','password', 'email')
             help_texts = {
                 'username': None,
             }

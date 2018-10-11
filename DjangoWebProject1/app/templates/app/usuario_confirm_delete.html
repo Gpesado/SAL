@@ -1,16 +1,16 @@
-{% extends "app/layout.html" %}
-
-{% block content %}
-
-<h1>Eliminar Usuario</h1>
-
-<p>Seguro desea eliminar al usuario: {{ usuario.username }}?</p>
-
-<form action="" method="POST">
+<form method="post" action="{% url 'usuario_delete' usuario.id %}" class="js-book-delete-form">
   {% csrf_token %}
-  <input type="submit" action="" value="Si, eliminar." class="btn btn-default"/>
-    <a href="{{ usuario.get_success_url }}" class="btn btn-default">Cancelar</a>
-
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">Eliminar Usuario</h4>
+  </div>
+  <div class="modal-body">
+    <p class="lead">Seguro desea eliminar al usuario: <strong>{{ usuario.username }}</strong>?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+  </div>
 </form>
-
-{% endblock %}

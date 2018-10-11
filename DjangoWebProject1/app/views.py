@@ -198,13 +198,21 @@ def usuario_update(request, pk):
     return save_book_form(request, form, 'app/usuario_update.html')
 
 
-def usuario_delete(request, pk, template_name='app/usuario_confirm_delete.html'):
-    usuario= get_object_or_404(Usuario, pk=pk)    
-    if request.method=='POST':
+def usuario_delete(request, pk):
+    usuario = get_object_or_404(Usuario, pk=pk)
+    data = dict()
+    if request.method == 'POST':
         usuario.is_active=False
         usuario.save()
-        return redirect('usuarios')
-    return render(request, template_name, {'object':usuario})
+        data['form_is_valid'] = True
+        usuarios = Usuario.objects.all()
+        data['html_book_list'] = render_to_string('app/usuario_list.html', {
+            'app': usuarios
+        })
+    else:
+        context = {'usuario': usuario}
+        data['html_form'] = render_to_string('app/usuario_confirm_delete.html', context, request=request)
+    return JsonResponse(data)
 
 
 
@@ -215,8 +223,8 @@ def save_book_form(request, form, template_name):
             form.save()
             data['form_is_valid'] = True
             books = Usuario.objects.all()
-            data['html_book_list'] = render_to_string('app/usuarios.html', {
-                'usuarios': books
+            data['html_book_list'] = render_to_string('app/usuario_list.html', {
+                'app': books
             })
         else:
             data['form_is_valid'] = False
@@ -241,7 +249,7 @@ class UsuarioDelete(DeleteView):
 
 class UsuarioDetailView(DetailView):
     model = Usuario
-    template_name = 'app/usuario_edit.html'
+    template_name = 'app/usuario_update.html'
     
 
 class AccountViewSet(viewsets.ModelViewSet):

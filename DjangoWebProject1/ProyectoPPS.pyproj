@@ -130,7 +130,7 @@
     <Content Include="app\templates\app\usuario_create.html" />
     <Content Include="app\templates\app\usuario_list.html" />
     <Content Include="app\templates\app\registrar_usuario.html" />
-    <Content Include="app\templates\app\usuario_edit.html" />
+    <Content Include="app\templates\app\usuario_update.html" />
     <Content Include="app\templates\app\usuario_form.html">
       <SubType>Code</SubType>
     </Content>
