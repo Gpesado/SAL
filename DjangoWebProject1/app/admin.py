@@ -5,6 +5,7 @@ from .models import *
 
 admin.site.register(Usuario)
 admin.site.register(Rol)
+admin.site.register(Menu)
 admin.site.register(Usuarios_has_rol)
 admin.site.register(Fabricante)
 admin.site.register(Marca_Luminaria_LED)

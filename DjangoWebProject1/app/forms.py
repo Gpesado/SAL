@@ -105,5 +105,10 @@ class RolForm(forms.ModelForm):
 
         class Meta:
             model = Rol
-            fields = ('nombre',)
+            fields = ('nombre', 'menues')
             
+class MenuForm(forms.ModelForm):
+
+        class Meta:
+            model = Menu
+            fields = ('nombre',)

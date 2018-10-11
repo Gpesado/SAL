@@ -14,11 +14,15 @@
         {% if user.is_authenticated %}
         <ul class="nav navbar-nav">
         <li><span class="navbar-brand">Hola {{ user.username }}!</span></li>
-        <li><a href="{% url 'usuarios' %}">Usuarios</a></li>
-        <li><a href="{% url 'roles' %}">Roles</a></li>
-        <li><a href="{% url 'vistaTecnico' %}">Vista de Tecnico</a></li>
-        <li><a href="{% url 'vistaAdministracion' %}">Vista de Administracion</a></li>
-        <li><a href="{% url 'vistaVisualizador' %}">Vista de Visualizador</a></li>
+        
+        
+        {% for menu in user.roles.all %}
+            {% for m in menu.menues.all %}
+                <li><a href="{% url  m.url  %}">{{ m.nombre }}</a></li>    
+            
+            {% endfor %}
+            {% endfor %}
+
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Cerrar Sesion</a></li>
       </ul>
           </form>

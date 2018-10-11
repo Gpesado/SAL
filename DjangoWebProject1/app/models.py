@@ -2,11 +2,20 @@ from django.db import models
 
 from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
+
+class Menu(models.Model):
+    nombre = models.CharField(max_length=35)
+    url = models.CharField(max_length=100, blank=True)
+    def __str__(self):
+        return "{0}".format(self.nombre)
+
 class Rol (models.Model):
     nombre = models.CharField(max_length=35)
 
     def __str__(self):
         return "{0}".format(self.nombre)
+
+    menues = models.ManyToManyField(Menu)
 
 #LOGGING
 class Usuario(AbstractUser):    
@@ -24,12 +33,19 @@ class Usuario(AbstractUser):
     def get_success_url(self):
         return reverse('usuarios')
 
+    
+
     def __str__(self):
         return "{0} {1} ({2})".format(self.first_name,self.last_name,self.username)
     
     roles = models.ManyToManyField(Rol)
 
-
+    def algo(self, pagina):
+        for rol in self.roles.all():
+            for menu in rol.menues.all():
+                if menu.nombre == pagina:
+                    return True
+        return False
     
 class Usuarios_has_rol(models.Model):
     usuario = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)
