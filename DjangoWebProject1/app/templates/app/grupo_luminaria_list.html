@@ -1,57 +1,53 @@
 ﻿{% extends 'app/base.html' %}
+
 {% load static %}
+
 {% block javascript %}
   <script src="{% static 'app/scripts/books.js' %}"></script>
 {% endblock %}
+
 {% block content %}
-  <h1 class="page-header">Usuarios</h1>
+  <h1 class="page-header">Grupos Luminarias</h1>
+
   <p>
-    <button type="button" class="btn btn-primary js-create-book" data-url="{% url 'usuario_create' %}">
+    <button type="button" class="btn btn-primary js-create-book" data-url="{% url 'grupoLuminaria_create' %}">
       <span class="glyphicon glyphicon-plus"></span>
-      Nuevo Usuario
+      Nuevo Grupo Luminaria
     </button>
   </p>
+
   <table class="table" id="book-table">
     <thead>
       <tr>
         <th>#</th>
-        <th>Usuario</th>
-        <th>Apellido</th>
         <th>Nombre</th>
-        <th>Activo</th>
-        <th>Email</th>
+        <th>Administrador</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
-      {% for usuario in usuarios %}
+      {% for grupo in grupoLuminarias %}
   <tr>
-    <td>{{ usuario.pk }}</td>
-    <td>{{ usuario.username }}</td>
-    <td>{{ usuario.last_name }}</td>
-    <td>{{ usuario.first_name }}</td>
-    {% if usuario.is_active %}
-      <td>ACTIVO</td>
-    {% else %}
-      <td>INACTIVO</td>
-    {% endif %}
-    <td>{{ usuario.email }}</td>
+    <td>{{ grupo.pk }}</td>
+    <td>{{ grupo.nombre }}</td>
+    <td>{{ grupo.administrador }}</td>
     <td style="width: 180px">
       <button type="button"
               class="btn btn-warning btn-sm js-update-book"
-              data-url="{% url 'usuario_update' usuario.pk %}">
+              data-url="{% url 'grupoLuminaria_update' grupo.pk %}">
         <span class="glyphicon glyphicon-pencil"></span> Editar
       </button>
       <button type="button"
               class="btn btn-danger btn-sm js-delete-book"
-              data-url="{% url 'usuario_delete' usuario.pk %}">
+              data-url="{% url 'grupoLuminaria_delete' grupo.pk %}">
         <span class="glyphicon glyphicon-trash"></span> Eliminar
       </button>
+   
     </td>
   </tr>
 {% empty %}
   <tr>
-    <td colspan="8" class="text-center bg-warning">No hay Usuarios</td>
+    <td colspan="8" class="text-center bg-warning">No existen grupos</td>
   </tr>
 {% endfor %}
     </tbody>

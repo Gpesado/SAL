@@ -12,11 +12,8 @@
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Cerrar Sesion</a></li>
     </ul>
 </form>
-
 {% else %}
-
 <ul class="nav navbar-nav navbar-right">
     <li><a href="{% url 'login' %}">Log in</a></li>
 </ul>
-
 {% endif %}

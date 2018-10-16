@@ -53,13 +53,13 @@ class agregarNodo_LEDForm(forms.ModelForm):
 
         class Meta:
             model = Nodo_LED
-            fields = ('potencia','lampara') 
+            fields = ('identificador','potencia','es_concentrador','lampara') 
 
 class agregarLuminaria_LEDForm(forms.ModelForm):
 
         class Meta:
             model = Luminaria_LED
-            fields = ('modeloLampara', 'estado') 
+            fields = ('identificador','modeloLampara', 'estado') 
 
 class agregarModeloLEDForm(forms.ModelForm):
 
@@ -93,13 +93,24 @@ class BootstrapAuthenticationForm(AuthenticationForm):
     }
 
 class RegisterUserForm(forms.ModelForm):
+        password = forms.CharField(widget=forms.PasswordInput)    
 
         class Meta:
             model = Usuario
-            fields = ('first_name', 'last_name', 'username','password', 'email', 'roles')
+            fields = ('username', 'first_name', 'last_name', 'password', 'email', 'roles')
             help_texts = {
                 'username': None,
             }
+
+class EditUserForm(forms.ModelForm):         
+
+        class Meta:
+            model = Usuario
+            fields = ('username', 'first_name', 'last_name', 'email', 'roles')
+            help_texts = {
+                'username': None,
+            }
+                  
 
 class RolForm(forms.ModelForm):
 
@@ -112,3 +123,9 @@ class MenuForm(forms.ModelForm):
         class Meta:
             model = Menu
             fields = ('nombre',)
+
+class RegisterGrupoLuminariaForm(forms.ModelForm):
+
+        class Meta:
+            model = Grupo_Luminaria
+            fields = ('nombre', 'administrador')

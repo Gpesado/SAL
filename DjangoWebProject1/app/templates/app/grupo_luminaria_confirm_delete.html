@@ -1,0 +1,15 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+
+<h1>Eliminar Grupo</h1>
+
+<p>Seguro desea eliminar al Grupo: {{ grupo.nombre }} (ADMIN: {{ grupo.administrador }})?</p>
+
+<form action="" method="POST">
+  {% csrf_token %}
+  <input type="submit" action="" value="Si, eliminar." class="btn btn-default"/>
+    <a href="{% url 'grupoLuminarias' %}" class="btn btn-default">Cancelar</a>
+</form>
+
+{% endblock %}

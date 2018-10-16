@@ -179,14 +179,16 @@ def usuario_create(request):
 def usuario_update(request, pk):
     usuario = get_object_or_404(Usuario, pk=pk)
     if request.method == 'POST':
-        form = RegisterUserForm(request.POST, instance=usuario)
+        form = EditUserForm(request.POST, instance=usuario)
     else:
-        form = RegisterUserForm(instance=usuario)
+        form = EditUserForm(instance=usuario)
     return save_usuario_form(request, form, 'app/usuario_update.html')
 
 
 def usuario_delete(request, pk):
-    usuario = get_object_or_404(Usuario, pk=pk)
+    #usuario = get_object_or_404(Usuario, pk=pk)
+    usuario = Usuario.objects.get(pk=pk)
+    #usuario = get_object_or_404(queryset, pk=1)
     data = dict()
     if request.method == 'POST':
         usuario.is_active=False
@@ -207,7 +209,13 @@ def save_usuario_form(request, form, template_name):
     data = dict()
     if request.method == 'POST':
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            username = form.cleaned_data['username']
+            password = form.cleaned_data.get("password")
+            if password is not None:
+                user.set_password(password)
+            user.save()
+            form.save_m2m()
             data['form_is_valid'] = True
             usuarios = Usuario.objects.all()
             data['html_usuario_list'] = render_to_string('app/usuario_list.html', {
@@ -226,7 +234,6 @@ class UsuarioListView(ListView):
     template_name = 'usuario_list.html'    
     paginate_by = 10
     queryset = Usuario.objects.all()  # Default: Model.objects.all()
-
 
 
 class UsuarioDelete(DeleteView):
@@ -256,21 +263,7 @@ def rol_update(request, pk):
     return save_rol_form(request, form, 'app/rol_update.html')
 
 
-def usuario_delete(request, pk):
-    rol = get_object_or_404(Rol, pk=pk)
-    data = dict()
-    if request.method == 'POST':
-        
-        rol.save()
-        data['form_is_valid'] = True
-        roles = Rol.objects.all()
-        data['html_rol_list'] = render_to_string('app/rol_list.html', {
-            'app': roles
-        })
-    else:
-        context = {'rol': rol}
-        data['html_form'] = render_to_string('app/rol_confirm_delete.html', context, request=request)
-    return JsonResponse(data)
+
 
 def rol_delete(request, pk):
     rol = get_object_or_404(Rol, pk=pk)
@@ -360,88 +353,70 @@ def validateData(data):
         }, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 
-#class LoginView(views.APIView):
-#    def post(self, request, format=None):
-#        username = request.data.get('username', None)
-
-#        if Usuario.objects.filter(username=username).exists() == False:
-#            return Response({
-#                'status': 'Bad request',
-#                'message': 'Invalid username.'
-#            }, status=status.HTTP_400_BAD_REQUEST)
-
-#        password = request.data.get('password', None)
-
-#        Usuario = authenticate(username=username, password=password)
-
-#        if Usuario is not None:
-#            login(request, Usuario)
-#            serialized = AccountSerializer(Usuario)
-
-#            return Response(serialized.data)
-#        else:
-#            return Response({
-#                'status': 'Unauthorized',
-#                'message': 'Invalid password.'
-#            }, status=status.HTTP_401_UNAUTHORIZED)
-
-#class LogoutView(views.APIView):
-#    permission_classes = (permissions.IsAuthenticated,)
-
-#    def post(self, request, format=None):
-#        logout(request)
-
-#        return Response({}, status=status.HTTP_204_NO_CONTENT)
-
-
-def index(request):
-    return render(request,'app/index.html')
-@login_required
-def special(request):
-    return HttpResponse("You are logged in !")
-@login_required
-def user_logout(request):
-    logout(request)
-    return HttpResponseRedirect(reverse('index'))
-def register(request):
-    registered = False
-    if request.method == 'POST':
-        user_form = BootstrapAuthenticationForm(data=request.POST)
-        
-        if user_form.is_valid() and profile_form.is_valid():
-            user = user_form.save()
-            user.set_password(user.password)
-            user.save()
-            profile = profile_form.save(commit=False)
-            profile.user = user
-            if 'profile_pic' in request.FILES:
-                print('found it')
-                profile.profile_pic = request.FILES['profile_pic']
-            profile.save()
-            registered = True
-        else:
-            print(user_form.errors,profile_form.errors)
+def grupoLuminaria_new(request):
+    if request.method == "POST":
+            form = RegisterGrupoLuminariaForm(request.POST)
+            if form.is_valid():
+                usuario = form.save(commit=False)
+                
+                usuario.save()
+                return redirect('grupoLuminaria_update', pk=usuario.pk)
     else:
-        user_form = BootstrapAuthenticationForm()
-        
-    return render(request,'app/registration.html',
-                          {'user_form':user_form,
-                           'profile_form':profile_form,
-                           'registered':registered})
-def user_login(request):
+        form = RegisterGrupoLuminariaForm()
+    return render(request, 'app/grupo_luminaria_create.html', {'form': form})
+
+def grupoLuminaria_create(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(username=username, password=password)
-        if user:
-            if user.is_active:
-                login(request,user)
-                return HttpResponseRedirect(reverse('index'))
-            else:
-                return HttpResponse("Your account was inactive.")
-        else:
-            print("Someone tried to login and failed.")
-            print("They used username: {} and password: {}".format(username,password))
-            return HttpResponse("Invalid login details given")
+        form = RegisterGrupoLuminariaForm(request.POST)
     else:
-        return render(request, 'app/login.html', {})
+        form = RegisterGrupoLuminariaForm()
+    return save_grupoLuminaria_form(request, form, 'app/grupo_luminaria_create.html')
+
+def grupoLuminaria_update(request, pk):
+    usuario = get_object_or_404(Grupo_Luminaria, pk=pk)
+    if request.method == 'POST':
+        form = RegisterGrupoLuminariaForm(request.POST, instance=usuario)
+    else:
+        form = RegisterGrupoLuminariaForm(instance=usuario)
+    return save_grupoLuminaria_form(request, form, 'app/grupo_luminaria_update.html')
+
+def grupoLuminaria_delete(request, pk, template_name='app/grupo_luminaria_confirm_delete.html'):
+    usuario= get_object_or_404(Grupo_Luminaria, pk=pk)    
+    if request.method=='POST':
+        usuario.is_active=False
+        usuario.save()
+        return redirect('grupoLuminaria')
+    return render(request, template_name, {'object':usuario})
+
+def save_grupoLuminaria_form(request, form, template_name):
+    data = dict()
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            data['form_is_valid'] = True
+            books = Grupo_Luminaria.objects.all()
+            data['html_book_list'] = render_to_string('app/grupo_luminaria.html', {
+                'grupoLuminaria': books
+            })
+        else:
+            data['form_is_valid'] = False
+    context = {'form': form}
+    data['html_form'] = render_to_string(template_name, context, request=request)
+    return JsonResponse(data)
+
+class GrupoLuminariaListView(ListView):
+    model = Grupo_Luminaria    
+    context_object_name = 'grupoLuminarias'
+    template_name = 'grupo_luminaria_list.html'    
+    paginate_by = 10
+    queryset = Grupo_Luminaria.objects.all()  # Default: Model.objects.all()
+
+    
+class GrupoLuminariaDetailView(DetailView):
+    model = Grupo_Luminaria
+    template_name = 'app/grupo_luminaria_edit.html'
+
+class GrupoLuminariaDelete(DeleteView):
+    model = Grupo_Luminaria
+    
+    success_url = reverse_lazy('grupoLuminaria')   

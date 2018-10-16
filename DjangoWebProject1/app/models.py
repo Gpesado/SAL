@@ -22,7 +22,7 @@ class Usuario(AbstractUser):
 
     email = models.EmailField(verbose_name='Mail', unique=True)
     first_name = models.CharField(verbose_name='Nombre', max_length=30, blank=True)
-    last_name = models.CharField(verbose_name='Apellido', max_length=30, blank=True)
+    last_name = models.CharField(verbose_name='Apellido', max_length=30, blank=True)    
 
     def get_absolute_url(self):
         return reverse('usuario_update', args=[str(self.id)])
@@ -75,17 +75,20 @@ class Modelo_Luminaria_LED(models.Model):
         return "{0} {1}".format(self.nombre,self.marca)
     
 class Luminaria_LED(models.Model):
+    identificador = models.CharField(max_length=35,default='LAMP_LED_')
     modeloLampara = models.ForeignKey(Modelo_Luminaria_LED, null = False,blank = False, on_delete=models.CASCADE)
     ESTADO = (('f','En funcionamiento'), ('d','Con desperfectos'), ('r','En Reparacion'), ('d','Desconectada'))
     estado = models.CharField(max_length= 1, choices=ESTADO, default='d')
     def __str__(self):
-      return "{0} {1}".format(self.estado,self.modeloLampara)
+      return "{2} ({0} MOD: {1})".format(self.estado,self.modeloLampara,self.identificador)
       
 class Nodo_LED(models.Model):
-    id = models.UUIDField
-    es_concentrador = models.BooleanField
+    identificador = models.CharField(max_length=35,default='NOD_LED_')
+    es_concentrador = models.BooleanField(default='False')
     potencia = models.FloatField(null = False,blank = False)
     lampara = models.ForeignKey(Luminaria_LED, null = True,blank = False, on_delete=models.CASCADE)
+    def __str__(self):
+        return "{3} (LAMP = {0}POT = {1}) (CON = {2})".format(self.lampara.__str__(), self.potencia.__str__(), self.es_concentrador.__str__(),self.identificador)
 
     
 #LUMINARIAS NO LED

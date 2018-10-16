@@ -10,7 +10,7 @@
       <a class="navbar-brand" href="{% url 'home' %}">SAL</a>
     </div>
     <div class="collapse navbar-collapse" id="main-menu">
-      <form id="logoutForm" action="/logout" method="post" class="navbar-right">
+      
         {% if user.is_authenticated %}
         <ul class="nav navbar-nav">
         <li><span class="navbar-brand">Hola {{ user.username }}!</span></li>
@@ -22,10 +22,9 @@
             
             {% endfor %}
             {% endfor %}
-
-        <li><a href="javascript:document.getElementById('logoutForm').submit()">Cerrar Sesion</a></li>
+        <li><a href="{% url 'logout' %}">Cerrar Sesion</a></li>
       </ul>
-          </form>
+          
         {% else %}
 
 <ul class="nav navbar-nav navbar-right">

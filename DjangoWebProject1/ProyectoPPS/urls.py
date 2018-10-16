@@ -27,6 +27,8 @@ import app.views
 from django.contrib.auth import views as auth_views
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.contrib.auth.views import LogoutView
 
 
 router = routers.SimpleRouter()
@@ -42,6 +44,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
      path('', TemplateView.as_view(template_name='app/index.html'), name='home'),
+    url(r'^logout/$', LogoutView.as_view(), {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
     #urls Usuario (CREATE/DELETE/LIST)
     url(r'^usuario/create$', app.views.usuario_create, name='usuario_create'),
     url(r'^usuario/(?P<pk>\d+)/delete/$', app.views.usuario_delete, name='usuario_delete'),
@@ -54,6 +57,14 @@ urlpatterns = [
     url(r'^rol/(?P<pk>\d+)/delete/$', app.views.rol_delete, name='rol_delete'),
     url(r'^rol/(?P<pk>\d+)/update/$', app.views.rol_update, name='rol_update'),
     url(r'^roles/$', app.views.RolListView.as_view(), name='roles'),
+    
+    #urls grupoLuminarias (CREATE/DELETE/LIST)
+    url(r'^grupoLuminaria/create$', app.views.grupoLuminaria_create, name='grupoLuminaria_create'),
+    url(r'^grupoLuminaria/(?P<pk>\d+)/delete/$', app.views.grupoLuminaria_delete, name='grupoLuminaria_delete'),
+    url(r'^grupoLuminaria/(?P<pk>\d+)/update/$', app.views.grupoLuminaria_update, name='grupoLuminaria_update'),
+    url(r'^grupoLuminaria$', app.views.GrupoLuminariaListView.as_view(), name='grupoLuminarias'),
+    url(r'^grupoLuminaria/(?P<pk>\d+)$', app.views.GrupoLuminariaListView.as_view(), name='grupoLuminaria_edit'),
+
     #urls Reset de Password
 
 
