@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'compressor',
     'app',
     'widget_tweaks',
-    'rolepermissions',
 ]
 
 MIDDLEWARE = [ 
