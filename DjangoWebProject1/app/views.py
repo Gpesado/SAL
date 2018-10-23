@@ -406,12 +406,3 @@ class GrupoLuminariaListView(ListView):
     template_name = 'grupo_luminaria_list.html'    
     paginate_by = 10
     queryset = Grupo_Luminaria.objects.all()  # Default: Model.objects.all()
-    
-class GrupoLuminariaDetailView(DetailView):
-    model = Grupo_Luminaria
-    template_name = 'app/grupo_luminaria_edit.html'
-
-class GrupoLuminariaDelete(DeleteView):
-    model = Grupo_Luminaria
-    
-    success_url = reverse_lazy('grupoLuminaria')   
