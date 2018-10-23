@@ -20,7 +20,8 @@
         <th>Nombre</th>
         <th>Activo</th>
         <th>Email</th>
-        <th></th>
+        <th>Roles</th>
+          <th></th>
       </tr>
     </thead>
     <tbody>
@@ -36,6 +37,11 @@
       <td>INACTIVO</td>
     {% endif %}
     <td>{{ usuario.email }}</td>
+      <td>
+          {% for rol in usuario.roles.all %}
+            {{ rol.nombre }} <br> 
+          {% endfor %}
+      </td>
     <td style="width: 180px">
       <button type="button"
               class="btn btn-warning btn-sm js-update-book"
