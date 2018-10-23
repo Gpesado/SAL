@@ -1,7 +1,6 @@
 """
 Definition of forms.
 """
-
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
@@ -110,7 +109,6 @@ class EditUserForm(forms.ModelForm):
             help_texts = {
                 'username': None,
             }
-                  
 
 class RolForm(forms.ModelForm):
 
@@ -129,3 +127,9 @@ class RegisterGrupoLuminariaForm(forms.ModelForm):
         class Meta:
             model = Grupo_Luminaria
             fields = ('nombre', 'administrador')
+            
+class RegisterOrdenForm(forms.ModelForm):
+
+        class Meta:
+            model = Orden_Reparacion
+            fields = ('falla','tecnico_asignado','estado')

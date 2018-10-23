@@ -43,7 +43,7 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
-     path('', TemplateView.as_view(template_name='app/index.html'), name='home'),
+    path('', TemplateView.as_view(template_name='app/index.html'), name='home'),
     url(r'^logout/$', LogoutView.as_view(), {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
     #urls Usuario (CREATE/DELETE/LIST)
     url(r'^usuario/create$', app.views.usuario_create, name='usuario_create'),
@@ -63,14 +63,15 @@ urlpatterns = [
     url(r'^grupoLuminaria/(?P<pk>\d+)/delete/$', app.views.grupoLuminaria_delete, name='grupoLuminaria_delete'),
     url(r'^grupoLuminaria/(?P<pk>\d+)/update/$', app.views.grupoLuminaria_update, name='grupoLuminaria_update'),
     url(r'^grupoLuminaria$', app.views.GrupoLuminariaListView.as_view(), name='grupoLuminarias'),
-    #url(r'^grupoLuminaria/(?P<pk>\d+)$', app.views.GrupoLuminariaListView.as_view(), name='grupoLuminaria_edit'),
-
-    #urls Reset de Password
-
-
-    #Login/Logout
     
-
+    #urls Ordenes de reparacion
+    url(r'^ordenes/create$', app.views.orden_create, name='orden_create'),
+    url(r'^ordenes/(?P<pk>\d+)/delete/$', app.views.orden_delete, name='orden_delete'),
+    url(r'^ordenes/(?P<pk>\d+)/update/$', app.views.orden_update, name='orden_update'),
+    url(r'^ordenes$', app.views.OrdenListView.as_view(), name='ordenes'),
+    
+    #urls Reset de Password
+    #Login/Logout
     url(r'^tecnico/agregarFalla/$', app.views.agregarFalla, name='agregarFalla'),
     url(r'^tecnico/agregarOrdenReparacion/$', app.views.agregarOrdenReparacion, name='agregarOrdenReparacion'),
     url(r'^tecnico/agregarObservacion/$', app.views.observacion_Orden_Reparacion, name='observacion_Orden_Reparacion'),

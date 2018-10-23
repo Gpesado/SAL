@@ -1,7 +1,7 @@
 from rest_framework import permissions, viewsets, status, views
 from rest_framework.response import Response
-from app.models import Usuario
-from app.forms import RegisterUserForm
+from app.models import *
+from app.forms import *
 from app.permissions import IsAccountOwner
 from app.serializers import AccountSerializer
 from django.http import HttpRequest
@@ -397,3 +397,59 @@ class GrupoLuminariaListView(ListView):
     template_name = 'grupo_luminaria_list.html'    
     paginate_by = 10
     queryset = Grupo_Luminaria.objects.all()  # Default: Model.objects.all()
+
+# VENTANA ORDENES DE REPARACION
+def orden_create(request):
+    if request.method == 'POST':
+        form = RegisterOrdenForm(request.POST)
+    else:
+        form = RegisterOrdenForm()
+    return save_orden_form(request, form, 'app/orden_create.html')
+
+def orden_update(request, pk):
+    orden = get_object_or_404(Orden_Reparacion, pk=pk)
+    if request.method == 'POST':
+        form = RegisterOrdenForm(request.POST, instance=orden)
+    else:
+        form = RegisterOrdenForm(instance=orden)
+    return save_orden_form(request, form, 'app/orden_update.html')
+
+def orden_delete(request, pk, template_name='app/orden_confirm_delete.html'):
+    orden = get_object_or_404(Orden_Reparacion, pk=pk)
+    data = dict()
+    if request.method == 'POST':
+        
+        orden.delete()
+        data['form_is_valid'] = True
+        ordenes = Orden_Reparacion.objects.all()
+        data['html_orden_list'] = render_to_string('app/orden_list.html', {
+            'app': ordenes
+        })
+    else:
+        context = {'orden': orden}
+        data['html_form'] = render_to_string('app/orden_confirm_delete.html', context, request=request)
+    return JsonResponse(data)
+
+def save_orden_form(request, form, template_name):
+    data = dict()
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            data['form_is_valid'] = True
+            ordenes = Orden_Reparacion.objects.all()
+            data['html_orden_list'] = render_to_string('app/orden_list.html', {
+                'app': ordenes
+            })
+        else:
+            data['form_is_valid'] = False
+    context = {'form': form}
+    data['html_form'] = render_to_string(template_name, context, request=request)
+    return JsonResponse(data)
+
+#TODO: PORQUE SI LO TENGO COMO orden_list en el archivo html no me lo toma? ademas esto me afecta a mis redirreciones  
+class OrdenListView(ListView):
+    model = Orden_Reparacion    
+    context_object_name = 'ordenes'
+    template_name = 'orden_list.html'    
+    paginate_by = 10
+    queryset = Orden_Reparacion.objects.all()  # Default: Model.objects.all()

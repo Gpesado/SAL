@@ -1,0 +1,81 @@
+﻿{% extends 'app/base.html' %}
+{% load static %}
+{% block javascript %}
+  <script src="{% static 'app/scripts/books.js' %}"></script>
+{% endblock %}
+{% block content %}
+  <h1 class="page-header">Ordenes de reparacion</h1>
+
+  <p>
+    <button type="button" class="btn btn-primary js-create-book" data-url="{% url 'orden_create' %}">
+      <span class="glyphicon glyphicon-plus"></span>
+      Nueva Orden
+    </button>
+  </p>
+
+  <table class="table" id="book-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Falla</th>
+        <th>Tecnico</th>
+        <th>Estado</th>        
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for orden in ordenes %}
+  <tr>
+    <td>{{ orden.pk }}</td>
+    <td>{{ orden.falla }}</td>
+    <td>{{ orden.tecnico_asignado }}</td>
+    <td>{{ orden.estado }}</td>
+    <td style="width: 180px">
+      <button type="button"
+              class="btn btn-warning btn-sm js-update-book"
+              data-url="{% url 'orden_update' orden.pk %}">
+        <span class="glyphicon glyphicon-pencil"></span> Editar
+      </button>
+      <button type="button"
+              class="btn btn-danger btn-sm js-delete-book"
+              data-url="{% url 'orden_delete' orden.pk %}">
+        <span class="glyphicon glyphicon-trash"></span> Eliminar
+      </button>
+    </td>
+  </tr>
+{% empty %}
+  <tr>
+    <td colspan="8" class="text-center bg-warning">No existen ordenes de reparacion</td>
+  </tr>
+{% endfor %}
+    </tbody>
+  </table>
+{% if is_paginated %}
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+      <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in paginator.page_range %}
+      {% if page_obj.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+      <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+  <div class="modal fade" id="modal-book">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+      </div>
+    </div>
+  </div>
+{% endblock %}

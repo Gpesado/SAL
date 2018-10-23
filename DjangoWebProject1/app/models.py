@@ -186,7 +186,7 @@ class Orden_Reparacion(models.Model):
                       ('tcs','Ticket cerrado sin aprobacion'))
     estado = models.CharField(max_length= 3, choices=estados_fallas, default='prt')
     def __str__(self):
-        return "{0} (tec:{1}) (estado:{2})".format(self.falla,self.tecnico_asignado,self.estado)
+        return "{0} (tec:{1}) (estado:{2})".format(self.falla,self.demandante,self.tecnico_asignado,self.estado)
     
 class Observaciones_Orden_Reparacion(models.Model):
     orden = models.ForeignKey(Orden_Reparacion, null = False,blank = False, on_delete=models.CASCADE)
