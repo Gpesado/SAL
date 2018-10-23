@@ -26,7 +26,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for grupo in grupoLuminarias %}
+      {% for grupo in grupos %}
   <tr>
     <td>{{ grupo.pk }}</td>
     <td>{{ grupo.nombre }}</td>
@@ -42,7 +42,6 @@
               data-url="{% url 'grupoLuminaria_delete' grupo.pk %}">
         <span class="glyphicon glyphicon-trash"></span> Eliminar
       </button>
-   
     </td>
   </tr>
 {% empty %}

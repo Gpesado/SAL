@@ -63,7 +63,7 @@ urlpatterns = [
     url(r'^grupoLuminaria/(?P<pk>\d+)/delete/$', app.views.grupoLuminaria_delete, name='grupoLuminaria_delete'),
     url(r'^grupoLuminaria/(?P<pk>\d+)/update/$', app.views.grupoLuminaria_update, name='grupoLuminaria_update'),
     url(r'^grupoLuminaria$', app.views.GrupoLuminariaListView.as_view(), name='grupoLuminarias'),
-    url(r'^grupoLuminaria/(?P<pk>\d+)$', app.views.GrupoLuminariaListView.as_view(), name='grupoLuminaria_edit'),
+    #url(r'^grupoLuminaria/(?P<pk>\d+)$', app.views.GrupoLuminariaListView.as_view(), name='grupoLuminaria_edit'),
 
     #urls Reset de Password
 

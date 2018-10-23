@@ -353,18 +353,6 @@ def validateData(data):
         }, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 
-def grupoLuminaria_new(request):
-    if request.method == "POST":
-            form = RegisterGrupoLuminariaForm(request.POST)
-            if form.is_valid():
-                usuario = form.save(commit=False)
-                
-                usuario.save()
-                return redirect('grupoLuminaria_update', pk=usuario.pk)
-    else:
-        form = RegisterGrupoLuminariaForm()
-    return render(request, 'app/grupo_luminaria_create.html', {'form': form})
-
 def grupoLuminaria_create(request):
     if request.method == 'POST':
         form = RegisterGrupoLuminariaForm(request.POST)
@@ -373,20 +361,28 @@ def grupoLuminaria_create(request):
     return save_grupoLuminaria_form(request, form, 'app/grupo_luminaria_create.html')
 
 def grupoLuminaria_update(request, pk):
-    usuario = get_object_or_404(Grupo_Luminaria, pk=pk)
+    grupo = get_object_or_404(Grupo_Luminaria, pk=pk)
     if request.method == 'POST':
-        form = RegisterGrupoLuminariaForm(request.POST, instance=usuario)
+        form = RegisterGrupoLuminariaForm(request.POST, instance=grupo)
     else:
-        form = RegisterGrupoLuminariaForm(instance=usuario)
+        form = RegisterGrupoLuminariaForm(instance=grupo)
     return save_grupoLuminaria_form(request, form, 'app/grupo_luminaria_update.html')
 
 def grupoLuminaria_delete(request, pk, template_name='app/grupo_luminaria_confirm_delete.html'):
-    usuario= get_object_or_404(Grupo_Luminaria, pk=pk)    
-    if request.method=='POST':
-        usuario.is_active=False
-        usuario.save()
-        return redirect('grupoLuminaria')
-    return render(request, template_name, {'object':usuario})
+    grupo = get_object_or_404(Grupo_Luminaria, pk=pk)
+    data = dict()
+    if request.method == 'POST':
+        
+        grupo.delete()
+        data['form_is_valid'] = True
+        grupos = Grupo_Luminaria.objects.all()
+        data['html_grupo_list'] = render_to_string('app/grupo_luminaria_list.html', {
+            'app': grupos
+        })
+    else:
+        context = {'grupo': grupo}
+        data['html_form'] = render_to_string('app/grupo_luminaria_confirm_delete.html', context, request=request)
+    return JsonResponse(data)
 
 def save_grupoLuminaria_form(request, form, template_name):
     data = dict()
@@ -394,9 +390,9 @@ def save_grupoLuminaria_form(request, form, template_name):
         if form.is_valid():
             form.save()
             data['form_is_valid'] = True
-            books = Grupo_Luminaria.objects.all()
-            data['html_book_list'] = render_to_string('app/grupo_luminaria.html', {
-                'grupoLuminaria': books
+            grupos = Grupo_Luminaria.objects.all()
+            data['html_grupo_list'] = render_to_string('app/grupo_luminaria_list.html', {
+                'app': grupos
             })
         else:
             data['form_is_valid'] = False
@@ -406,11 +402,10 @@ def save_grupoLuminaria_form(request, form, template_name):
 
 class GrupoLuminariaListView(ListView):
     model = Grupo_Luminaria    
-    context_object_name = 'grupoLuminarias'
+    context_object_name = 'grupos'
     template_name = 'grupo_luminaria_list.html'    
     paginate_by = 10
     queryset = Grupo_Luminaria.objects.all()  # Default: Model.objects.all()
-
     
 class GrupoLuminariaDetailView(DetailView):
     model = Grupo_Luminaria
