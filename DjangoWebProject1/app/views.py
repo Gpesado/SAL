@@ -25,7 +25,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 
-
+# VENTANA INDIVIDUALES , POSIBLEMENTE SE DEBAN ELIMINAR AL ARMAR LAS VENTANAS INTEGRADORAS...
 def home(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
@@ -159,6 +159,7 @@ def agregarMarcaLED(request):
             form = agregarMarcaLEDForm()
         return render(request, 'app/agregarMarcaLED.html', {'form': form})
 
+# VENTANAS DE NAVEGACION DEPENDIENDO DEL ROL
 def vistaTecnico(request):
     return render(request,'app/vistaTecnico.html')
 
@@ -168,13 +169,13 @@ def vistaAdministracion(request):
 def vistaVisualizador(request):
     return render(request,'app/vistaVisualizador.html')
 
+# VENTANA GESTION DE USUARIOS
 def usuario_create(request):
     if request.method == 'POST':
         form = RegisterUserForm(request.POST)
     else:
         form = RegisterUserForm()
     return save_usuario_form(request, form, 'app/usuario_create.html')
-
 
 def usuario_update(request, pk):
     usuario = get_object_or_404(Usuario, pk=pk)
@@ -183,7 +184,6 @@ def usuario_update(request, pk):
     else:
         form = EditUserForm(instance=usuario)
     return save_usuario_form(request, form, 'app/usuario_update.html')
-
 
 def usuario_delete(request, pk):
     #usuario = get_object_or_404(Usuario, pk=pk)
@@ -202,8 +202,6 @@ def usuario_delete(request, pk):
         context = {'usuario': usuario}
         data['html_form'] = render_to_string('app/usuario_confirm_delete.html', context, request=request)
     return JsonResponse(data)
-
-
 
 def save_usuario_form(request, form, template_name):
     data = dict()
@@ -227,14 +225,12 @@ def save_usuario_form(request, form, template_name):
     data['html_form'] = render_to_string(template_name, context, request=request)
     return JsonResponse(data)
 
-
 class UsuarioListView(ListView):
     model = Usuario    
     context_object_name = 'usuarios'
     template_name = 'usuario_list.html'    
     paginate_by = 10
     queryset = Usuario.objects.all()  # Default: Model.objects.all()
-
 
 class UsuarioDelete(DeleteView):
     model = Usuario
@@ -245,7 +241,7 @@ class UsuarioDetailView(DetailView):
     model = Usuario
     template_name = 'app/usuario_update.html'
     
-
+# VENTANA ROLES
 def rol_create(request):
     if request.method == 'POST':
         form = RolForm(request.POST)
@@ -261,9 +257,6 @@ def rol_update(request, pk):
     else:
         form = RolForm(instance=rol)
     return save_rol_form(request, form, 'app/rol_update.html')
-
-
-
 
 def rol_delete(request, pk):
     rol = get_object_or_404(Rol, pk=pk)
@@ -297,7 +290,6 @@ def save_rol_form(request, form, template_name):
     data['html_form'] = render_to_string(template_name, context, request=request)
     return JsonResponse(data)
 
-
 class RolListView(ListView):
     model = Rol
     context_object_name = 'roles'
@@ -305,8 +297,7 @@ class RolListView(ListView):
     paginate_by = 10
     queryset = Rol.objects.all()  # Default: Model.objects.all()
 
-
-
+# VALIDACIONES DE USUARIOS
 class AccountViewSet(viewsets.ModelViewSet):
     lookup_field = 'username'
     queryset = Usuario.objects.all()
@@ -352,7 +343,7 @@ def validateData(data):
             'message': 'Found existing Usuario with username: ' + str(username)
         }, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
-
+# VENTANA GRUPO DE LUMINARIA
 def grupoLuminaria_create(request):
     if request.method == 'POST':
         form = RegisterGrupoLuminariaForm(request.POST)
