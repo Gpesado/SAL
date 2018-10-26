@@ -22,6 +22,7 @@
         <th>#</th>
         <th>Nombre</th>
         <th>Administrador</th>
+        <th>Luminarias_led</th>
         <th></th>
       </tr>
     </thead>
@@ -31,6 +32,11 @@
     <td>{{ grupo.pk }}</td>
     <td>{{ grupo.nombre }}</td>
     <td>{{ grupo.administrador }}</td>
+    <td>
+        {% for lum_led in grupo.luminarias_led.all %}
+          {{ lum_led.identificador }} <br> 
+        {% endfor %}
+    </td>
     <td style="width: 180px">
       <button type="button"
               class="btn btn-warning btn-sm js-update-book"

@@ -5,6 +5,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 from app.models import *
+from bootstrap_datepicker.widgets import DatePicker
 
 class agregarFallaForm(forms.ModelForm):
 
@@ -132,4 +133,13 @@ class RegisterOrdenForm(forms.ModelForm):
 
         class Meta:
             model = Orden_Reparacion
-            fields = ('falla','tecnico_asignado','estado')
+            fecha = forms.DateField(
+                widget=DatePicker(
+                    options={
+                        "format": "mm/dd/yyyy",
+                        "autoclose": True
+                    }
+                )
+            )
+            fields = ('falla','demandante','fecha','tecnico_asignado','estado')
+            

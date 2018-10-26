@@ -1,7 +1,7 @@
 from django.db import models
-
 from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
+import datetime
 
 class Menu(models.Model):
     nombre = models.CharField(max_length=35)
@@ -126,6 +126,8 @@ class Grupo_Luminaria(models.Model):
     administrador = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)
     def __str__(self):
         return "{0} (admin = {1})".format(self.nombre, self.administrador.__str__())
+    
+    luminaras_led = models.ManyToManyField(Luminaria_LED)
 
 class Nodo_LED_Grupo_Luminaria(models.Model):
     nodo = models.ForeignKey(Nodo_LED, null = False,blank = False, on_delete=models.CASCADE)
@@ -177,7 +179,7 @@ class Falla(models.Model):
 class Orden_Reparacion(models.Model):
     falla = models.ForeignKey(Falla, null = False,blank = False, on_delete=models.CASCADE)
     demandante = models.ForeignKey(Usuario,related_name='%(class)s_requests_created', null = True,blank = False, on_delete=models.CASCADE)
-    fecha = models.DateField
+    fecha = models.DateField(default=datetime.date.today, blank=False)
     tecnico_asignado = models.ForeignKey(Usuario, null = True,blank = False, on_delete=models.CASCADE)
     estados_fallas = (('prt','Pendiente de revision tecnica'), 
                       ('pcf','Pendiente de confirmacion tecnica'), 
@@ -186,7 +188,7 @@ class Orden_Reparacion(models.Model):
                       ('tcs','Ticket cerrado sin aprobacion'))
     estado = models.CharField(max_length= 3, choices=estados_fallas, default='prt')
     def __str__(self):
-        return "{0} (tec:{1}) (estado:{2})".format(self.falla,self.demandante,self.tecnico_asignado,self.estado)
+        return "{0} {1}(tec:{2}) (estado:{3})".format(self.falla,self.demandante,self.tecnico_asignado,self.estado)
     
 class Observaciones_Orden_Reparacion(models.Model):
     orden = models.ForeignKey(Orden_Reparacion, null = False,blank = False, on_delete=models.CASCADE)
