@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'compressor',
     'app',
     'widget_tweaks',
+    'django_cron',
 ]
 
 MIDDLEWARE = [ 
@@ -149,3 +150,15 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = '/'
 
 APPEND_SLASH=False
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'enjeidevelopment@gmail.com'
+EMAIL_HOST_PASSWORD = 'Teco_2009'
+
+CRON_CLASSES = [
+    'my_app.cron.MyCronJob'
+    # ...
+]
