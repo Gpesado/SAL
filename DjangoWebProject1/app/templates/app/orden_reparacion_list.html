@@ -1,18 +1,15 @@
 ﻿{% extends 'app/base.html' %}
-
 {% load static %}
-
 {% block javascript %}
   <script src="{% static 'app/scripts/books.js' %}"></script>
 {% endblock %}
-
 {% block content %}
-  <h1 class="page-header">Grupos Luminarias</h1>
+  <h1 class="page-header">Ordenes de reparacion</h1>
 
   <p>
-    <button type="button" class="btn btn-primary js-create-book" data-url="{% url 'grupoLuminaria_create' %}">
+    <button type="button" class="btn btn-primary js-create-book" data-url="{% url 'orden_create' %}">
       <span class="glyphicon glyphicon-plus"></span>
-      Nuevo Grupo Luminaria
+      Nueva Orden
     </button>
   </p>
 
@@ -20,39 +17,35 @@
     <thead>
       <tr>
         <th>#</th>
-        <th>Nombre</th>
-        <th>Administrador</th>
-        <th>Luminarias_led</th>
+        <th>Falla</th>
+        <th>Tecnico</th>
+        <th>Estado</th>        
         <th></th>
       </tr>
     </thead>
     <tbody>
-      {% for grupo in grupos %}
+      {% for orden in ordenes %}
   <tr>
-    <td>{{ grupo.pk }}</td>
-    <td>{{ grupo.nombre }}</td>
-    <td>{{ grupo.administrador }}</td>
-    <td>
-        {% for lum_led in grupo.luminarias_led.all %}
-          {{ lum_led.identificador }} <br> 
-        {% endfor %}
-    </td>
+    <td>{{ orden.pk }}</td>
+    <td>{{ orden.falla }}</td>
+    <td>{{ orden.tecnico_asignado }}</td>
+    <td>{{ orden.estado }}</td>
     <td style="width: 180px">
       <button type="button"
               class="btn btn-warning btn-sm js-update-book"
-              data-url="{% url 'grupoLuminaria_update' grupo.pk %}">
+              data-url="{% url 'orden_update' orden.pk %}">
         <span class="glyphicon glyphicon-pencil"></span> Editar
       </button>
       <button type="button"
               class="btn btn-danger btn-sm js-delete-book"
-              data-url="{% url 'grupoLuminaria_delete' grupo.pk %}">
+              data-url="{% url 'orden_delete' orden.pk %}">
         <span class="glyphicon glyphicon-trash"></span> Eliminar
       </button>
     </td>
   </tr>
 {% empty %}
   <tr>
-    <td colspan="8" class="text-center bg-warning">No existen grupos</td>
+    <td colspan="8" class="text-center bg-warning">No existen ordenes de reparacion</td>
   </tr>
 {% endfor %}
     </tbody>

@@ -1,7 +1,7 @@
 from rest_framework import permissions, viewsets, status, views
 from rest_framework.response import Response
-from app.models import Usuario
-from app.forms import RegisterUserForm
+from app.models import *
+from app.forms import *
 from app.permissions import IsAccountOwner
 from app.serializers import AccountSerializer
 from django.http import HttpRequest
@@ -24,10 +24,8 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
-from django.conf import settings
 
-
+# VENTANA INDIVIDUALES , POSIBLEMENTE SE DEBAN ELIMINAR AL ARMAR LAS VENTANAS INTEGRADORAS...
 def home(request):
     """Renders the home page."""
     assert isinstance(request, HttpRequest)
@@ -161,6 +159,7 @@ def agregarMarcaLED(request):
             form = agregarMarcaLEDForm()
         return render(request, 'app/agregarMarcaLED.html', {'form': form})
 
+# VENTANAS DE NAVEGACION DEPENDIENDO DEL ROL
 def vistaTecnico(request):
     return render(request,'app/vistaTecnico.html')
 
@@ -170,13 +169,13 @@ def vistaAdministracion(request):
 def vistaVisualizador(request):
     return render(request,'app/vistaVisualizador.html')
 
+# VENTANA GESTION DE USUARIOS
 def usuario_create(request):
     if request.method == 'POST':
         form = RegisterUserForm(request.POST)
     else:
         form = RegisterUserForm()
     return save_usuario_form(request, form, 'app/usuario_create.html')
-
 
 def usuario_update(request, pk):
     usuario = get_object_or_404(Usuario, pk=pk)
@@ -185,7 +184,6 @@ def usuario_update(request, pk):
     else:
         form = EditUserForm(instance=usuario)
     return save_usuario_form(request, form, 'app/usuario_update.html')
-
 
 def usuario_delete(request, pk):
     #usuario = get_object_or_404(Usuario, pk=pk)
@@ -204,8 +202,6 @@ def usuario_delete(request, pk):
         context = {'usuario': usuario}
         data['html_form'] = render_to_string('app/usuario_confirm_delete.html', context, request=request)
     return JsonResponse(data)
-
-
 
 def save_usuario_form(request, form, template_name):
     data = dict()
@@ -229,14 +225,12 @@ def save_usuario_form(request, form, template_name):
     data['html_form'] = render_to_string(template_name, context, request=request)
     return JsonResponse(data)
 
-
 class UsuarioListView(ListView):
     model = Usuario    
     context_object_name = 'usuarios'
     template_name = 'usuario_list.html'    
     paginate_by = 10
     queryset = Usuario.objects.all()  # Default: Model.objects.all()
-
 
 class UsuarioDelete(DeleteView):
     model = Usuario
@@ -247,7 +241,7 @@ class UsuarioDetailView(DetailView):
     model = Usuario
     template_name = 'app/usuario_update.html'
     
-
+# VENTANA ROLES
 def rol_create(request):
     if request.method == 'POST':
         form = RolForm(request.POST)
@@ -263,9 +257,6 @@ def rol_update(request, pk):
     else:
         form = RolForm(instance=rol)
     return save_rol_form(request, form, 'app/rol_update.html')
-
-
-
 
 def rol_delete(request, pk):
     rol = get_object_or_404(Rol, pk=pk)
@@ -299,7 +290,6 @@ def save_rol_form(request, form, template_name):
     data['html_form'] = render_to_string(template_name, context, request=request)
     return JsonResponse(data)
 
-
 class RolListView(ListView):
     model = Rol
     context_object_name = 'roles'
@@ -307,8 +297,7 @@ class RolListView(ListView):
     paginate_by = 10
     queryset = Rol.objects.all()  # Default: Model.objects.all()
 
-
-
+# VALIDACIONES DE USUARIOS
 class AccountViewSet(viewsets.ModelViewSet):
     lookup_field = 'username'
     queryset = Usuario.objects.all()
@@ -354,19 +343,7 @@ def validateData(data):
             'message': 'Found existing Usuario with username: ' + str(username)
         }, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
-
-def grupoLuminaria_new(request):
-    if request.method == "POST":
-            form = RegisterGrupoLuminariaForm(request.POST)
-            if form.is_valid():
-                usuario = form.save(commit=False)
-                
-                usuario.save()
-                return redirect('grupoLuminaria_update', pk=usuario.pk)
-    else:
-        form = RegisterGrupoLuminariaForm()
-    return render(request, 'app/grupo_luminaria_create.html', {'form': form})
-
+# VENTANA GRUPO DE LUMINARIA
 def grupoLuminaria_create(request):
     if request.method == 'POST':
         form = RegisterGrupoLuminariaForm(request.POST)
@@ -375,20 +352,28 @@ def grupoLuminaria_create(request):
     return save_grupoLuminaria_form(request, form, 'app/grupo_luminaria_create.html')
 
 def grupoLuminaria_update(request, pk):
-    usuario = get_object_or_404(Grupo_Luminaria, pk=pk)
+    grupo = get_object_or_404(Grupo_Luminaria, pk=pk)
     if request.method == 'POST':
-        form = RegisterGrupoLuminariaForm(request.POST, instance=usuario)
+        form = RegisterGrupoLuminariaForm(request.POST, instance=grupo)
     else:
-        form = RegisterGrupoLuminariaForm(instance=usuario)
+        form = RegisterGrupoLuminariaForm(instance=grupo)
     return save_grupoLuminaria_form(request, form, 'app/grupo_luminaria_update.html')
 
 def grupoLuminaria_delete(request, pk, template_name='app/grupo_luminaria_confirm_delete.html'):
-    usuario= get_object_or_404(Grupo_Luminaria, pk=pk)    
-    if request.method=='POST':
-        usuario.is_active=False
-        usuario.save()
-        return redirect('grupoLuminaria')
-    return render(request, template_name, {'object':usuario})
+    grupo = get_object_or_404(Grupo_Luminaria, pk=pk)
+    data = dict()
+    if request.method == 'POST':
+        
+        grupo.delete()
+        data['form_is_valid'] = True
+        grupos = Grupo_Luminaria.objects.all()
+        data['html_grupo_list'] = render_to_string('app/grupo_luminaria_list.html', {
+            'app': grupos
+        })
+    else:
+        context = {'grupo': grupo}
+        data['html_form'] = render_to_string('app/grupo_luminaria_confirm_delete.html', context, request=request)
+    return JsonResponse(data)
 
 def save_grupoLuminaria_form(request, form, template_name):
     data = dict()
@@ -396,9 +381,9 @@ def save_grupoLuminaria_form(request, form, template_name):
         if form.is_valid():
             form.save()
             data['form_is_valid'] = True
-            books = Grupo_Luminaria.objects.all()
-            data['html_book_list'] = render_to_string('app/grupo_luminaria.html', {
-                'grupoLuminaria': books
+            grupos = Grupo_Luminaria.objects.all()
+            data['html_grupo_list'] = render_to_string('app/grupo_luminaria_list.html', {
+                'app': grupos
             })
         else:
             data['form_is_valid'] = False
@@ -408,26 +393,63 @@ def save_grupoLuminaria_form(request, form, template_name):
 
 class GrupoLuminariaListView(ListView):
     model = Grupo_Luminaria    
-    context_object_name = 'grupoLuminarias'
+    context_object_name = 'grupos'
     template_name = 'grupo_luminaria_list.html'    
     paginate_by = 10
     queryset = Grupo_Luminaria.objects.all()  # Default: Model.objects.all()
 
-    
-class GrupoLuminariaDetailView(DetailView):
-    model = Grupo_Luminaria
-    template_name = 'app/grupo_luminaria_edit.html'
+# VENTANA ORDENES DE REPARACION
+def orden_create(request):
+    if request.method == 'POST':
+        form = RegisterOrdenForm(request.POST)
+    else:
+        form = RegisterOrdenForm()
+    return save_orden_form(request, form, 'app/orden_create.html')
 
-class GrupoLuminariaDelete(DeleteView):
-    model = Grupo_Luminaria
-    
-    success_url = reverse_lazy('grupoLuminaria')   
+def orden_update(request, pk):
+    orden = get_object_or_404(Orden_Reparacion, pk=pk)
+    if request.method == 'POST':
+        form = RegisterOrdenForm(request.POST, instance=orden)
+    else:
+        form = RegisterOrdenForm(instance=orden)
+    return save_orden_form(request, form, 'app/orden_update.html')
 
+def orden_delete(request, pk, template_name='app/orden_confirm_delete.html'):
+    orden = get_object_or_404(Orden_Reparacion, pk=pk)
+    data = dict()
+    if request.method == 'POST':
+        
+        orden.delete()
+        data['form_is_valid'] = True
+        ordenes = Orden_Reparacion.objects.all()
+        data['html_orden_list'] = render_to_string('app/orden_list.html', {
+            'app': ordenes
+        })
+    else:
+        context = {'orden': orden}
+        data['html_form'] = render_to_string('app/orden_confirm_delete.html', context, request=request)
+    return JsonResponse(data)
 
-def email(request):
-    subject = 'Thank you for registering to our site'
-    message = ' it  means a world to us '
-    email_from = settings.EMAIL_HOST_USER
-    recipient_list = ['receiver@gmail.com',]
-    send_mail( subject, message, email_from, recipient_list )
-    return redirect('redirect to a new page')
+def save_orden_form(request, form, template_name):
+    data = dict()
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            data['form_is_valid'] = True
+            ordenes = Orden_Reparacion.objects.all()
+            data['html_orden_list'] = render_to_string('app/orden_list.html', {
+                'app': ordenes
+            })
+        else:
+            data['form_is_valid'] = False
+    context = {'form': form}
+    data['html_form'] = render_to_string(template_name, context, request=request)
+    return JsonResponse(data)
+
+#TODO: PORQUE SI LO TENGO COMO orden_list en el archivo html no me lo toma? ademas esto me afecta a mis redirreciones  
+class OrdenListView(ListView):
+    model = Orden_Reparacion    
+    context_object_name = 'ordenes'
+    template_name = 'orden_list.html'    
+    paginate_by = 10
+    queryset = Orden_Reparacion.objects.all()  # Default: Model.objects.all()

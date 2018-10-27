@@ -1,15 +1,16 @@
-{% extends "app/layout.html" %}
-
-{% block content %}
-
-<h1>Eliminar Grupo</h1>
-
-<p>Seguro desea eliminar al Grupo: {{ grupo.nombre }} (ADMIN: {{ grupo.administrador }})?</p>
-
-<form action="" method="POST">
+<form method="post" action="{% url 'grupoLuminaria_delete' grupo.id %}" class="js-book-delete-form">
   {% csrf_token %}
-  <input type="submit" action="" value="Si, eliminar." class="btn btn-default"/>
-    <a href="{% url 'grupoLuminarias' %}" class="btn btn-default">Cancelar</a>
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">Eliminar Grupo</h4>
+  </div>
+  <div class="modal-body">
+    <p class="lead">Seguro desea eliminar el grupo: <strong>{{ grupo.nombre }}</strong>?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+  </div>
 </form>
-
-{% endblock %}

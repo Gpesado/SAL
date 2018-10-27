@@ -3,7 +3,7 @@
     {% csrf_token %}
     <ul class="nav navbar-nav navbar-right">
         <li><span class="navbar-brand">Hola {{ user.username }}!</span></li>
-        <li><a href="{% url 'usuario_create' %}">Registrar Usuario</a></li>
+        <li><a href="{% url 'ordenes' %}">Ver Orden</a></li>
         <li><a href="{% url 'usuarios' %}">Ver Usuarios</a></li>
         <li><a href="{% url 'roles' %}">Ver Roles</a></li>
         <li><a href="{% url 'vistaTecnico' %}">Vista de Tecnico</a></li>
