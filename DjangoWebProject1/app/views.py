@@ -229,7 +229,6 @@ class UsuarioListView(ListView):
     model = Usuario    
     context_object_name = 'usuarios'
     template_name = 'usuario_list.html'    
-    paginate_by = 10
     queryset = Usuario.objects.all()  # Default: Model.objects.all()
 
 class UsuarioDelete(DeleteView):
