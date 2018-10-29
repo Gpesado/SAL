@@ -170,6 +170,17 @@ class Falla(models.Model):
     def __str__(self):
         return "{0} ({1})".format(self.nombre,self.grado_criticidad)
 
+    #INCIDENTES
+class Incidente(models.Model):
+    falla = models.ForeignKey(Falla, null = False,blank = False, on_delete=models.CASCADE)
+    fecha = models.DateField(default=datetime.date.today, blank=False)
+    luminaria = models.ForeignKey(Luminaria_LED, null = False,blank = False, on_delete=models.CASCADE)
+    estado_incidente = (('a','Arreglado'), ('e','En reparacion'), ('p','Pendiente de Reparacion'))
+    estado = models.CharField(max_length=1, choices=estado_incidente, default='p')
+    relevador = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)
+    def __str__(self):
+        return "{2} (F: {0}/{1}{3})".format(self.falla,self.fecha,self.luminaria,self.estado)
+
     #ORDEN_REPARACION
 class Orden_Reparacion(models.Model):
     falla = models.ForeignKey(Falla, null = False,blank = False, on_delete=models.CASCADE)

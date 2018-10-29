@@ -178,4 +178,10 @@ class RegisterBalastroForm(forms.ModelForm):
 
         class Meta:
             model = Balastro
-            fields = ('modelo', 'fabricante')    
+            fields = ('modelo', 'fabricante')   
+            
+class RegisterIncidenteForm(forms.ModelForm):
+
+        class Meta:
+            model = Incidente
+            fields = ('falla', 'fecha','luminaria', 'estado','relevador')

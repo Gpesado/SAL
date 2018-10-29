@@ -955,7 +955,7 @@ def balastro_create(request):
         form = RegisterBalastroForm(request.POST)
     else:
         form = RegisterBalastroForm()
-    return save_nodonoled_form(request, form, 'app/balastro_create.html')
+    return save_balastro_form(request, form, 'app/balastro_create.html')
 
 def balastro_update(request, pk):
     balastro = get_object_or_404(Balastro, pk=pk)
@@ -1003,3 +1003,58 @@ class balastroListView(ListView):
     template_name = 'balastro_list.html'    
     paginate_by = 10
     queryset = Balastro.objects.all()  # Default: Model.objects.all()
+
+    # Incidentes
+def incidente_create(request):
+    if request.method == 'POST':
+        form = RegisterIncidenteForm(request.POST)
+    else:
+        form = RegisterIncidenteForm()
+    return save_incidente_form(request, form, 'app/incidente_create.html')
+
+def incidente_update(request, pk):
+    incidente = get_object_or_404(Incidente, pk=pk)
+    if request.method == 'POST':
+        form = RegisterIncidenteForm(request.POST, instance=incidente)
+    else:
+        form = RegisterIncidenteForm(instance=incidente)
+    return save_incidente_form(request, form, 'app/incidente_update.html')
+
+def incidente_delete(request, pk, template_name='app/incidente_confirm_delete.html'):
+    incidente = get_object_or_404(Incidente, pk=pk)
+    data = dict()
+    if request.method == 'POST':
+        
+        incidente.delete()
+        data['form_is_valid'] = True
+        incidentes = Incidente.objects.all()
+        data['html_incidente_list'] = render_to_string('app/incidente_list.html', {
+            'app': incidentes
+        })
+    else:
+        context = {'incidente': incidente}
+        data['html_form'] = render_to_string('app/incidente_confirm_delete.html', context, request=request)
+    return JsonResponse(data)
+
+def save_incidente_form(request, form, template_name):
+    data = dict()
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            data['form_is_valid'] = True
+            incidentes = Incidente.objects.all()
+            data['html_incidente_list'] = render_to_string('app/incidente_list.html', {
+                'app': incidentes
+            })
+        else:
+            data['form_is_valid'] = False
+    context = {'form': form}
+    data['html_form'] = render_to_string(template_name, context, request=request)
+    return JsonResponse(data)
+
+class incidenteListView(ListView):
+    model = Incidente    
+    context_object_name = 'incidentes'
+    template_name = 'incidente_list.html'    
+    paginate_by = 10
+    queryset = Incidente.objects.all()  # Default: Model.objects.all()

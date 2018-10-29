@@ -1,0 +1,75 @@
+﻿{% extends 'app/base.html' %}
+{% load static %}
+{% block javascript %}
+
+<script src="{% static 'app/scripts/books.js' %}"></script>
+  
+{% endblock %}
+{% block content %}
+  <h1 class="page-header">Incidentes</h1>
+  <p>
+    <button type="button" class="btn btn-primary js-create-book" data-url="{% url 'incidente_create' %}">
+      <span class="glyphicon glyphicon-plus"></span>
+      Nuevo Incidente
+    </button>
+  </p>
+  <table class="table" id="book-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>falla</th>
+        <th>fecha</th>
+        <th>luminaria</th>
+        <th>estado</th>
+        <th>relevador</th>
+          <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for incidente in incidentes %}
+  <tr>
+    <td>{{ incidente.pk }}</td>
+    <td>{{ incidente.falla }}</td>
+    <td>{{ incidente.fecha }}</td>
+    <td>{{ incidente.luminaria }}</td>
+    <td>{{ incidente.estado }}</td>
+    <td>{{ incidente.relevador }}</td>
+    <td style="width: 180px">
+      <button type="button"
+              class="btn btn-warning btn-sm js-update-book"
+              data-url="{% url 'incidente_update' incidente.pk %}">
+        <span class="glyphicon glyphicon-pencil"></span> Editar
+      </button>
+      <button type="button"
+              class="btn btn-danger btn-sm js-delete-book"
+              data-url="{% url 'incidente_delete' incidente.pk %}">
+        <span class="glyphicon glyphicon-trash"></span> Eliminar
+      </button>
+    </td>
+  </tr>
+{% empty %}
+  <tr>
+    <td colspan="8" class="text-center bg-warning">No existen Incidentes</td>
+  </tr>
+{% endfor %}
+    </tbody>
+      <tfoot>
+              <tr>
+          <th></th>
+          <th><input type="text" style="width:80px" placeholder="falla" /></th>
+          <th><input type="text" style="width:80px" placeholder="fecha" /></th>
+          <th><input type="text" style="width:80px" placeholder="luminaria" /></th>
+          <th><input type="text" style="width:80px" placeholder="estado" /></th>
+          <th><input type="text" style="width:80px" placeholder="relevador" /></th>
+              </tr>
+        </tfoot>
+  </table>
+
+  <div class="modal fade" id="modal-book">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+      </div>
+    </div>
+  </div>
+{% endblock %}

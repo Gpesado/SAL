@@ -130,6 +130,12 @@ urlpatterns = [
     url(r'^tecnico/balastro/(?P<pk>\d+)/update/$', app.views.balastro_update, name='balastro_update'),
     url(r'^tecnico/balastro$', app.views.balastroListView.as_view(), name='balastro'),
 
+      #urls Incidentes (CREATE/DELETE/LIST)
+    url(r'^tecnico/incidente/create$', app.views.incidente_create, name='incidente_create'),
+    url(r'^tecnico/incidente/(?P<pk>\d+)/delete/$', app.views.incidente_delete, name='incidente_delete'),
+    url(r'^tecnico/incidente/(?P<pk>\d+)/update/$', app.views.incidente_update, name='incidente_update'),
+    url(r'^tecnico/incidente$', app.views.incidenteListView.as_view(), name='incidente'),
+
 
     #urls Reset de Password
     #Login/Logout
