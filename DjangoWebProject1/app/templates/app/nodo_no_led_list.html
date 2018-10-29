@@ -1,0 +1,79 @@
+﻿{% extends 'app/base.html' %}
+{% load static %}
+{% block javascript %}
+
+<script src="{% static 'app/scripts/books.js' %}"></script>
+  
+{% endblock %}
+{% block content %}
+  <h1 class="page-header">Nodo no LED</h1>
+  <p>
+    <button type="button" class="btn btn-primary js-create-book" data-url="{% url 'nodonoled_create' %}">
+      <span class="glyphicon glyphicon-plus"></span>
+      Nuevo nodo no LED
+    </button>
+  </p>
+  <table class="table" id="book-table">
+    <thead>
+      <tr>           
+        <th>#</th>
+        <th>identificador</th>
+        <th>concentrador</th>
+        <th>potencia_esperada</th>
+        <th>potencia_real</th>
+        <th>fecha_ult_medicion</th>
+        <th>lampara</th>
+          <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for nodonoled in nodonoleds %}
+  <tr>
+    <td>{{ nodonoled.pk }}</td>
+    <td>{{ nodonoled.identificador }}</td>
+    <td>{{ nodonoled.es_concentrador }}</td>
+    <td>{{ nodonoled.potencia_esperada }}</td>
+    <td>{{ nodonoled.potencia_real }}</td>
+    <td>{{ nodonoled.fecha_ult_medicion }}</td>
+    <td>{{ nodonoled.lampara }}</td>
+    <td style="width: 180px">
+      <button type="button"
+              class="btn btn-warning btn-sm js-update-book"
+              data-url="{% url 'nodonoled_update' nodonoled.pk %}">
+        <span class="glyphicon glyphicon-pencil"></span> Editar
+      </button>
+      <button type="button"
+              class="btn btn-danger btn-sm js-delete-book"
+              data-url="{% url 'nodonoled_delete' nodonoled.pk %}">
+        <span class="glyphicon glyphicon-trash"></span> Eliminar
+      </button>
+    </td>
+  </tr>
+{% empty %}
+  <tr>
+    <td colspan="8" class="text-center bg-warning">No existen nodos</td>
+  </tr>
+{% endfor %}
+    </tbody>
+      <tfoot>
+              <tr>                  
+          <th></th>
+          <th><input type="text" style="width:80px" placeholder="identificador" /></th>
+          <th><input type="text" style="width:80px" placeholder="es_concentrador" /></th>
+          <th></th>
+          <th></th>
+          <th><input type="text" style="width:80px" placeholder="fecha_ult_medicion" /></th>
+          <th><input type="text" style="width:80px" placeholder="lampara" /></th>
+            <th></th>
+              </tr>
+        </tfoot>
+  </table>
+
+  <div class="modal fade" id="modal-book">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+      </div>
+    </div>
+  </div>
+{% endblock %}

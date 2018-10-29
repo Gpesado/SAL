@@ -48,6 +48,10 @@ class Usuario(AbstractUser):
     #FABRICANTES
 class Fabricante(models.Model):
     nombre = models.CharField(max_length=35)
+    origen = models.CharField(max_length=35, default='Argentina')
+    def __str__(self):
+        return "{0}".format(self.nombre)
+
     
     #Luminarias LED
 class Marca_Luminaria_LED(models.Model):
@@ -88,23 +92,30 @@ class Nodo_LED(models.Model):
 class Marca_Luminaria_NO_LED(models.Model):
     nombre = models.CharField(max_length= 35)
     fabricante = models.ManyToManyField(Fabricante)
-
+    def __str__(self):
+        return "{0}".format(self.nombre)
 
 class Modelo_Luminaria_NO_LED(models.Model):
     nombre = models.CharField(max_length= 35)
     marca = models.ForeignKey(Marca_Luminaria_NO_LED, null = False,blank = False, on_delete=models.CASCADE)
-   
+    def __str__(self):
+        return "{0} {1}".format(self.nombre,self.marca)
+
 class Balastro(models.Model):
     modelo = models.CharField(max_length= 35)
-    modeloLampara = models.ForeignKey(Fabricante, null = False,blank = False, on_delete=models.CASCADE)
+    fabricante = models.ForeignKey(Fabricante, null = False,blank = False, on_delete=models.CASCADE)
+    def __str__(self):
+        return "{0}".format(self.nombre)
 
 class Lampara_No_LED(models.Model):
+    identificador = models.CharField(max_length=35,default='LAMP_NLED_')
     modeloLampara = models.ForeignKey(Modelo_Luminaria_NO_LED, null = True,blank = False, on_delete=models.CASCADE)
-    es_incandecente = models.BooleanField
+    es_incandecente = models.BooleanField(default='False')
     balastro = models.ForeignKey(Balastro, null = True,blank = False, on_delete=models.CASCADE)
     ESTADO = (('f','En funcionamiento'), ('d','Con desperfectos'), ('r','En Reparacion'), ('d','Desconectada'))
     estado = models.CharField(max_length= 1, choices=ESTADO, default='d')
-
+    def __str__(self):
+      return "{2} ({0} MOD: {1})".format(self.estado,self.modeloLampara,self.identificador)
 class Nodo_NO_LED(models.Model):
     identificador = models.CharField(max_length=35,default='N_NLED_')
     es_concentrador = models.BooleanField(default='False')

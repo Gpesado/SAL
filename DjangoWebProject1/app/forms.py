@@ -118,4 +118,64 @@ class RegisterOrdenForm(forms.ModelForm):
                 )
             )
             fields = ('falla','demandante','fecha','tecnico_asignado','estado')
+
+#NUEVOS NUEVOS NUEVOSNUEVOS NUEVOS NUEVOSNUEVOS NUEVOS NUEVOSNUEVOS NUEVOS NUEVOSNUEVOS NUEVOS NUEVOSNUEVOS NUEVOS NUEVOS
+class RegisterFabricanteForm(forms.ModelForm):
+
+        class Meta:
+            model = Fabricante
+            fields = ('nombre','origen')
             
+class RegisterLuminarialedForm(forms.ModelForm):
+
+        class Meta:
+            model = Luminaria_LED
+            fields = ('identificador', 'modeloLampara','estado')
+            
+class RegisterLuminarianoledForm(forms.ModelForm):
+
+        class Meta:
+            model = Lampara_No_LED
+            fields = ('identificador','modeloLampara', 'es_incandecente','balastro','estado')
+            
+class RegisterMarcaledForm(forms.ModelForm):
+
+        class Meta:
+            model = Marca_Luminaria_LED
+            fields = ('nombre', 'fabricante')
+            
+class RegisterMarcanoledForm(forms.ModelForm):
+
+        class Meta:
+            model = Marca_Luminaria_NO_LED
+            fields = ('nombre', 'fabricante')
+            
+class RegisterModeloledForm(forms.ModelForm):
+
+        class Meta:
+            model = Modelo_Luminaria_LED
+            fields = ('nombre', 'marca')
+            
+class RegisterModelonoledForm(forms.ModelForm):
+
+        class Meta:
+            model = Modelo_Luminaria_NO_LED
+            fields = ('nombre', 'marca')
+            
+class RegisterNodoledForm(forms.ModelForm):
+
+        class Meta:
+            model = Nodo_LED
+            fields = ('identificador', 'es_concentrador','potencia_esperada','potencia_real','fecha_ult_medicion','lampara')
+            
+class RegisterNodonoledForm(forms.ModelForm):
+
+        class Meta:
+            model = Nodo_NO_LED
+            fields = ('identificador', 'es_concentrador','potencia_esperada','potencia_real','fecha_ult_medicion','lampara')    
+
+class RegisterBalastroForm(forms.ModelForm):
+
+        class Meta:
+            model = Balastro
+            fields = ('modelo', 'fabricante')    

@@ -1,0 +1,75 @@
+﻿{% extends 'app/base.html' %}
+{% load static %}
+{% block javascript %}
+
+<script src="{% static 'app/scripts/books.js' %}"></script>
+  
+{% endblock %}
+{% block content %}
+  <h1 class="page-header">Luminaria no LED</h1>
+  <p>
+    <button type="button" class="btn btn-primary js-create-book" data-url="{% url 'luminarianoled_create' %}">
+      <span class="glyphicon glyphicon-plus"></span>
+      Nueva luminaria no led
+    </button>
+  </p>
+  <table class="table" id="book-table">
+    <thead>           
+      <tr>
+        <th>#</th>
+        <th>Identificador</th>
+        <th>ModeloLampara</th>
+        <th>Incandecente?</th>
+        <th>Balastro</th>
+        <th>Estado</th>
+          <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for luminarianoled in luminarianoleds %}
+  <tr>
+    <td>{{ luminarianoled.pk }}</td>
+    <td>{{ luminarianoled.identificador }}</td>
+    <td>{{ luminarianoled.modeloLampara }}</td>
+    <td>{{ luminarianoled.es_incandecente }}</td>
+    <td>{{ luminarianoled.balastro }}</td>
+    <td>{{ luminarianoled.estado }}</td>
+    <td style="width: 180px">
+      <button type="button"
+              class="btn btn-warning btn-sm js-update-book"
+              data-url="{% url 'luminarianoled_update' luminarianoled.pk %}">
+        <span class="glyphicon glyphicon-pencil"></span> Editar
+      </button>
+      <button type="button"
+              class="btn btn-danger btn-sm js-delete-book"
+              data-url="{% url 'luminarianoled_delete' luminarianoled.pk %}">
+        <span class="glyphicon glyphicon-trash"></span> Eliminar
+      </button>
+    </td>
+  </tr>
+{% empty %}
+  <tr>
+    <td colspan="8" class="text-center bg-warning">No existen luminarias</td>
+  </tr>
+{% endfor %}
+    </tbody>
+      <tfoot>
+              <tr>
+            <th></th>
+          <th><input type="text" style="width:80px" placeholder="Identificador" /></th>
+          <th><input type="text" style="width:80px" placeholder="ModeloLampara" /></th>
+          <th><input type="text" style="width:80px" placeholder="Incandecente" /></th>
+          <th><input type="text" style="width:80px" placeholder="Balastro" /></th>
+          <th><input type="text" style="width:80px" placeholder="Estado" /></th>
+              </tr>
+        </tfoot>
+  </table>
+
+  <div class="modal fade" id="modal-book">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+      </div>
+    </div>
+  </div>
+{% endblock %}

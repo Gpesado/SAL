@@ -1,0 +1,79 @@
+﻿{% extends 'app/base.html' %}
+{% load static %}
+{% block javascript %}
+
+<script src="{% static 'app/scripts/books.js' %}"></script>
+  
+{% endblock %}
+{% block content %}
+  <h1 class="page-header">Nodo LED</h1>
+  <p>
+    <button type="button" class="btn btn-primary js-create-book" data-url="{% url 'nodoled_create' %}">
+      <span class="glyphicon glyphicon-plus"></span>
+      Nuevo nodo LED
+    </button>
+  </p>
+  <table class="table" id="book-table">
+    <thead>
+      <tr>           
+        <th>#</th>
+        <th>identificador</th>
+        <th>concentrador</th>
+        <th>potencia_esperada</th>
+        <th>potencia_real</th>
+        <th>fecha_ult_medicion</th>
+        <th>lampara</th>
+          <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for nodoled in nodoleds %}
+  <tr>
+    <td>{{ nodoled.pk }}</td>
+    <td>{{ nodoled.identificador }}</td>
+    <td>{{ nodoled.es_concentrador }}</td>
+    <td>{{ nodoled.potencia_esperada }}</td>
+    <td>{{ nodoled.potencia_real }}</td>
+    <td>{{ nodoled.fecha_ult_medicion }}</td>
+    <td>{{ nodoled.lampara }}</td>
+    <td style="width: 180px">
+      <button type="button"
+              class="btn btn-warning btn-sm js-update-book"
+              data-url="{% url 'nodoled_update' nodoled.pk %}">
+        <span class="glyphicon glyphicon-pencil"></span> Editar
+      </button>
+      <button type="button"
+              class="btn btn-danger btn-sm js-delete-book"
+              data-url="{% url 'nodoled_delete' nodoled.pk %}">
+        <span class="glyphicon glyphicon-trash"></span> Eliminar
+      </button>
+    </td>
+  </tr>
+{% empty %}
+  <tr>
+    <td colspan="8" class="text-center bg-warning">No existen nodos</td>
+  </tr>
+{% endfor %}
+    </tbody>
+      <tfoot>
+              <tr>                  
+          <th></th>
+          <th><input type="text" style="width:80px" placeholder="identificador" /></th>
+          <th><input type="text" style="width:80px" placeholder="es_concentrador" /></th>
+          <th></th>
+          <th></th>
+          <th><input type="text" style="width:80px" placeholder="fecha_ult_medicion" /></th>
+          <th><input type="text" style="width:80px" placeholder="lampara" /></th>
+            <th></th>
+              </tr>
+        </tfoot>
+  </table>
+
+  <div class="modal fade" id="modal-book">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+      </div>
+    </div>
+  </div>
+{% endblock %}

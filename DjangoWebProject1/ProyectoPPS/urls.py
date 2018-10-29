@@ -70,6 +70,67 @@ urlpatterns = [
     url(r'^ordenes/(?P<pk>\d+)/update/$', app.views.orden_update, name='orden_update'),
     url(r'^ordenes$', app.views.OrdenListView.as_view(), name='ordenes'),
     
+      #urls fabricante (CREATE/DELETE/LIST)
+    url(r'^tecnico/fabricante/create$', app.views.fabricante_create, name='fabricante_create'),
+    url(r'^tecnico/fabricante/(?P<pk>\d+)/delete/$', app.views.fabricante_delete, name='fabricante_delete'),
+    url(r'^tecnico/fabricante/(?P<pk>\d+)/update/$', app.views.fabricante_update, name='fabricante_update'),
+    url(r'^tecnico/fabricante$', app.views.fabricanteListView.as_view(), name='fabricante'),
+    
+      #urls luminarialed (CREATE/DELETE/LIST)
+    url(r'^tecnico/luminarialed/create$', app.views.luminarialed_create, name='luminarialed_create'),
+    url(r'^tecnico/luminarialed/(?P<pk>\d+)/delete/$', app.views.luminarialed_delete, name='luminarialed_delete'),
+    url(r'^tecnico/luminarialed/(?P<pk>\d+)/update/$', app.views.luminarialed_update, name='luminarialed_update'),
+    url(r'^tecnico/luminarialed$', app.views.luminarialedListView.as_view(), name='luminarialed'),
+      
+      #urls luminarianoled (CREATE/DELETE/LIST)
+    url(r'^tecnico/luminarianoled/create$', app.views.luminarianoled_create, name='luminarianoled_create'),
+    url(r'^tecnico/luminarianoled/(?P<pk>\d+)/delete/$', app.views.luminarianoled_delete, name='luminarianoled_delete'),
+    url(r'^tecnico/luminarianoled/(?P<pk>\d+)/update/$', app.views.luminarianoled_update, name='luminarianoled_update'),
+    url(r'^tecnico/luminarianoled$', app.views.luminarianoledListView.as_view(), name='luminarianoled'),
+      
+      #urls marcaled (CREATE/DELETE/LIST)
+    url(r'^tecnico/marcaled/create$', app.views.marcaled_create, name='marcaled_create'),
+    url(r'^tecnico/marcaled/(?P<pk>\d+)/delete/$', app.views.marcaled_delete, name='marcaled_delete'),
+    url(r'^tecnico/marcaled/(?P<pk>\d+)/update/$', app.views.marcaled_update, name='marcaled_update'),
+    url(r'^tecnico/marcaled$', app.views.marcaledListView.as_view(), name='marcaled'),
+    
+      #urls marcanoled (CREATE/DELETE/LIST)
+    url(r'^tecnico/marcanoled/create$', app.views.marcanoled_create, name='marcanoled_create'),
+    url(r'^tecnico/marcanoled/(?P<pk>\d+)/delete/$', app.views.marcanoled_delete, name='marcanoled_delete'),
+    url(r'^tecnico/marcanoled/(?P<pk>\d+)/update/$', app.views.marcanoled_update, name='marcanoled_update'),
+    url(r'^tecnico/marcanoled$', app.views.marcanoledListView.as_view(), name='marcanoled'),
+      
+      #urls modeloled (CREATE/DELETE/LIST)
+    url(r'^tecnico/modeloled/create$', app.views.modeloled_create, name='modeloled_create'),
+    url(r'^tecnico/modeloled/(?P<pk>\d+)/delete/$', app.views.modeloled_delete, name='modeloled_delete'),
+    url(r'^tecnico/modeloled/(?P<pk>\d+)/update/$', app.views.modeloled_update, name='modeloled_update'),
+    url(r'^tecnico/modeloled$', app.views.modeloledListView.as_view(), name='modeloled'),
+      
+      #urls modelonoled (CREATE/DELETE/LIST)
+    url(r'^tecnico/modelonoled/create$', app.views.modelonoled_create, name='modelonoled_create'),
+    url(r'^tecnico/modelonoled/(?P<pk>\d+)/delete/$', app.views.modelonoled_delete, name='modelonoled_delete'),
+    url(r'^tecnico/modelonoled/(?P<pk>\d+)/update/$', app.views.modelonoled_update, name='modelonoled_update'),
+    url(r'^tecnico/modelonoled$', app.views.modelonoledListView.as_view(), name='modelonoled'),
+
+        #urls nodoled (CREATE/DELETE/LIST)
+    url(r'^tecnico/nodoled/create$', app.views.nodoled_create, name='nodoled_create'),
+    url(r'^tecnico/nodoled/(?P<pk>\d+)/delete/$', app.views.nodoled_delete, name='nodoled_delete'),
+    url(r'^tecnico/nodoled/(?P<pk>\d+)/update/$', app.views.nodoled_update, name='nodoled_update'),
+    url(r'^tecnico/nodoled$', app.views.nodoledListView.as_view(), name='nodoled'),
+    
+      #urls nodonoled (CREATE/DELETE/LIST)
+    url(r'^tecnico/nodonoled/create$', app.views.nodonoled_create, name='nodonoled_create'),
+    url(r'^tecnico/nodonoled/(?P<pk>\d+)/delete/$', app.views.nodonoled_delete, name='nodonoled_delete'),
+    url(r'^tecnico/nodonoled/(?P<pk>\d+)/update/$', app.views.nodonoled_update, name='nodonoled_update'),
+    url(r'^tecnico/nodonoled$', app.views.nodonoledListView.as_view(), name='nodonoled'),
+      
+      #urls balastro (CREATE/DELETE/LIST)
+    url(r'^tecnico/balastro/create$', app.views.balastro_create, name='balastro_create'),
+    url(r'^tecnico/balastro/(?P<pk>\d+)/delete/$', app.views.balastro_delete, name='balastro_delete'),
+    url(r'^tecnico/balastro/(?P<pk>\d+)/update/$', app.views.balastro_update, name='balastro_update'),
+    url(r'^tecnico/balastro$', app.views.balastroListView.as_view(), name='balastro'),
+
+
     #urls Reset de Password
     #Login/Logout
     url(r'^tecnico/agregarFalla/$', app.views.agregarFalla, name='agregarFalla'),
@@ -84,7 +145,7 @@ urlpatterns = [
     url(r'^administracion/agregarModeloLED/$', app.views.agregarModeloLED, name='agregarModeloLED'),
     url(r'^administracion/agregarMarcaLED/$', app.views.agregarMarcaLED, name='agregarMarcaLED'),
     
-    url(r'^tecnico/$', app.views.vistaTecnico, name='vistaTecnico'),
-    url(r'^administracion/$', app.views.vistaAdministracion, name='vistaAdministracion'),
-    url(r'^visualizador/$', app.views.vistaVisualizador, name='vistaVisualizador'),
+    url(r'^tecnico$', app.views.vistaTecnico, name='vistaTecnico'),
+    url(r'^administracion$', app.views.vistaAdministracion, name='vistaAdministracion'),
+    url(r'^visualizador$', app.views.vistaVisualizador, name='vistaVisualizador'),
 ]
