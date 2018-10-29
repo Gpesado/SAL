@@ -13,30 +13,6 @@ class agregarFallaForm(forms.ModelForm):
             model = Falla
             fields = ('nombre', 'descripcion','grado_criticidad') 
 
-class agregarGrupoForm(forms.ModelForm):
-
-        class Meta:
-            model = Grupo_Luminaria
-            fields = ('nombre', 'administrador','luminarias_led') 
-
-class agregar_nodo_luminaria_ledForm(forms.ModelForm):
-
-        class Meta:
-            model = Nodo_LED_Grupo_Luminaria
-            fields = ('nodo', 'grupo') 
-
-class agregar_observador_grupo_ledForm(forms.ModelForm):
-
-        class Meta:
-            model = Observador_Grupo_Luminaria
-            fields = ('observador', 'grupo')
-
-class agregar_tecnico_grupo_ledForm(forms.ModelForm):
-
-        class Meta:
-            model = Tecnico_Grupo_Luminaria
-            fields = ('tecnico', 'grupo') 
-
 class agregarOrdenReparacionForm(forms.ModelForm):
 
         class Meta:
@@ -53,7 +29,7 @@ class agregarNodo_LEDForm(forms.ModelForm):
 
         class Meta:
             model = Nodo_LED
-            fields = ('identificador','potencia','es_concentrador','lampara') 
+            fields = ('identificador','es_concentrador','potencia_esperada','potencia_real','fecha_ult_medicion','lampara')
 
 class agregarLuminaria_LEDForm(forms.ModelForm):
 
@@ -127,7 +103,7 @@ class RegisterGrupoLuminariaForm(forms.ModelForm):
 
         class Meta:
             model = Grupo_Luminaria
-            fields = ('nombre', 'administrador','luminarias_led')
+            fields = ('nombre', 'administrador','nodo_luminarias_led','nodo_luminarias_no_led','observadores','tecnicos')
             
 class RegisterOrdenForm(forms.ModelForm):
 
