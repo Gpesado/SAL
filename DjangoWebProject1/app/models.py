@@ -19,7 +19,6 @@ class Rol (models.Model):
 
 #LOGGING
 class Usuario(AbstractUser):    
-
     email = models.EmailField(verbose_name='Mail', unique=True)
     first_name = models.CharField(verbose_name='Nombre', max_length=30, blank=True)
     last_name = models.CharField(verbose_name='Apellido', max_length=30, blank=True)    
@@ -33,8 +32,6 @@ class Usuario(AbstractUser):
     def get_success_url(self):
         return reverse('usuarios')
 
-    
-
     def __str__(self):
         return "{0} {1} ({2})".format(self.first_name,self.last_name,self.username)
     
@@ -46,11 +43,6 @@ class Usuario(AbstractUser):
                 if menu.nombre == pagina:
                     return True
         return False
-    
-class Usuarios_has_rol(models.Model):
-    usuario = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)
-    rol = models.ForeignKey(Rol, null = False,blank = False, on_delete=models.CASCADE)
-
 
 #Luminarias
     #FABRICANTES
@@ -60,17 +52,15 @@ class Fabricante(models.Model):
     #Luminarias LED
 class Marca_Luminaria_LED(models.Model):
     nombre = models.CharField(max_length=35)
+    fabricante = models.ManyToManyField(Fabricante)
     
     def __str__(self):
         return "{0}".format(self.nombre)
-    
-class Marca_has_Fabricante_LED(models.Model):
-    marca = models.ForeignKey(Marca_Luminaria_LED, null = False,blank = False, on_delete=models.CASCADE)
-    fabricante = models.ForeignKey(Fabricante, null = False,blank = False, on_delete=models.CASCADE)
   
 class Modelo_Luminaria_LED(models.Model):
     nombre = models.CharField(max_length=35)
     marca = models.ForeignKey(Marca_Luminaria_LED, null = False,blank = False, on_delete=models.CASCADE)
+
     def __str__(self):
         return "{0} {1}".format(self.nombre,self.marca)
     
@@ -83,21 +73,22 @@ class Luminaria_LED(models.Model):
       return "{2} ({0} MOD: {1})".format(self.estado,self.modeloLampara,self.identificador)
       
 class Nodo_LED(models.Model):
-    identificador = models.CharField(max_length=35,default='NOD_LED_')
+    identificador = models.CharField(max_length=35,default='N_LED_')
     es_concentrador = models.BooleanField(default='False')
-    potencia = models.FloatField(null = False,blank = False)
+    potencia_esperada = models.FloatField(null = False,blank = False,default = 0)
+    potencia_real = models.FloatField(null = False,blank = False,default = 0)
+    fecha_ult_medicion = models.DateField(default = datetime.date.today, blank=False)
     lampara = models.ForeignKey(Luminaria_LED, null = True,blank = False, on_delete=models.CASCADE)
+
     def __str__(self):
-        return "{3} (LAMP = {0}POT = {1}) (CON = {2})".format(self.lampara.__str__(), self.potencia.__str__(), self.es_concentrador.__str__(),self.identificador)
+        return "{3} (LAMP = {0}POT = {1} / {4} ) (CON = {2})".format(self.lampara.__str__(), self.potencia_real.__str__(), self.es_concentrador.__str__(),self.identificador, self.potencia_esperada)
 
     
 #LUMINARIAS NO LED
 class Marca_Luminaria_NO_LED(models.Model):
     nombre = models.CharField(max_length= 35)
+    fabricante = models.ManyToManyField(Fabricante)
 
-class Marca_has_Fabricante_NO_LED(models.Model):
-    marca = models.ForeignKey(Marca_Luminaria_NO_LED, null = False,blank = False, on_delete=models.CASCADE)
-    fabricante = models.ForeignKey(Fabricante, null = False,blank = False, on_delete=models.CASCADE)
 
 class Modelo_Luminaria_NO_LED(models.Model):
     nombre = models.CharField(max_length= 35)
@@ -115,36 +106,29 @@ class Lampara_No_LED(models.Model):
     estado = models.CharField(max_length= 1, choices=ESTADO, default='d')
 
 class Nodo_NO_LED(models.Model):
-    id = models.UUIDField
-    es_concentrador = models.BooleanField
-    potencia = models.FloatField(null = False,blank = False)
-    lampara = models.ForeignKey(Lampara_No_LED, null = True,blank = False, on_delete=models.CASCADE)    
+    identificador = models.CharField(max_length=35,default='N_NLED_')
+    es_concentrador = models.BooleanField(default='False')
+    potencia_esperada = models.FloatField(null = False,blank = False,default = 0)
+    potencia_real = models.FloatField(null = False,blank = False,default = 0)
+    fecha_ult_medicion = models.DateField(default = datetime.date.today, blank=False)
+    lampara = models.ForeignKey(Lampara_No_LED, null = True,blank = False, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "{3} (LAMP = {0}POT = {1}) (CON = {2})".format(self.lampara.__str__(), self.potencia.__str__(), self.es_concentrador.__str__(),self.identificador)
 
 #GRUPOS LUMINARIAS
 class Grupo_Luminaria(models.Model):
-    nombre = models.CharField(max_length= 35)
+    nombre = models.CharField(max_length= 35 , null = False)
     administrador = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)
+    nodo_luminarias_led = models.ManyToManyField(Nodo_LED, blank=True)
+    nodo_luminarias_no_led = models.ManyToManyField(Nodo_NO_LED, blank=True)
+    observadores = models.ManyToManyField(Usuario, related_name='observadores', blank=True)
+    tecnicos = models.ManyToManyField(Usuario, related_name='tecnicos', blank=True)
+
     def __str__(self):
         return "{0} (admin = {1})".format(self.nombre, self.administrador.__str__())
     
-    luminarias_led = models.ManyToManyField(Luminaria_LED)
-
-class Nodo_LED_Grupo_Luminaria(models.Model):
-    nodo = models.ForeignKey(Nodo_LED, null = False,blank = False, on_delete=models.CASCADE)
-    grupo = models.ForeignKey(Grupo_Luminaria, null = False,blank = False, on_delete=models.CASCADE)
     
-class Nodo_NO_LED_Grupo_Luminaria(models.Model):
-    nodo = models.ForeignKey(Nodo_NO_LED, null = False,blank = False, on_delete=models.CASCADE)
-    grupo = models.ForeignKey(Grupo_Luminaria, null = False,blank = False, on_delete=models.CASCADE)
-    
-class Observador_Grupo_Luminaria(models.Model):
-    observador = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)
-    grupo = models.ForeignKey(Grupo_Luminaria, null = False,blank = False, on_delete=models.CASCADE)
-    
-class Tecnico_Grupo_Luminaria(models.Model):
-    tecnico = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)
-    grupo = models.ForeignKey(Grupo_Luminaria, null = False,blank = False, on_delete=models.CASCADE)
-
 #STOCK DE INSUMOS PARA REPARACIONES
 class Stock_Luminaria_LED(models.Model):
     item = models.ForeignKey(Modelo_Luminaria_LED, null = False,blank = False, on_delete=models.CASCADE)
@@ -192,6 +176,7 @@ class Orden_Reparacion(models.Model):
     
 class Observaciones_Orden_Reparacion(models.Model):
     orden = models.ForeignKey(Orden_Reparacion, null = False,blank = False, on_delete=models.CASCADE)
+    fecha = models.DateField(default=datetime.date.today, blank=False)
     descripcion = models.CharField(max_length=200)
     usuario = models.ForeignKey(Usuario, null = True,blank = False, on_delete=models.CASCADE)
     
