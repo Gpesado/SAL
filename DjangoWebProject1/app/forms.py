@@ -17,7 +17,7 @@ class agregarGrupoForm(forms.ModelForm):
 
         class Meta:
             model = Grupo_Luminaria
-            fields = ('nombre', 'administrador') 
+            fields = ('nombre', 'administrador','luminarias_led') 
 
 class agregar_nodo_luminaria_ledForm(forms.ModelForm):
 
@@ -127,7 +127,7 @@ class RegisterGrupoLuminariaForm(forms.ModelForm):
 
         class Meta:
             model = Grupo_Luminaria
-            fields = ('nombre', 'administrador')
+            fields = ('nombre', 'administrador','luminarias_led')
             
 class RegisterOrdenForm(forms.ModelForm):
 

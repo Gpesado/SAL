@@ -1,21 +1,78 @@
 ﻿{% extends 'app/base.html' %}
-
 {% load static %}
-
 {% block javascript %}
+
   <script src="{% static 'app/scripts/books.js' %}"></script>
-{% endblock %}
+  <script>
+    var editor; // use a global for the submit and return data rendering in the examples
+ 
+$(document).ready(function() {
+    editor = new $.fn.dataTable.Editor( {
+        ajax: "../php/staff.php",
+        table: "#book-table",
+        fields: [ {
+                label: "First name:",
+                name: "first_name"
+            }, {
+                label: "Last name:",
+                name: "last_name"
+            }, {
+                label: "Position:",
+                name: "position"
+            }, {
+                label: "Office:",
+                name: "office"
+            }, {
+                label: "Extension:",
+                name: "extn"
+            }, {
+                label: "Start date:",
+                name: "start_date",
+                type: 'datetime'
+            }, {
+                label: "Salary:",
+                name: "salary"
+            }
+        ]
+    } );
+ 
+    var table = $('#book-table').DataTable( {
+        lengthChange: false,
+        ajax: "../php/staff.php",
+        columns: [
+            { data: null, render: function ( data, type, row ) {
+                // Combine the first and last names into a single table field
+                return data.first_name+' '+data.last_name;
+            } },
+            { data: "position" },
+            { data: "office" },
+            { data: "extn" },
+            { data: "start_date" },
+            { data: "salary", render: $.fn.dataTable.render.number( ',', '.', 0, '$' ) }
+        ],
+        select: true
+    } );
+ 
+    // Display the buttons
+    new $.fn.dataTable.Buttons( table, [
+        { extend: "create", editor: editor },
+        { extend: "edit",   editor: editor },
+        { extend: "remove", editor: editor }
+    ] );
+ 
+    table.buttons().container()
+        .appendTo( $('.col-sm-6:eq(0)', table.table().container() ) );
+} );
 
-{% block content %}
+</script>
+
   <h1 class="page-header">Grupos Luminarias</h1>
-
   <p>
     <button type="button" class="btn btn-primary js-create-book" data-url="{% url 'grupoLuminaria_create' %}">
       <span class="glyphicon glyphicon-plus"></span>
       Nuevo Grupo Luminaria
     </button>
   </p>
-
   <table class="table" id="book-table">
     <thead>
       <tr>
@@ -56,28 +113,17 @@
   </tr>
 {% endfor %}
     </tbody>
+      <tfoot>
+        <tr>
+          <th>#</th>
+          <th>Nombre</th>
+          <th>Administrador</th>
+          <th>Luminarias_led</th>
+          <th></th>
+        </tr>
+        </tfoot>
   </table>
-{% if is_paginated %}
-  <ul class="pagination">
-    {% if page_obj.has_previous %}
-      <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
-    {% else %}
-      <li class="disabled"><span>&laquo;</span></li>
-    {% endif %}
-    {% for i in paginator.page_range %}
-      {% if page_obj.number == i %}
-        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-      {% else %}
-        <li><a href="?page={{ i }}">{{ i }}</a></li>
-      {% endif %}
-    {% endfor %}
-    {% if page_obj.has_next %}
-      <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
-    {% else %}
-      <li class="disabled"><span>&raquo;</span></li>
-    {% endif %}
-  </ul>
-{% endif %}
+
   <div class="modal fade" id="modal-book">
     <div class="modal-dialog">
       <div class="modal-content">
