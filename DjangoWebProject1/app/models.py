@@ -127,7 +127,7 @@ class Grupo_Luminaria(models.Model):
     def __str__(self):
         return "{0} (admin = {1})".format(self.nombre, self.administrador.__str__())
     
-    luminaras_led = models.ManyToManyField(Luminaria_LED)
+    luminarias_led = models.ManyToManyField(Luminaria_LED)
 
 class Nodo_LED_Grupo_Luminaria(models.Model):
     nodo = models.ForeignKey(Nodo_LED, null = False,blank = False, on_delete=models.CASCADE)
