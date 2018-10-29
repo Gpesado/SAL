@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'app',
     'widget_tweaks',
     'django_cron',
+    'django_celery_beat',
+
 ]
 
 MIDDLEWARE = [ 
@@ -162,3 +164,7 @@ CRON_CLASSES = [
     'my_app.cron.MyCronJob'
     # ...
 ]
+
+import djcelery
+djcelery.setup_loader()
+BROKER_URL = 'django://'
