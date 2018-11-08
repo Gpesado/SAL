@@ -1,0 +1,69 @@
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var latlng = new google.maps.LatLng(20,20);
+        var mapOptions = {
+            zoom: 12,
+            center: latlng,
+            mapTypeControl: false,
+            navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        map = new google.maps.Map($('.map')[0], mapOptions);
+    
+        var marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            draggable: true,
+            animation: google.maps.Animation.DROP,
+            title:"SOY UN EJEMPLO"
+        });
+        
+        {% for marcador in marcadores_grupos %}
+            latlng = new google.maps.LatLng("{{ marcador.lat }}", "{{ marcador.lng }}");
+            var marker2 = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            animation: google.maps.Animation.DROP,
+            title:"{{ marcador.nombre }}"
+            });  
+                {% for marcador_led in marcador.marcadoresLed.all %}
+                latlng = new google.maps.LatLng("{{ marcador_led.lat }}", "{{ marcador_led.lng }}");
+                var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+                var marker3 = new google.maps.Marker({
+                position: latlng,
+                map: map,
+                animation: google.maps.Animation.DROP,
+                icon: image,
+                title:"{{ marcador_led.nombre }}"
+                });
+                {% endfor %}
+                
+                {% for marcador_no_led in marcador.marcadoresNoLed.all %}
+                    latlng = new google.maps.LatLng("{{ marcador_no_led.lat }}", "{{ marcador_no_led.lng }}");
+                    new google.maps.Marker({
+                    position: latlng,
+                    map: map,
+                    animation: google.maps.Animation.DROP,
+                    title:"{{ marcador_no_led.nombre }}"
+                    });
+                {% endfor %}
+        {% endfor %}
+        // This event listener calls addMarker() when the map is clicked.
+        google.maps.event.addListener(map, 'click', function(event) {
+        addMarker(event.latLng, map);
+        });
+        // Adds a marker to the map.
+        function addMarker(location, map) {
+          // Add the marker at the clicked location, and add the next-available label
+          // from the array of alphabetical characters.
+          var marker = new google.maps.Marker({
+            position: location,
+            label: labels[labelIndex++ % labels.length],
+            map: map
+          });
+        }
+    });
+</script>
+<div class="map" style="width: 400px; height: 400px;"></div>

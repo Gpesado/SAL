@@ -136,6 +136,8 @@ urlpatterns = [
     url(r'^tecnico/incidente/(?P<pk>\d+)/update/$', app.views.incidente_update, name='incidente_update'),
     url(r'^tecnico/incidente$', app.views.incidenteListView.as_view(), name='incidente'),
 
+    #urls Mapas (CREATE/DELETE/LIST)
+    url(r'^visualizador/mapa_luminarias$', app.views.mapView.as_view(), name='mapa_luminarias'),
 
     #urls Reset de Password
     #Login/Logout

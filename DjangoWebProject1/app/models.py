@@ -105,7 +105,7 @@ class Balastro(models.Model):
     modelo = models.CharField(max_length= 35)
     fabricante = models.ForeignKey(Fabricante, null = False,blank = False, on_delete=models.CASCADE)
     def __str__(self):
-        return "{0}".format(self.nombre)
+        return "{0}".format(self.modelo)
 
 class Lampara_No_LED(models.Model):
     identificador = models.CharField(max_length=35,default='LAMP_NLED_')
@@ -237,3 +237,32 @@ class Notificacion_alerta(models.Model):
 class Personalizacion_Alerta(models.Model):
     alerta = models.ForeignKey(Alerta, null = False,blank = False, on_delete=models.CASCADE)
     personalizador = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE) 
+
+#MARCADOR LUMINARIAS
+class Marcador_Luminaria_Led(models.Model):
+    nombre = models.CharField(max_length= 35)
+    luminaria = models.ForeignKey(Luminaria_LED, null = False,blank = False, on_delete=models.CASCADE)
+    lat = models.CharField(max_length= 35)
+    lng = models.CharField(max_length= 35)
+
+    def __str__(self):
+        return "{0} L:{1}(cord:{2},{3})".format(self.nombre,self.luminaria,self.lat,self.lng)
+
+class Marcador_Luminaria_No_Led(models.Model):
+    nombre = models.CharField(max_length= 35)
+    luminaria = models.ForeignKey(Lampara_No_LED, null = False,blank = False, on_delete=models.CASCADE)
+    lat = models.CharField(max_length= 35)
+    lng = models.CharField(max_length= 35)
+
+    def __str__(self):
+        return "{0} L:{1}(cord:{2},{3})".format(self.nombre,self.luminaria,self.lat,self.lng)
+class Marcador_Grupo_Luminaria(models.Model):
+    nombre = models.CharField(max_length= 35)
+    grupo = models.ForeignKey(Grupo_Luminaria, null = False,blank = False, on_delete=models.CASCADE)
+    marcadoresLed = models.ManyToManyField(Marcador_Luminaria_Led, blank=True)
+    marcadoresNoLed = models.ManyToManyField(Marcador_Luminaria_No_Led, blank=True)
+    lat = models.CharField(max_length= 35)
+    lng = models.CharField(max_length= 35)
+    
+    def __str__(self):
+        return "{0} L:{1}(cord:{2},{3})".format(self.nombre,self.grupo,self.lat,self.lng)

@@ -7,7 +7,7 @@ from app.serializers import AccountSerializer
 from django.http import HttpRequest
 from django.template import RequestContext
 from datetime import datetime
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404, render_to_response
 from .forms import *
 from django.utils import timezone
 from django.views.generic.list import ListView
@@ -1058,3 +1058,10 @@ class incidenteListView(ListView):
     template_name = 'incidente_list.html'    
     paginate_by = 10
     queryset = Incidente.objects.all()  # Default: Model.objects.all()
+
+#Visualizador - ver mapa
+class mapView(ListView):
+    model = Marcador_Grupo_Luminaria    
+    context_object_name = 'marcadores_grupos'
+    template_name = 'home.html'
+    queryset = Marcador_Grupo_Luminaria.objects.all()  # Default: Model.objects.all()
