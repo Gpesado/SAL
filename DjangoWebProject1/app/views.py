@@ -1060,8 +1060,63 @@ class incidenteListView(ListView):
     queryset = Incidente.objects.all()  # Default: Model.objects.all()
 
 #Visualizador - ver mapa
-class mapView(ListView):
+class mapaView(ListView):
     model = Marcador_Grupo_Luminaria    
     context_object_name = 'marcadores_grupos'
-    template_name = 'home.html'
+    template_name = 'marcador_grupo_luminaria_list.html'
     queryset = Marcador_Grupo_Luminaria.objects.all()  # Default: Model.objects.all()
+
+class mapView(ListView):
+    model = Marcador_Luminaria_Led    
+    context_object_name = 'marcadores_lumLed'
+    template_name = 'app/marcador_luminaria_led_list.html'
+    queryset = Marcador_Luminaria_Led.objects.all()  # Default: Model.objects.all()
+'''
+def marcadorCreate(request, pk):
+    luminaria = get_object_or_404(Nodo_NO_LED, pk=pk)
+    if request.method == 'POST':
+        form = RegisterMarcadorLEDForm(request.POST, instance = luminaria)
+    else:
+        form = RegisterMarcadorLEDForm(instance = luminaria)  
+    return save_marcador_form(request, form, 'app/marcador_grupo_luminaria_list.html')
+
+def marcador_update(request, pk):
+    marcador = get_object_or_404(Marcador_Grupo_Luminaria, pk=pk)
+    if request.method == 'POST':
+        form = RegisterMarcadorForm(request.POST, instance=marcador)
+    else:
+        form = RegisterMarcadorForm(instance=marcador)
+    return save_marcador_form(request, form, 'app/marcador_update.html')
+
+def marcador_delete(request, pk, template_name='app/marcador_confirm_delete.html'):
+    marcador = get_object_or_404(Marcador_Grupo_Luminaria, pk=pk)
+    data = dict()
+    if request.method == 'POST':
+        
+        marcador.delete()
+        data['form_is_valid'] = True
+        marcadores = Marcador_Grupo_Luminaria.objects.all()
+        data['html_marcador_list'] = render_to_string('app/marcador_list.html', {
+            'app': marcadores
+        })
+    else:
+        context = {'marcador': marcador}
+        data['html_form'] = render_to_string('app/marcador_confirm_delete.html', context, request=request)
+    return JsonResponse(data)
+
+def save_marcador_form(request, form, template_name):
+    data = dict()
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            data['form_is_valid'] = True
+            marcadores = Marcador_Grupo_Luminaria.objects.all()
+            data['html_marcador_list'] = render_to_string('app/marcador_grupo_luminaria_list.html', {
+                'app': marcadores
+            })
+        else:
+            data['form_is_valid'] = False
+    context = {'form': form}
+    data['html_form'] = render_to_string(template_name, context, request=request)
+    return JsonResponse(data)
+'''

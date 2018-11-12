@@ -137,7 +137,9 @@ urlpatterns = [
     url(r'^tecnico/incidente$', app.views.incidenteListView.as_view(), name='incidente'),
 
     #urls Mapas (CREATE/DELETE/LIST)
-    url(r'^visualizador/mapa_luminarias$', app.views.mapView.as_view(), name='mapa_luminarias'),
+    url(r'^visualizador/mapa_luminarias$', app.views.mapaView.as_view(), name='mapa_luminarias'),
+    url(r'^visualizador/buscarMarcador$', app.views.mapView.as_view(), name='buscarMarcador'),
+   # url(r'^tecnico/luminarialed/marcadorCreate$', app.views.marcadorCreate, name='marcadorCreate'),
 
     #urls Reset de Password
     #Login/Logout

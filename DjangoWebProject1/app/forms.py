@@ -185,3 +185,8 @@ class RegisterIncidenteForm(forms.ModelForm):
         class Meta:
             model = Incidente
             fields = ('falla', 'fecha','luminaria', 'estado','relevador')
+
+class RegisterMarcadorLEDForm(forms.ModelForm):
+        class Meta:
+            model = Marcador_Luminaria_Led
+            fields = ('nombre', 'luminaria','lat','lng')

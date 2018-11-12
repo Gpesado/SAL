@@ -76,6 +76,7 @@ class Luminaria_LED(models.Model):
     def __str__(self):
       return "{2} ({0} MOD: {1})".format(self.estado,self.modeloLampara,self.identificador)
       
+      
 class Nodo_LED(models.Model):
     identificador = models.CharField(max_length=35,default='N_LED_')
     es_concentrador = models.BooleanField(default='False')

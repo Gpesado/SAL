@@ -165,6 +165,6 @@ CRON_CLASSES = [
     # ...
 ]
 
-import djcelery
-djcelery.setup_loader()
+#import djcelery
+#djcelery.setup_loader()
 BROKER_URL = 'django://'
