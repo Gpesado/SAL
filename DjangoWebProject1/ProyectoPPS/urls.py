@@ -1,5 +1,4 @@
 """django-angular URL Configuration
-
 The urlpatterns list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.10/topics/http/urls/
 Examples:
@@ -38,12 +37,13 @@ accounts_router = routers.NestedSimpleRouter(
     router, r'accounts', lookup='account'
 )
 
+task_pattern = r'(?P<task_id>[\w\d\-\.]+)'
 
 urlpatterns = [
 
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('', TemplateView.as_view(template_name='app/index.html'), name='home'),
+    path('', app.views.home, name='home'),
     url(r'^logout/$', LogoutView.as_view(), {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
     #urls Usuario (CREATE/DELETE/LIST)
     url(r'^usuario/create$', app.views.usuario_create, name='usuario_create'),
@@ -130,20 +130,29 @@ urlpatterns = [
     url(r'^tecnico/balastro/(?P<pk>\d+)/update/$', app.views.balastro_update, name='balastro_update'),
     url(r'^tecnico/balastro$', app.views.balastroListView.as_view(), name='balastro'),
 
+      #urls balastro (CREATE/DELETE/LIST)
+    url(r'^tecnico/alerta/create$', app.views.alerta_create, name='alerta_create'),
+    url(r'^tecnico/alerta/(?P<pk>\d+)/delete/$', app.views.alerta_delete, name='alerta_delete'),
+    url(r'^tecnico/alerta/(?P<pk>\d+)/update/$', app.views.alerta_update, name='alerta_update'),
+    url(r'^tecnico/alerta$', app.views.alertaListView.as_view(), name='alerta'),
+
+
+    #urls Mapas (CREATE/DELETE/LIST)    
+    url(r'^visualizador/mapa_luminarias$', app.views.mapaView.as_view(), name='mapa_luminarias'),
+    url(r'^visualizador/buscarMarcador$', app.views.mapView.as_view(), name='buscarMarcador'),
+   # url(r'^tecnico/luminarialed/marcadorCreate$', app.views.marcadorCreate, name='marcadorCreate'),
+
       #urls Incidentes (CREATE/DELETE/LIST)
     url(r'^tecnico/incidente/create$', app.views.incidente_create, name='incidente_create'),
     url(r'^tecnico/incidente/(?P<pk>\d+)/delete/$', app.views.incidente_delete, name='incidente_delete'),
     url(r'^tecnico/incidente/(?P<pk>\d+)/update/$', app.views.incidente_update, name='incidente_update'),
     url(r'^tecnico/incidente$', app.views.incidenteListView.as_view(), name='incidente'),
-
-    #urls Mapas (CREATE/DELETE/LIST)
-    url(r'^visualizador/mapa_luminarias$', app.views.mapaView.as_view(), name='mapa_luminarias'),
-    url(r'^visualizador/buscarMarcador$', app.views.mapView.as_view(), name='buscarMarcador'),
-   # url(r'^tecnico/luminarialed/marcadorCreate$', app.views.marcadorCreate, name='marcadorCreate'),
+    path('ajax/load_luminarias/', app.views.load_luminarias, name='ajax_load_luminarias'),  # <-- this one here
 
     #urls Reset de Password
     #Login/Logout
     url(r'^tecnico/agregarFalla/$', app.views.agregarFalla, name='agregarFalla'),
+    url(r'^tecnico/falla/create$', app.views.falla_create, name='falla_create'),
     url(r'^tecnico/agregarOrdenReparacion/$', app.views.agregarOrdenReparacion, name='agregarOrdenReparacion'),
     url(r'^tecnico/agregarObservacion/$', app.views.observacion_Orden_Reparacion, name='observacion_Orden_Reparacion'),
     url(r'^administracion/agregarGrupo/$', app.views.agregarGrupo, name='agregarGrupo'),
@@ -155,7 +164,15 @@ urlpatterns = [
     url(r'^administracion/agregarModeloLED/$', app.views.agregarModeloLED, name='agregarModeloLED'),
     url(r'^administracion/agregarMarcaLED/$', app.views.agregarMarcaLED, name='agregarMarcaLED'),
     
+    url(r'^tecnico/configuracion_luminaria/create$', app.views.configuracion_luminaria_create, name='configuracion_luminaria_create'),
+    url(r'^tecnico/configuracion_luminaria/(?P<pk>\d+)/delete/$', app.views.configuracion_luminaria_delete, name='configuracion_luminaria_delete'),
+    url(r'^tecnico/configuracion_luminaria/(?P<pk>\d+)/update/$', app.views.configuracion_luminaria_update, name='configuracion_luminaria_update'),
+    url(r'^tecnico/configuracion_luminaria$', app.views.configuracion_luminariaListView.as_view(), name='configuracion_luminaria'),
+
+
     url(r'^tecnico$', app.views.vistaTecnico, name='vistaTecnico'),
+    url(r'^base$', app.views.base, name='base'),
     url(r'^administracion$', app.views.vistaAdministracion, name='vistaAdministracion'),
     url(r'^visualizador$', app.views.vistaVisualizador, name='vistaVisualizador'),
-]
+	
+] 

@@ -1,0 +1,72 @@
+﻿{% extends 'app/base.html' %}
+{% load static %}
+{% block javascript %}
+  <script src="{% static 'app/scripts/books.js' %}"></script>
+{% endblock %}
+{% block content %}
+  <h1 class="page-header">Grupos Luminarias</h1>
+  <p>
+    <button type="button" class="btn btn-primary js-create-book" data-url="{% url 'grupoLuminaria_create' %}">
+      <span class="glyphicon glyphicon-plus"></span>
+      Nuevo Grupo Luminaria
+    </button>
+  </p>
+  <table class="table" id="book-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nombre</th>
+        <th>Administrador</th>
+        <th>Luminarias_led</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for grupo in grupos %}
+  <tr>
+    <td>{{ grupo.pk }}</td>
+    <td>{{ grupo.nombre }}</td>
+    <td>{{ grupo.administrador }}</td>
+    <td>
+        {% for lum_led in grupo.luminarias_led.all %}
+          {{ lum_led.identificador }} <br> 
+        {% endfor %}
+    </td>
+    <td style="width: 180px">
+      <button type="button"
+              class="btn btn-warning btn-sm js-update-book"
+              data-url="{% url 'grupoLuminaria_update' grupo.pk %}">
+        <span class="glyphicon glyphicon-pencil"></span> Editar
+      </button>
+      <button type="button"
+              class="btn btn-danger btn-sm js-delete-book"
+              data-url="{% url 'grupoLuminaria_delete' grupo.pk %}">
+        <span class="glyphicon glyphicon-trash"></span> Eliminar
+      </button>
+    </td>
+  </tr>
+{% empty %}
+  <tr>
+    <td colspan="8" class="text-center bg-warning">No existen grupos</td>
+  </tr>
+{% endfor %}
+    </tbody>
+      <tfoot>
+        <tr>
+          <th>#</th>
+          <th>Nombre</th>
+          <th>Administrador</th>
+          <th>Luminarias_led</th>
+          <th></th>
+        </tr>
+        </tfoot>
+  </table>
+
+  <div class="modal fade" id="modal-book">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+      </div>
+    </div>
+  </div>
+{% endblock %}

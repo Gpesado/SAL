@@ -1,11 +1,8 @@
 ﻿{% extends 'app/base.html' %}
-
 {% load static %}
-
 {% block javascript %}
   <script src="{% static 'app/scripts/books.js' %}"></script>
 {% endblock %}
-
 {% block content %}
   <h1 class="page-header">Roles</h1>
 
@@ -20,7 +17,8 @@
     <thead>
       <tr>
         <th>#</th>
-        <th>Nombre</th>        
+        <th>Nombre</th> 
+		<th>Menues</th>		
         <th></th>
       </tr>
     </thead>
@@ -29,6 +27,11 @@
   <tr>
     <td>{{ rol.pk }}</td>
     <td>{{ rol.nombre }}</td>
+	<td>
+          {% for rol in rol.menues.all %}
+            {{ rol.nombre }} <br> 
+          {% endfor %}
+      </td>
     <td style="width: 180px">
       <button type="button"
               class="btn btn-warning btn-sm js-update-book"

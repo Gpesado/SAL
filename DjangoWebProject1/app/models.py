@@ -76,7 +76,6 @@ class Luminaria_LED(models.Model):
     def __str__(self):
       return "{2} ({0} MOD: {1})".format(self.estado,self.modeloLampara,self.identificador)
       
-      
 class Nodo_LED(models.Model):
     identificador = models.CharField(max_length=35,default='N_LED_')
     es_concentrador = models.BooleanField(default='False')
@@ -106,7 +105,7 @@ class Balastro(models.Model):
     modelo = models.CharField(max_length= 35)
     fabricante = models.ForeignKey(Fabricante, null = False,blank = False, on_delete=models.CASCADE)
     def __str__(self):
-        return "{0}".format(self.modelo)
+        return "{0}".format(self.nombre)
 
 class Lampara_No_LED(models.Model):
     identificador = models.CharField(max_length=35,default='LAMP_NLED_')
@@ -132,7 +131,7 @@ class Nodo_NO_LED(models.Model):
 class Grupo_Luminaria(models.Model):
     nombre = models.CharField(max_length= 35 , null = False)
     administrador = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)
-    nodo_luminarias_led = models.ManyToManyField(Nodo_LED, blank=True)
+    nodo_luminarias_led = models.ManyToManyField(Nodo_LED, related_name='grupo_luminaria_led', blank=True)
     nodo_luminarias_no_led = models.ManyToManyField(Nodo_NO_LED, blank=True)
     observadores = models.ManyToManyField(Usuario, related_name='observadores', blank=True)
     tecnicos = models.ManyToManyField(Usuario, related_name='tecnicos', blank=True)
@@ -171,16 +170,7 @@ class Falla(models.Model):
     def __str__(self):
         return "{0} ({1})".format(self.nombre,self.grado_criticidad)
 
-    #INCIDENTES
-class Incidente(models.Model):
-    falla = models.ForeignKey(Falla, null = False,blank = False, on_delete=models.CASCADE)
-    fecha = models.DateField(default=datetime.date.today, blank=False)
-    luminaria = models.ForeignKey(Luminaria_LED, null = False,blank = False, on_delete=models.CASCADE)
-    estado_incidente = (('a','Arreglado'), ('e','En reparacion'), ('p','Pendiente de Reparacion'))
-    estado = models.CharField(max_length=1, choices=estado_incidente, default='p')
-    relevador = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)
-    def __str__(self):
-        return "{2} (F: {0}/{1}{3})".format(self.falla,self.fecha,self.luminaria,self.estado)
+
 
     #ORDEN_REPARACION
 class Orden_Reparacion(models.Model):
@@ -225,45 +215,50 @@ class Gasto_Por_Insumo_Basico(models.Model):
 #SISTEMA DE ALERTAS
 class Alerta(models.Model):
     nombre = models.CharField(max_length= 35)
-    descripcion = models.CharField(max_length= 100)
-    tiempo = models.TimeField
+    descripcion = models.CharField(max_length= 100)    
+    tiempo = (('d','Dia'), ('h','Hora'))
+    periodicidad = models.CharField(max_length= 1, choices=tiempo, default='d')
+    frecuencia = models.PositiveIntegerField(null = False)
     criticidad = (('a','Alta'), ('m','Media'), ('b','Baja'))
     grado_criticidad = models.CharField(max_length= 1, choices=criticidad, default='m')
     
+    def __str__(self):
+        return "{0} - {1}".format(self.nombre, self.descripcion.__str__())
+
 class Notificacion_alerta(models.Model):
     alerta = models.ForeignKey(Alerta, null = False,blank = False, on_delete=models.CASCADE)
     destinatario = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)
+    fecha_envio = models.DateField(default = datetime.date.today, blank=False)
+
+class Configuracion_Mail(models.Model):
     asunto = models.CharField(max_length= 100)
-   
+    cuerpo = models.CharField(max_length= 4000)
+
 class Personalizacion_Alerta(models.Model):
     alerta = models.ForeignKey(Alerta, null = False,blank = False, on_delete=models.CASCADE)
     personalizador = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE) 
-
-#MARCADOR LUMINARIAS
-class Marcador_Luminaria_Led(models.Model):
-    nombre = models.CharField(max_length= 35)
-    luminaria = models.ForeignKey(Luminaria_LED, null = False,blank = False, on_delete=models.CASCADE)
-    lat = models.CharField(max_length= 35)
-    lng = models.CharField(max_length= 35)
-
-    def __str__(self):
-        return "{0} L:{1}(cord:{2},{3})".format(self.nombre,self.luminaria,self.lat,self.lng)
-
-class Marcador_Luminaria_No_Led(models.Model):
-    nombre = models.CharField(max_length= 35)
-    luminaria = models.ForeignKey(Lampara_No_LED, null = False,blank = False, on_delete=models.CASCADE)
-    lat = models.CharField(max_length= 35)
-    lng = models.CharField(max_length= 35)
-
-    def __str__(self):
-        return "{0} L:{1}(cord:{2},{3})".format(self.nombre,self.luminaria,self.lat,self.lng)
-class Marcador_Grupo_Luminaria(models.Model):
-    nombre = models.CharField(max_length= 35)
-    grupo = models.ForeignKey(Grupo_Luminaria, null = False,blank = False, on_delete=models.CASCADE)
-    marcadoresLed = models.ManyToManyField(Marcador_Luminaria_Led, blank=True)
-    marcadoresNoLed = models.ManyToManyField(Marcador_Luminaria_No_Led, blank=True)
-    lat = models.CharField(max_length= 35)
-    lng = models.CharField(max_length= 35)
+	
+#CONFIGURACION LUMINARIAS
+class Configuracion_Luminaria(models.Model):
+	nombre = models.CharField(max_length= 35)
+	descripcion = models.CharField(max_length= 100)
+	potencia_desde = models.FloatField(null = False,blank = False,default = 0)
+	potencia_hasta = models.FloatField(null = False,blank = False,default = 0)
+	imagen = models.ImageField(upload_to="imagenes/",null=True, blank=True)    
     
+    #INCIDENTES
+class Incidente(models.Model):
+    falla = models.ForeignKey(Falla, null = False,blank = False, on_delete=models.CASCADE)
+    fecha = models.DateField(default=datetime.date.today, blank=False)    
+    alerta = models.ForeignKey(Alerta, null = False,blank = False, on_delete=models.CASCADE)
+    luminaria = models.ForeignKey(Luminaria_LED, null = False,blank = False, on_delete=models.CASCADE)
+    estado_incidente = (('a','Arreglado'), ('e','En reparacion'), ('p','Pendiente de Reparacion'))
+    estado = models.CharField(max_length=1, choices=estado_incidente, default='p')
+    relevador = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)
     def __str__(self):
-        return "{0} L:{1}(cord:{2},{3})".format(self.nombre,self.grupo,self.lat,self.lng)
+        return "{2} (F: {0}/{1}{3})".format(self.falla,self.fecha,self.luminaria,self.estado)
+
+class Incidente_Por_Usuario(models.Model):
+    usuario = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)
+    cantidad_asignados = models.PositiveIntegerField(null = False)
+    cantidad_cerrados = models.PositiveIntegerField(null = False)

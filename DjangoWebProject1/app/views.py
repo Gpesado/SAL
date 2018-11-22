@@ -7,7 +7,7 @@ from app.serializers import AccountSerializer
 from django.http import HttpRequest
 from django.template import RequestContext
 from datetime import datetime
-from django.shortcuts import redirect, render, get_object_or_404, render_to_response
+from django.shortcuts import redirect, render, get_object_or_404
 from .forms import *
 from django.utils import timezone
 from django.views.generic.list import ListView
@@ -24,19 +24,56 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+
+def send_mail_relevador(x):
+    send_mail(
+    'Subject here',
+    'Here is the message.',
+    'enjeidevelopment@gmail.com',
+    [x],
+    fail_silently=False,
+)
+
+def get_administrador_round_robin():
+    usuario = Usuario.objects.values('pk').annotate(Count('Incidente_Por_Usuario')).order_by('-num_Incidente_Por_Usuario')[0]
+
+
+def grabar_incidente_x_usuario(x):
+    
+    aaa = Incidente_Por_Usuario.objects.get(usuario__pk=x.pk)
+
+    aaa.cantidad_asignados =  aaa.cantidad_asignados + 1
+    aaa.save()
+
+
+def incidentesPorUsuario(x):
+    incidentes = Incidente.objects.get(relevador=x)
 
 # VENTANA INDIVIDUALES , POSIBLEMENTE SE DEBAN ELIMINAR AL ARMAR LAS VENTANAS INTEGRADORAS...
 def home(request):
+    
     """Renders the home page."""
-    assert isinstance(request, HttpRequest)
+    #assert isinstance(request, HttpRequest)
+    incidentes = Incidente.objects.all() 
     return render(
         request,
         'app/index.html',
         {
-            'title':'Home Page',
-            'year':datetime.now().year,
+        'incidentes': incidentes,
         }
     )
+
+def base(request):  
+    incidentes = Incidente.objects.all()    
+    return render(
+        request,
+        'app/base.html',
+        {
+        'incidentes': incidentes,
+        }
+    )
+
 
 def agregarFalla(request):
         if request.method == "POST":
@@ -168,6 +205,7 @@ def vistaAdministracion(request):
 
 def vistaVisualizador(request):
     return render(request,'app/vistaVisualizador.html')
+
 
 # VENTANA GESTION DE USUARIOS
 def usuario_create(request):
@@ -1006,18 +1044,26 @@ class balastroListView(ListView):
 
     # Incidentes
 def incidente_create(request):
-    if request.method == 'POST':
-        form = RegisterIncidenteForm(request.POST)
-    else:
-        form = RegisterIncidenteForm()
-    return save_incidente_form(request, form, 'app/incidente_create.html')
+        if request.method == "POST":
+            form = RegisterIncidenteForm(request.POST)
+            if form.is_valid():
+                incidente = form.save(commit=False)
+                incidente.save()
+
+                grabar_incidente_x_usuario(incidente.relevador)
+
+
+                return HttpResponse('<script type="text/javascript">window.close()</script>')
+        else:
+            form = RegisterIncidenteForm()
+        return render(request, 'app/incidente_create.html', {'form': form})  
 
 def incidente_update(request, pk):
     incidente = get_object_or_404(Incidente, pk=pk)
     if request.method == 'POST':
-        form = RegisterIncidenteForm(request.POST, instance=incidente)
+        form = RegisterIncidenteFormEdit(request.POST, instance=incidente)
     else:
-        form = RegisterIncidenteForm(instance=incidente)
+        form = RegisterIncidenteFormEdit(instance=incidente)
     return save_incidente_form(request, form, 'app/incidente_update.html')
 
 def incidente_delete(request, pk, template_name='app/incidente_confirm_delete.html'):
@@ -1041,6 +1087,14 @@ def save_incidente_form(request, form, template_name):
     if request.method == 'POST':
         if form.is_valid():
             form.save()
+
+            
+            
+
+            usuario = Usuario.objects.get(pk=form['relevador'].value())
+
+            send_mail_relevador(usuario.email)
+
             data['form_is_valid'] = True
             incidentes = Incidente.objects.all()
             data['html_incidente_list'] = render_to_string('app/incidente_list.html', {
@@ -1056,67 +1110,145 @@ class incidenteListView(ListView):
     model = Incidente    
     context_object_name = 'incidentes'
     template_name = 'incidente_list.html'    
-    paginate_by = 10
     queryset = Incidente.objects.all()  # Default: Model.objects.all()
-
-#Visualizador - ver mapa
-class mapaView(ListView):
-    model = Marcador_Grupo_Luminaria    
-    context_object_name = 'marcadores_grupos'
-    template_name = 'marcador_grupo_luminaria_list.html'
-    queryset = Marcador_Grupo_Luminaria.objects.all()  # Default: Model.objects.all()
-
-class mapView(ListView):
-    model = Marcador_Luminaria_Led    
-    context_object_name = 'marcadores_lumLed'
-    template_name = 'app/marcador_luminaria_led_list.html'
-    queryset = Marcador_Luminaria_Led.objects.all()  # Default: Model.objects.all()
-'''
-def marcadorCreate(request, pk):
-    luminaria = get_object_or_404(Nodo_NO_LED, pk=pk)
+	
+def load_luminarias(request):
+    grupo_luminaria_id = request.GET.get('grupo_luminaria')
+    nodoleds = Nodo_LED.objects.filter(grupo_luminaria_led__id=grupo_luminaria_id)
+    return render(request, 'app/dropdown_nodos_led.html', {'nodoleds': nodoleds})
+	
+    # Incidentes
+def configuracion_luminaria_create(request):
     if request.method == 'POST':
-        form = RegisterMarcadorLEDForm(request.POST, instance = luminaria)
+        form = RegisterConfiguracionLuminariaForm(request.POST)
     else:
-        form = RegisterMarcadorLEDForm(instance = luminaria)  
-    return save_marcador_form(request, form, 'app/marcador_grupo_luminaria_list.html')
+        form = RegisterConfiguracionLuminariaForm()
+    return save_configuracion_luminaria_form(request, form, 'app/configuracion_luminaria_create.html')
 
-def marcador_update(request, pk):
-    marcador = get_object_or_404(Marcador_Grupo_Luminaria, pk=pk)
+def configuracion_luminaria_update(request, pk):
+    configuracion_luminaria = get_object_or_404(Configuracion_Luminaria, pk=pk)
     if request.method == 'POST':
-        form = RegisterMarcadorForm(request.POST, instance=marcador)
+        form = RegisterConfiguracionLuminariaForm(request.POST, request.FILES,instance=configuracion_luminaria)
     else:
-        form = RegisterMarcadorForm(instance=marcador)
-    return save_marcador_form(request, form, 'app/marcador_update.html')
+        form = RegisterConfiguracionLuminariaForm(instance=configuracion_luminaria)
+    return save_configuracion_luminaria_form(request, form, 'app/configuracion_luminaria_update.html')
 
-def marcador_delete(request, pk, template_name='app/marcador_confirm_delete.html'):
-    marcador = get_object_or_404(Marcador_Grupo_Luminaria, pk=pk)
+def configuracion_luminaria_delete(request, pk, template_name='app/configuracion_luminaria_confirm_delete.html'):
+    configuracion_luminaria = get_object_or_404(Configuracion_Luminaria, pk=pk)
     data = dict()
     if request.method == 'POST':
         
-        marcador.delete()
+        configuracion_luminaria.delete()
         data['form_is_valid'] = True
-        marcadores = Marcador_Grupo_Luminaria.objects.all()
-        data['html_marcador_list'] = render_to_string('app/marcador_list.html', {
-            'app': marcadores
+        configuracion_luminarias = Configuracion_Luminaria.objects.all()
+        data['html_incidente_list'] = render_to_string('app/configuracion_luminaria_list.html', {
+            'app': configuracion_luminarias
         })
     else:
-        context = {'marcador': marcador}
-        data['html_form'] = render_to_string('app/marcador_confirm_delete.html', context, request=request)
+        context = {'configuracion_luminaria': configuracion_luminaria}
+        data['html_form'] = render_to_string('app/incidente_confirm_delete.html', context, request=request)
     return JsonResponse(data)
 
-def save_marcador_form(request, form, template_name):
+def save_configuracion_luminaria_form(request, form, template_name):
     data = dict()
     if request.method == 'POST':
         if form.is_valid():
             form.save()
             data['form_is_valid'] = True
-            marcadores = Marcador_Grupo_Luminaria.objects.all()
-            data['html_marcador_list'] = render_to_string('app/marcador_grupo_luminaria_list.html', {
-                'app': marcadores
+            configuracion_luminarias = Configuracion_Luminaria.objects.all()
+            data['html_configuracion_luminaria_list'] = render_to_string('app/configuracion_luminaria_list.html', {
+                'app': configuracion_luminarias
             })
         else:
             data['form_is_valid'] = False
     context = {'form': form}
     data['html_form'] = render_to_string(template_name, context, request=request)
     return JsonResponse(data)
-'''
+
+class configuracion_luminariaListView(ListView):
+    model = Configuracion_Luminaria    
+    context_object_name = 'configuracion_luminarias'
+    template_name = 'configuracion_luminaria_list.html'    
+    queryset = Configuracion_Luminaria.objects.all()  # Default: Model.objects.all()	
+
+def alerta_create(request):
+        if request.method == "POST":
+            form = RegisterAlertaForm(request.POST)
+            if form.is_valid():
+                alerta = form.save(commit=False)
+                alerta.save()
+                return HttpResponse('<script type="text/javascript">window.close()</script>')
+        else:
+            form = RegisterAlertaForm()
+        return render(request, 'app/alerta_create.html', {'form': form})    
+
+
+def alerta_update(request, pk):
+    alerta = get_object_or_404(Alerta, pk=pk)
+    if request.method == 'POST':
+        form = RegisterAlertaForm(request.POST, request.FILES,instance=alerta)
+    else:
+        form = RegisterAlertaForm(instance=alerta)
+    return save_alerta_form(request, form, 'app/alerta_update.html')
+
+def alerta_delete(request, pk, template_name='app/alerta_confirm_delete.html'):
+    alerta = get_object_or_404(Alerta, pk=pk)
+    data = dict()
+    if request.method == 'POST':
+        
+        alerta.delete()
+        data['form_is_valid'] = True
+        alertas = Alerta.objects.all()
+        data['html_alerta_list'] = render_to_string('app/alerta_list.html', {
+            'app': alertas
+        })
+    else:
+        context = {'alerta': alerta}
+        data['html_form'] = render_to_string('app/alerta_confirm_delete.html', context, request=request)
+    return JsonResponse(data)
+
+def save_alerta_form(request, form, template_name):
+    data = dict()
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            data['form_is_valid'] = True
+            alertas = Alerta.objects.all()
+            data['html_alerta_list'] = render_to_string('app/alerta_list.html', {
+                'app': alertas
+            })
+        else:
+            data['form_is_valid'] = False
+    context = {'form': form}
+    data['html_form'] = render_to_string(template_name, context, request=request)
+    return JsonResponse(data)
+
+
+class alertaListView(ListView):
+    model = Alerta    
+    context_object_name = 'alertas'
+    template_name = 'alerta_list.html'    
+    queryset = Alerta.objects.all()  # Default: Model.objects.all()    
+
+def falla_create(request):
+    if request.method == 'POST':
+        form = agregarFallaForm(request.POST)
+    else:
+        form = agregarFallaForm()
+    return save_falla_form(request, form, 'app/falla_create.html')
+
+def save_falla_form(request, form, template_name):
+    data = dict()
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            data['form_is_valid'] = True
+            alertas = Falla.objects.all()
+            data['html_incidente_create'] = render_to_string('app/incidente_create.html', {
+                'app': alertas
+            })
+        else:
+            data['form_is_valid'] = False
+    context = {'form': form}
+    data['html_form'] = render_to_string(template_name, context, request=request)
+    return JsonResponse(data)

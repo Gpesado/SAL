@@ -37,12 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'compressor',
     'app',
     'widget_tweaks',
-    'django_cron',
     'django_celery_beat',
+	'celerybeat_status',
 
 ]
 
@@ -165,6 +163,18 @@ CRON_CLASSES = [
     # ...
 ]
 
-#import djcelery
-#djcelery.setup_loader()
-BROKER_URL = 'django://'
+# Celery transport
+CELERY_BROKER_URL = 'redis://localhost:6379' 
+CELERY_TIMEZONE = 'UTC'
+CELERY_ENABLE_UTC = True 
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
+from celery.schedules import crontab
+
+CELERYBEAT_SCHEDULE = {
+        'every-minute': {
+            'task': 'tasks.sync_oracle_history',
+            'schedule': crontab(minute='*/1'),
+            },
+        }

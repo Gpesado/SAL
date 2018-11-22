@@ -1,0 +1,75 @@
+﻿{% extends 'app/base.html' %}
+{% load static %}
+{% block javascript %}
+
+<script src="{% static 'app/scripts/books.js' %}"></script>
+  
+{% endblock %}
+{% block content %}
+  <h1 class="page-header">Alerta</h1>
+  <p>
+    <button type="button" class="btn btn-primary" onclick="myFunction()" id="btn" data-url="{% url 'alerta_create' %}">
+      <span class="glyphicon glyphicon-plus"></span>
+      Nuevo alerta
+    </button>
+  </p>
+  <table class="table" id="book-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Modelo</th>
+        <th>Fabricante</th>
+          <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for alerta in alertas %}
+  <tr>
+    <td>{{ alerta.pk }}</td>
+    <td>{{ alerta.nombre }}</td>
+    <td>{{ alerta.descripción }}</td>
+    <td style="width: 180px">
+      <button type="button"
+              class="btn btn-warning btn-sm js-update-book"
+              data-url="{% url 'alerta_update' alerta.pk %}">
+        <span class="glyphicon glyphicon-pencil"></span> Editar
+      </button>
+      <button type="button"
+              class="btn btn-danger btn-sm js-delete-book"
+              data-url="{% url 'alerta_delete' alerta.pk %}">
+        <span class="glyphicon glyphicon-trash"></span> Eliminar
+      </button>
+    </td>
+  </tr>
+{% empty %}
+  <tr>
+    <td colspan="8" class="text-center bg-warning">No existen alertas</td>
+  </tr>
+{% endfor %}
+    </tbody>
+      <tfoot>
+              <tr>
+          <th></th>
+          <th><input type="text" style="width:80px" placeholder="Modelo" /></th>
+          <th><input type="text" style="width:80px" placeholder="Fabricante" /></th>
+             <th></th>
+              </tr>
+        </tfoot>
+  </table>
+
+  <div class="modal fade" id="modal-book">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    
+function myFunction() {
+    window.open("{% url 'alerta_create' %}", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
+}
+</script>
+{% endblock %}

@@ -1,0 +1,63 @@
+﻿{% extends 'app/base.html' %}
+{% load static %}
+{% block javascript %}
+  <script src="{% static 'app/scripts/books.js' %}"></script>
+{% endblock %}
+{% block content %}
+  <h1 class="page-header">configuracion_luminariaes</h1>
+
+  <p>
+    <button type="button" class="btn btn-primary js-create-book" data-url="{% url 'configuracion_luminaria_create' %}">
+      <span class="glyphicon glyphicon-plus"></span>
+      Nuevo configuracion_luminaria
+    </button>
+  </p>
+
+  <table class="table" id="book-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nombre</th> 
+		<th>Descripcion</th>		
+    <th>Potencia Desde</th> 
+    <th>Potencia Hasta</th>   
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for configuracion_luminaria in configuracion_luminarias %}
+  <tr>
+    <td>{{ configuracion_luminaria.pk }}</td>
+    <td>{{ configuracion_luminaria.nombre }}</td>
+	<td>{{ configuracion_luminaria.descripcion }}</td>
+  <td>{{ configuracion_luminaria.potencia_desde }}</td>
+  <td>{{ configuracion_luminaria.potencia_hasta }}</td>
+    <td style="width: 180px">
+      <button type="button"
+              class="btn btn-warning btn-sm js-update-book"
+              data-url="{% url 'configuracion_luminaria_update' configuracion_luminaria.pk %}">
+        <span class="glyphicon glyphicon-pencil"></span> Editar
+      </button>
+      <button type="button"
+              class="btn btn-danger btn-sm js-delete-book"
+              data-url="{% url 'configuracion_luminaria_delete' configuracion_luminaria.pk %}">
+        <span class="glyphicon glyphicon-trash"></span> Eliminar
+      </button>
+    </td>
+  </tr>
+{% empty %}
+  <tr>
+    <td colspan="8" class="text-center bg-warning">No existen configuracion_luminarias</td>
+  </tr>
+{% endfor %}
+    </tbody>
+  </table>
+
+  <div class="modal fade" id="modal-book">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+      </div>
+    </div>
+  </div>
+{% endblock %}

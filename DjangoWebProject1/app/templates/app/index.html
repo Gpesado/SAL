@@ -1,10 +1,21 @@
 {% extends "app/base.html" %}
-
+{% block title %}
+    Homepage - {{ block.super }}
+{% endblock title %}
 {% block content %}
 
+    {% for incidente in incidentes %}
 
-<div class="row">
-    
-</div>
+    {% if incidente.relevador.pk == user.pk %}
 
-{% endblock %}
+    {% if incidente.alerta.grado_criticidad == "b" %}
+	<div class="alert alert-danger">{{ incidente.falla }} </div>
+	{% else %}
+	<div class="alert alert-warning">{{ incidente.falla }} </div>
+	{% endif %}
+
+	{% endif %}
+    	
+    {% endfor %}
+
+{% endblock content %}

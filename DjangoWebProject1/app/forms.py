@@ -6,6 +6,9 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 from app.models import *
 from bootstrap_datepicker.widgets import DatePicker
+from django.db.models import Count
+from django.db.models import F
+
 
 class agregarFallaForm(forms.ModelForm):
 
@@ -180,13 +183,40 @@ class RegisterBalastroForm(forms.ModelForm):
             model = Balastro
             fields = ('modelo', 'fabricante')   
             
+class RegisterAlertaForm(forms.ModelForm):
+
+        class Meta:
+            model = Alerta
+            fields = ('nombre', 'descripcion', 'grado_criticidad', 'periodicidad', 'frecuencia')   
+
+
 class RegisterIncidenteForm(forms.ModelForm):
 
         class Meta:
             model = Incidente
-            fields = ('falla', 'fecha','luminaria', 'estado','relevador')
+            fields = ('falla', 'fecha','alerta', 'luminaria', 'estado','relevador')
 
-class RegisterMarcadorLEDForm(forms.ModelForm):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            #self.fields['relevador'].queryset = Usuario.objects.filter(pk=1)
+            #self.fields['relevador'].queryset = Usuario.objects.values('username').distinct().annotate(models.Count('pk'))[:1]
+            #queryset = Usuario.objects.annotate(cantidad=Count('incidente_por_usuario')).order_by('cantidad')[:1]
+
+
+            queryset = Incidente_Por_Usuario.objects.all().order_by(F('cantidad_asignados') - F('cantidad_cerrados'))[:1]            
+
+            for each in queryset:
+
+                self.fields['relevador'].queryset = Usuario.objects.filter(pk=each.usuario.pk)
+
+class RegisterIncidenteFormEdit(forms.ModelForm):
+
         class Meta:
-            model = Marcador_Luminaria_Led
-            fields = ('nombre', 'luminaria','lat','lng')
+            model = Incidente
+            fields = ('falla', 'fecha','alerta', 'luminaria', 'estado','relevador')
+
+class RegisterConfiguracionLuminariaForm(forms.ModelForm):
+
+        class Meta:
+            model = Configuracion_Luminaria
+            fields = ('nombre', 'descripcion','potencia_desde', 'potencia_hasta','imagen')			

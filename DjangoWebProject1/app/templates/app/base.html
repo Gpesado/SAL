@@ -20,8 +20,8 @@
       <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
       
-      <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-      <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+      <script src="../../static/app/js/jquery.dataTables.min.js"></script>
+      <script src="../../static/app/js/dataTables.bootstrap.min.js"></script>
       <script src="https://cdn.datatables.net/buttons/1.5.4/js/dataTables.buttons.min.js"></script>
 
 
@@ -39,7 +39,8 @@
    
  
     // DataTable
-              var table = $('#book-table').DataTable(                    
+              var table = $('#book-table').DataTable(     
+							  
               );
  
     // Apply the search
@@ -57,6 +58,20 @@
 
 } );
       </script>
+  
+	<style>
+.dataTables_wrapper .dataTables_filter {
+float: right;
+text-align: right;
+visibility: hidden;
+}
+
+.dataTables_length {
+float: right;
+text-align: right;
+visibility: hidden;
+}
+</style>
   </head>
   <body>
     {% include 'app/header.html' %}
@@ -64,9 +79,6 @@
       {% block content %}
       {% endblock %}
     </div>
-    
-    
-   
 
     {% block javascript %}
         <script src="{% static 'app/scripts/jquery-3.1.1.min.js' %}"></script>
