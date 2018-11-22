@@ -28,7 +28,8 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.contrib.auth.views import LogoutView
-
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.auth import views as auth_views
 
 router = routers.SimpleRouter()
 router.register(r'accounts', AccountViewSet)
@@ -45,6 +46,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('', app.views.home, name='home'),
     url(r'^logout/$', LogoutView.as_view(), {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
+    
     #urls Usuario (CREATE/DELETE/LIST)
     url(r'^usuario/create$', app.views.usuario_create, name='usuario_create'),
     url(r'^usuario/(?P<pk>\d+)/delete/$', app.views.usuario_delete, name='usuario_delete'),
@@ -136,17 +138,13 @@ urlpatterns = [
     url(r'^tecnico/alerta/(?P<pk>\d+)/update/$', app.views.alerta_update, name='alerta_update'),
     url(r'^tecnico/alerta$', app.views.alertaListView.as_view(), name='alerta'),
 
-
-    #urls Mapas (CREATE/DELETE/LIST)    
-    url(r'^visualizador/mapa_luminarias$', app.views.mapaView.as_view(), name='mapa_luminarias'),
-    url(r'^visualizador/buscarMarcador$', app.views.mapView.as_view(), name='buscarMarcador'),
-   # url(r'^tecnico/luminarialed/marcadorCreate$', app.views.marcadorCreate, name='marcadorCreate'),
-
       #urls Incidentes (CREATE/DELETE/LIST)
     url(r'^tecnico/incidente/create$', app.views.incidente_create, name='incidente_create'),
     url(r'^tecnico/incidente/(?P<pk>\d+)/delete/$', app.views.incidente_delete, name='incidente_delete'),
     url(r'^tecnico/incidente/(?P<pk>\d+)/update/$', app.views.incidente_update, name='incidente_update'),
     url(r'^tecnico/incidente$', app.views.incidenteListView.as_view(), name='incidente'),
+	url(r'^tecnico/incidentes_reparador$', app.views.incidentes_reparador, name='incidentes_reparador'),
+    url(r'^tecnico/incidente_reparador$', app.views.agregarIncidenteReparador, name='incidente_reparador'),
     path('ajax/load_luminarias/', app.views.load_luminarias, name='ajax_load_luminarias'),  # <-- this one here
 
     #urls Reset de Password
@@ -174,5 +172,10 @@ urlpatterns = [
     url(r'^base$', app.views.base, name='base'),
     url(r'^administracion$', app.views.vistaAdministracion, name='vistaAdministracion'),
     url(r'^visualizador$', app.views.vistaVisualizador, name='vistaVisualizador'),
+
+    #urls Mapas (CREATE/DELETE/LIST)
+    url(r'^visualizador/mapa_luminarias$', app.views.mapaView.as_view(), name='mapa_luminarias'),
+    url(r'^visualizador/buscarMarcador$', app.views.mapView.as_view(), name='buscarMarcador'),
+   #
 	
 ] 

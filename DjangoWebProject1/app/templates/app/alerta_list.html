@@ -1,4 +1,4 @@
-﻿{% extends 'app/base.html' %}
+﻿{% extends 'app/base_tecnico.html' %}
 {% load static %}
 {% block javascript %}
 
@@ -17,8 +17,11 @@
     <thead>
       <tr>
         <th>#</th>
-        <th>Modelo</th>
-        <th>Fabricante</th>
+        <th>Nombre</th>
+        <th>Descripcion</th>
+        <th>Periodicidad</th>
+        <th>Frecuencia</th>
+        <th>Criticidad</th>
           <th></th>
       </tr>
     </thead>
@@ -27,7 +30,21 @@
   <tr>
     <td>{{ alerta.pk }}</td>
     <td>{{ alerta.nombre }}</td>
-    <td>{{ alerta.descripción }}</td>
+    <td>{{ alerta.descripcion }}</td>
+    {% if alerta.periodicidad == 'd' %}
+    <td>Diaria</td>
+    
+    {% else %}
+      <td>Hora</td>
+    {% endif %}
+    <td>{{ alerta.frecuencia }}</td>
+    {% if alerta.grado_criticidad == 'a' %}
+    <td>Alta</td>
+    {% elif alerta.grado_criticidad == 'm' %}
+      <td>Media</td>
+    {% else %}
+      <td>Baja</td>
+    {% endif %}
     <td style="width: 180px">
       <button type="button"
               class="btn btn-warning btn-sm js-update-book"
@@ -47,14 +64,7 @@
   </tr>
 {% endfor %}
     </tbody>
-      <tfoot>
-              <tr>
-          <th></th>
-          <th><input type="text" style="width:80px" placeholder="Modelo" /></th>
-          <th><input type="text" style="width:80px" placeholder="Fabricante" /></th>
-             <th></th>
-              </tr>
-        </tfoot>
+      
   </table>
 
   <div class="modal fade" id="modal-book">

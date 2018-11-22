@@ -1,8 +1,6 @@
 {% extends 'app/base.html' %}
 {% block content %}
-<div>
-    <h3> Bienvenido a la ventana de Tecnico!</h3>
-</div>
+
 <div class="navbar-collapse collapse">
     <ul class="nav navbar-nav">
         <li><a href="{% url 'fabricante' %}">Fabricante</a></li>
@@ -15,7 +13,10 @@
         <li><a href="{% url 'nodoled' %}">Nodo LED</a></li>
         <li><a href="{% url 'nodonoled' %}">Nodo no LED</a></li>
         <li><a href="{% url 'balastro' %}">Balastro</a></li>
+        <li><a href="{% url 'alerta' %}">Alertas</a></li>
         <li><a href="{% url 'incidente' %}">Incidentes</a></li>
         <li><a href="{% url 'ordenes' %}">Ordenes de Reparación</a></li>
+        <li><a href="{% url 'incidentes_reparador' %}">Asignar Reparador</a></li>
     </ul>
+</div>
 {% endblock %}

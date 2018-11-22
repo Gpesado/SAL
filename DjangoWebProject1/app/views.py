@@ -7,7 +7,7 @@ from app.serializers import AccountSerializer
 from django.http import HttpRequest
 from django.template import RequestContext
 from datetime import datetime
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404, render_to_response
 from .forms import *
 from django.utils import timezone
 from django.views.generic.list import ListView
@@ -26,10 +26,10 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 
-def send_mail_relevador(x):
+def send_mail_relevador(x, y, z):
     send_mail(
-    'Subject here',
-    'Here is the message.',
+    y,
+    z,
     'enjeidevelopment@gmail.com',
     [x],
     fail_silently=False,
@@ -55,7 +55,7 @@ def home(request):
     
     """Renders the home page."""
     #assert isinstance(request, HttpRequest)
-    incidentes = Incidente.objects.all() 
+    incidentes = Incidente.objects.filter(estado='p') 
     return render(
         request,
         'app/index.html',
@@ -331,7 +331,6 @@ class RolListView(ListView):
     model = Rol
     context_object_name = 'roles'
     template_name = 'rol_list.html'    
-    paginate_by = 10
     queryset = Rol.objects.all()  # Default: Model.objects.all()
 
 # VALIDACIONES DE USUARIOS
@@ -1090,10 +1089,11 @@ def save_incidente_form(request, form, template_name):
 
             
             
-
+            subject = form.cleaned_data['asunto_mail_relevador']
+            message = form.cleaned_data['cuerpo_mail_relevador']
             usuario = Usuario.objects.get(pk=form['relevador'].value())
 
-            send_mail_relevador(usuario.email)
+            send_mail_relevador(usuario.email, subject, message)
 
             data['form_is_valid'] = True
             incidentes = Incidente.objects.all()
@@ -1252,3 +1252,98 @@ def save_falla_form(request, form, template_name):
     context = {'form': form}
     data['html_form'] = render_to_string(template_name, context, request=request)
     return JsonResponse(data)
+	
+
+class incidenteAsignadosListView(ListView):
+    model = Incidente_Reparador    
+    context_object_name = 'incidentes_reparador'
+    template_name = 'app/incidente_reparador_asignados.html'    
+    queryset = Incidente_Reparador.objects.all()  # Default: Model.objects.all()
+	
+def incidentes_reparador(request):
+    
+    """Renders the home page."""
+    #assert isinstance(request, HttpRequest)
+    incidentes = Incidente.objects.filter(estado='p') 
+    reparadores = Usuario.objects.filter(roles__nombre='Reparador')
+    return render(
+        request,
+        'app/incidente_reparador_list.html',
+        {
+        'incidentes': incidentes,
+        'reparadores': reparadores
+        }
+    )
+
+def agregarIncidenteReparador(request):
+        print(request.POST)
+        if request.method == "POST":
+            form = agregarIncidente_Reparador(request.POST)
+            if form.is_valid():
+                falla = form.save(commit=False)
+                falla.save()
+                return redirect('vistaTecnico')
+            else:
+                print('pepe')
+        else:
+            form = agregarIncidente_Reparador()
+        return render(request, 'app/incidente_reparador_list.html', {'form': form})        
+
+#Visualizador - ver mapa
+class mapaView(ListView):
+    model = Marcador_Grupo_Luminaria    
+    context_object_name = 'marcadores_grupos'
+    template_name = 'marcador_grupo_luminaria_list.html'
+    queryset = Marcador_Grupo_Luminaria.objects.all()  # Default: Model.objects.all()
+
+class mapView(ListView):
+    model = Marcador_Luminaria_Led    
+    context_object_name = 'marcadores_lumLed'
+    template_name = 'app/marcador_luminaria_led_list.html'
+    queryset = Marcador_Luminaria_Led.objects.all()  # Default: Model.objects.all()
+'''
+def marcadorCreate(request, pk):
+    luminaria = get_object_or_404(Nodo_NO_LED, pk=pk)
+    if request.method == 'POST':
+        form = RegisterMarcadorLEDForm(request.POST, instance = luminaria)
+    else:
+        form = RegisterMarcadorLEDForm(instance = luminaria)  
+    return save_marcador_form(request, form, 'app/marcador_grupo_luminaria_list.html')
+ def marcador_update(request, pk):
+    marcador = get_object_or_404(Marcador_Grupo_Luminaria, pk=pk)
+    if request.method == 'POST':
+        form = RegisterMarcadorForm(request.POST, instance=marcador)
+    else:
+        form = RegisterMarcadorForm(instance=marcador)
+    return save_marcador_form(request, form, 'app/marcador_update.html')
+ def marcador_delete(request, pk, template_name='app/marcador_confirm_delete.html'):
+    marcador = get_object_or_404(Marcador_Grupo_Luminaria, pk=pk)
+    data = dict()
+    if request.method == 'POST':
+        
+        marcador.delete()
+        data['form_is_valid'] = True
+        marcadores = Marcador_Grupo_Luminaria.objects.all()
+        data['html_marcador_list'] = render_to_string('app/marcador_list.html', {
+            'app': marcadores
+        })
+    else:
+        context = {'marcador': marcador}
+        data['html_form'] = render_to_string('app/marcador_confirm_delete.html', context, request=request)
+    return JsonResponse(data)
+ def save_marcador_form(request, form, template_name):
+    data = dict()
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            data['form_is_valid'] = True
+            marcadores = Marcador_Grupo_Luminaria.objects.all()
+            data['html_marcador_list'] = render_to_string('app/marcador_grupo_luminaria_list.html', {
+                'app': marcadores
+            })
+        else:
+            data['form_is_valid'] = False
+    context = {'form': form}
+    data['html_form'] = render_to_string(template_name, context, request=request)
+    return JsonResponse(data)
+''' 

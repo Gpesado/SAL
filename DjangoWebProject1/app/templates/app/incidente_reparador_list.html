@@ -1,4 +1,4 @@
-﻿{% extends 'app/base.html' %}
+﻿{% extends 'app/base_tecnico.html' %}
 {% load static %}
 {% block javascript %}
 
@@ -7,21 +7,26 @@
 {% endblock %}
 {% block content %}
   <h1 class="page-header">Incidentes</h1>
-  <p>
-    <button type="button" class="btn btn-primary" onclick="myFunction()" data-url="{% url 'incidente_create' %}">
-      <span class="glyphicon glyphicon-plus"></span>
-      Nuevo Incidente
-    </button>
-  </p>
+  <label >Reparadores</label>
+<form method="POST" class="post-form">{% csrf_token %}
+
+  <select class="form-control" id="sel1">
+    {% for reparador in reparadores %}
+	<option value="{{ reparador.pk }}">{{ reparador.username }}</option>
+	{% endfor %}
+  </select>
+  
+  <br/>
+  
   <table class="table" id="book-table">
     <thead>
       <tr>
         <th>#</th>
-        <th>falla</th>
-        <th>fecha</th>
-        <th>luminaria</th>
-        <th>estado</th>
-        <th>relevador</th>
+        <th>Falla</th>
+        <th>Fecha</th>
+        <th>Luminaria</th>
+        <th>Relevador</th>
+        
           <th></th>
       </tr>
     </thead>
@@ -32,19 +37,17 @@
     <td>{{ incidente.falla }}</td>
     <td>{{ incidente.fecha }}</td>
     <td>{{ incidente.luminaria }}</td>
-    <td>{{ incidente.estado }}</td>
     <td>{{ incidente.relevador }}</td>
     <td style="width: 180px">
-      <button type="button"
-              class="btn btn-warning btn-sm js-update-book"
-              data-url="{% url 'incidente_update' incidente.pk %}">
-        <span class="glyphicon glyphicon-pencil"></span> Editar
+      <form action="{% url 'incidente_reparador'  %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit"
+              class="btn btn-warning btn-sm"
+              
+        <span class="glyphicon glyphicon-pencil"></span> Asignar
       </button>
-      <button type="button"
-              class="btn btn-danger btn-sm js-delete-book"
-              data-url="{% url 'incidente_delete' incidente.pk %}">
-        <span class="glyphicon glyphicon-trash"></span> Eliminar
-      </button>
+        </form>
+
     </td>
   </tr>
 {% empty %}
@@ -58,9 +61,9 @@
           <th></th>
           <th><input type="text" style="width:80px" placeholder="falla" /></th>
           <th><input type="text" style="width:80px" placeholder="fecha" /></th>
-          <th><input type="text" style="width:80px" placeholder="luminaria" /></th>
-          <th><input type="text" style="width:80px" placeholder="estado" /></th>
+          <th><input type="text" style="width:80px" placeholder="luminaria" /></th>          
           <th><input type="text" style="width:80px" placeholder="relevador" /></th>
+          <th></th>
               </tr>
         </tfoot>
   </table>
@@ -72,7 +75,7 @@
       </div>
     </div>
   </div>
-
+</form>
 <script>
 
     

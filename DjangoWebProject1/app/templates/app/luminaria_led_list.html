@@ -1,4 +1,4 @@
-﻿{% extends 'app/base.html' %}
+﻿{% extends 'app/base_tecnico.html' %}
 {% load static %}
 {% block javascript %}
 
@@ -40,6 +40,11 @@
               class="btn btn-danger btn-sm js-delete-book"
               data-url="{% url 'luminarialed_delete' luminarialed.pk %}">
         <span class="glyphicon glyphicon-trash"></span> Eliminar
+      </button>
+      <button type="button"
+      class="btn btn-danger btn-sm js-update-book"
+      data-url="{% url 'marcadorCreate' %}">
+      <span class="glyphicon glyphicon-trash"></span> AGREGAR UBICACION
       </button>
     </td>
   </tr>

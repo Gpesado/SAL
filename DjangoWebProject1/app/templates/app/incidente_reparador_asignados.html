@@ -1,4 +1,4 @@
-﻿{% extends 'app/base_tecnico.html' %}
+﻿{% extends 'app/vistaTecnico.html' %}
 {% load static %}
 {% block javascript %}
 
@@ -8,7 +8,7 @@
 {% block content %}
   <h1 class="page-header">Incidentes</h1>
   <p>
-    <button type="button" class="btn btn-primary" onclick="myFunction()" data-url="{% url 'incidente_create' %}">
+    <button type="button" class="btn btn-primary" onclick="myFunction()" data-url="{% url 'incidente_reparador_asignar' %}">
       <span class="glyphicon glyphicon-plus"></span>
       Nuevo Incidente
     </button>
@@ -19,29 +19,18 @@
         <th>#</th>
         <th>Falla</th>
         <th>Fecha</th>
-        <th>Luminaria</th>
-        <th>Estado</th>
-        <th>Relevador</th>
+
           <th></th>
       </tr>
     </thead>
     <tbody>
       {% for incidente in incidentes %}
   <tr>
-    <td>{{ incidente.pk }}</td>
-    <td>{{ incidente.falla }}</td>
-    <td>{{ incidente.fecha }}</td>
-    <td>{{ incidente.luminaria }}</td>
-    {% if incidente.estado == 'a' %}
-		<td>Arreglado</td>
-	{% elif incidente.estado == 'e' %}
-		<td>En reparacion</td>
-	{% else %}
-		<td>Pendiente</td>
-	{% endif %}
-    <td>{{ incidente.relevador }}</td>
+    <td>{{ incidente.usuario }}</td>
+    <td>{{ incidente.incidente }}</td>
+    
     <td style="width: 180px">
-      <button type="button" 
+      <button type="button"
               class="btn btn-warning btn-sm js-update-book"
               data-url="{% url 'incidente_update' incidente.pk %}">
         <span class="glyphicon glyphicon-pencil"></span> Editar
@@ -86,8 +75,6 @@
 function myFunction() {
     window.open("{% url 'incidente_create' %}", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=300,left=500,width=600,height=600");
 }
-
-
 </script>
 
 {% endblock %}

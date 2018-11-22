@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
 import datetime
 
+
 class Menu(models.Model):
     nombre = models.CharField(max_length=35)
     url = models.CharField(max_length=100, blank=True)
@@ -105,7 +106,7 @@ class Balastro(models.Model):
     modelo = models.CharField(max_length= 35)
     fabricante = models.ForeignKey(Fabricante, null = False,blank = False, on_delete=models.CASCADE)
     def __str__(self):
-        return "{0}".format(self.nombre)
+        return "{0}".format(self.modelo)
 
 class Lampara_No_LED(models.Model):
     identificador = models.CharField(max_length=35,default='LAMP_NLED_')
@@ -238,6 +239,33 @@ class Personalizacion_Alerta(models.Model):
     alerta = models.ForeignKey(Alerta, null = False,blank = False, on_delete=models.CASCADE)
     personalizador = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE) 
 	
+
+#MARCADOR LUMINARIAS
+class Marcador_Luminaria_Led(models.Model):
+    nombre = models.CharField(max_length= 35)
+    luminaria = models.ForeignKey(Luminaria_LED, null = False,blank = False, on_delete=models.CASCADE)
+    lat = models.CharField(max_length= 35)
+    lng = models.CharField(max_length= 35)
+    def __str__(self):
+        return "{0} L:{1}(cord:{2},{3})".format(self.nombre,self.luminaria,self.lat,self.lng)
+class Marcador_Luminaria_No_Led(models.Model):
+    nombre = models.CharField(max_length= 35)
+    luminaria = models.ForeignKey(Lampara_No_LED, null = False,blank = False, on_delete=models.CASCADE)
+    lat = models.CharField(max_length= 35)
+    lng = models.CharField(max_length= 35)
+    def __str__(self):
+        return "{0} L:{1}(cord:{2},{3})".format(self.nombre,self.luminaria,self.lat,self.lng)
+class Marcador_Grupo_Luminaria(models.Model):
+    nombre = models.CharField(max_length= 35)
+    grupo = models.ForeignKey(Grupo_Luminaria, null = False,blank = False, on_delete=models.CASCADE)
+    marcadoresLed = models.ManyToManyField(Marcador_Luminaria_Led, blank=True)
+    marcadoresNoLed = models.ManyToManyField(Marcador_Luminaria_No_Led, blank=True)
+    lat = models.CharField(max_length= 35)
+    lng = models.CharField(max_length= 35)
+    
+    def __str__(self):
+        return "{0} L:{1}(cord:{2},{3})".format(self.nombre,self.grupo,self.lat,self.lng)
+
 #CONFIGURACION LUMINARIAS
 class Configuracion_Luminaria(models.Model):
 	nombre = models.CharField(max_length= 35)
@@ -249,12 +277,16 @@ class Configuracion_Luminaria(models.Model):
     #INCIDENTES
 class Incidente(models.Model):
     falla = models.ForeignKey(Falla, null = False,blank = False, on_delete=models.CASCADE)
+    descripcion = models.CharField(max_length= 1000, blank=True)
     fecha = models.DateField(default=datetime.date.today, blank=False)    
     alerta = models.ForeignKey(Alerta, null = False,blank = False, on_delete=models.CASCADE)
     luminaria = models.ForeignKey(Luminaria_LED, null = False,blank = False, on_delete=models.CASCADE)
     estado_incidente = (('a','Arreglado'), ('e','En reparacion'), ('p','Pendiente de Reparacion'))
     estado = models.CharField(max_length=1, choices=estado_incidente, default='p')
-    relevador = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)
+    relevador = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)	
+    asunto_mail_relevador = models.CharField(max_length= 100, blank=True)
+    cuerpo_mail_relevador = models.CharField(max_length= 1000, blank=True)
+
     def __str__(self):
         return "{2} (F: {0}/{1}{3})".format(self.falla,self.fecha,self.luminaria,self.estado)
 
@@ -262,3 +294,7 @@ class Incidente_Por_Usuario(models.Model):
     usuario = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)
     cantidad_asignados = models.PositiveIntegerField(null = False)
     cantidad_cerrados = models.PositiveIntegerField(null = False)
+	
+class Incidente_Reparador(models.Model):
+    usuario = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)
+    incidente = models.ForeignKey(Incidente, null = False,blank = False, on_delete=models.CASCADE)    

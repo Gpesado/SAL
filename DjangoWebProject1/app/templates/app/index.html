@@ -3,15 +3,15 @@
     Homepage - {{ block.super }}
 {% endblock title %}
 {% block content %}
-
+	<h2>Incidentes Abiertos que tiene Asignado</h2>
     {% for incidente in incidentes %}
 
     {% if incidente.relevador.pk == user.pk %}
 
-    {% if incidente.alerta.grado_criticidad == "b" %}
-	<div class="alert alert-danger">{{ incidente.falla }} </div>
+    {% if incidente.alerta.grado_criticidad == "a" %}
+	<div class="alert alert-danger">Falla: {{ incidente.falla }} - Luminaria: {{ incidente.luminaria }} - Descripcion: {{ incidente.descripcion }} </div>
 	{% else %}
-	<div class="alert alert-warning">{{ incidente.falla }} </div>
+	<div class="alert alert-warning">Falla: {{ incidente.falla }} - Luminaria: {{ incidente.luminaria }} - Descripcion: {{ incidente.descripcion }} </div>
 	{% endif %}
 
 	{% endif %}

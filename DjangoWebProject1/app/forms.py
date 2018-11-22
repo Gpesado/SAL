@@ -194,10 +194,10 @@ class RegisterIncidenteForm(forms.ModelForm):
 
         class Meta:
             model = Incidente
-            fields = ('falla', 'fecha','alerta', 'luminaria', 'estado','relevador')
-
+            fields = ('falla', 'fecha','alerta', 'luminaria', 'estado','relevador', 'descripcion', 'asunto_mail_relevador', 'cuerpo_mail_relevador')
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
+            self.fields["descripcion"].widget = forms.Textarea()
             #self.fields['relevador'].queryset = Usuario.objects.filter(pk=1)
             #self.fields['relevador'].queryset = Usuario.objects.values('username').distinct().annotate(models.Count('pk'))[:1]
             #queryset = Usuario.objects.annotate(cantidad=Count('incidente_por_usuario')).order_by('cantidad')[:1]
@@ -213,10 +213,24 @@ class RegisterIncidenteFormEdit(forms.ModelForm):
 
         class Meta:
             model = Incidente
-            fields = ('falla', 'fecha','alerta', 'luminaria', 'estado','relevador')
+            fields = ('falla', 'fecha','alerta', 'luminaria', 'estado','relevador', 'descripcion', 'asunto_mail_relevador', 'cuerpo_mail_relevador')
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields["descripcion"].widget = forms.Textarea()
 
 class RegisterConfiguracionLuminariaForm(forms.ModelForm):
 
         class Meta:
             model = Configuracion_Luminaria
             fields = ('nombre', 'descripcion','potencia_desde', 'potencia_hasta','imagen')			
+
+class RegisterMarcadorLEDForm(forms.ModelForm):
+        class Meta:
+            model = Marcador_Luminaria_Led
+            fields = ('nombre', 'luminaria','lat','lng')
+
+class agregarIncidente_Reparador(forms.ModelForm):
+
+        class Meta:
+            model = Incidente_Reparador
+            fields = ('usuario', 'incidente') 
