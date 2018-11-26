@@ -1385,15 +1385,15 @@ def incidente_materiales(request):
 
 def addMarcadorLed(request, pk):
     luminaria = get_object_or_404(Luminaria_LED, pk=pk)
+    id = luminaria.id.__str__()
     if request.method == "POST":
-        form = RegisterMarcadorLEDForm(request.POST, instance=luminaria)
+        form = RegisterMarcadorLEDForm(id, request.POST)
         if form.is_valid():
-            print("soy valido")
             marcador = form.save(commit=False)
             marcador.save()
             return redirect('luminarialed')
     else:
-        form = RegisterMarcadorLEDForm(instance=luminaria)
+        form = RegisterMarcadorLEDForm(id)
     return render(request, 'app/add_marcador_led.html', {'form': form})
 
 def incidente_material_update(request, pk):

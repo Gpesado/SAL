@@ -1,8 +1,12 @@
 {% block content %}
-    <h1>New Marcador</h1>
+<div class="pac-card" id="pac-card">
+    <div>
+      <div id="title">
+        <label>Nuevo Marcador Led</label>
+      </div>
     <form method="POST" class="post-form">{% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Save</button>
+        <button type="submit" class="save btn btn-default">Guardar</button>
     </form>
 <!-- puede manejarse el imput como id_lat id_lng // lat lng -->
 
