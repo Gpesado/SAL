@@ -236,9 +236,14 @@ class RegisterConfiguracionLuminariaForm(forms.ModelForm):
             fields = ('nombre', 'descripcion','potencia_desde', 'potencia_hasta','imagen')			
 
 class RegisterMarcadorLEDForm(forms.ModelForm):
+
         class Meta:
             model = Marcador_Luminaria_Led
             fields = ('nombre', 'luminaria','lat','lng')
+        def __init__(self, id, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields['luminaria'].queryset = Luminaria_LED.objects.filter(id = id)
+            self.fields['luminaria'].initial = id
 
 class agregarIncidente_Reparador(forms.ModelForm):
 

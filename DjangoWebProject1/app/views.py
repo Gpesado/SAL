@@ -586,7 +586,7 @@ def luminarialed_delete(request, pk, template_name='app/luminarialed_confirm_del
         luminarialed.delete()
         data['form_is_valid'] = True
         luminarialeds = Luminaria_LED.objects.all()
-        data['html_luminarialed_list'] = render_to_string('app/luminarialed_list.html', {
+        data['html_luminarialed_list'] = render_to_string('app/luminaria_led_list.html', {
             'app': luminarialeds
         })
     else:
@@ -601,7 +601,7 @@ def save_luminarialed_form(request, form, template_name):
             form.save()
             data['form_is_valid'] = True
             luminarialeds = Luminaria_LED.objects.all()
-            data['html_luminarialed_list'] = render_to_string('app/luminarialed_list.html', {
+            data['html_luminarialed_list'] = render_to_string('app/luminaria_led_list.html', {
                 'app': luminarialeds
             })
         else:
@@ -1386,15 +1386,15 @@ def incidente_materiales(request):
 
 def addMarcadorLed(request, pk):
     luminaria = get_object_or_404(Luminaria_LED, pk=pk)
+    id = luminaria.id.__str__()
     if request.method == "POST":
-        form = RegisterMarcadorLEDForm(request.POST, instance=luminaria)
+        form = RegisterMarcadorLEDForm(id, request.POST)
         if form.is_valid():
-            print("soy valido")
             marcador = form.save(commit=False)
             marcador.save()
             return redirect('luminarialed')
     else:
-        form = RegisterMarcadorLEDForm(instance=luminaria)
+        form = RegisterMarcadorLEDForm(id)
     return render(request, 'app/add_marcador_led.html', {'form': form})
 
 def incidente_material_update(request, pk):
