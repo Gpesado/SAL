@@ -25,6 +25,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from datetime import timedelta
 
 def send_mail_relevador(x, y, z):
     send_mail(
@@ -55,6 +56,22 @@ def home(request):
     
     """Renders the home page."""
     #assert isinstance(request, HttpRequest)
+    
+    #pepe = Notificacion_alerta.objects.exclude(incidente__estado = 'a')
+    pepe = Notificacion_alerta.objects.filter(incidente_id = 2).order_by('-pk').first()
+
+    if pepe.incidente.alerta.periodicidad == 'k':
+        
+        d = timedelta(days=pepe.incidente.alerta.frecuencia)
+        fecha = pepe.fecha_envio + d
+    
+    else:
+        h = timedelta(hours=pepe.incidente.alerta.frecuencia)
+        fecha = pepe.fecha_envio + h
+    if timezone.now() < fecha:
+        print(fecha)     
+    print(pepe.incidente.alerta)
+
     incidentes = Incidente.objects.filter(estado='p') 
     return render(
         request,

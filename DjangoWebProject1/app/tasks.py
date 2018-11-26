@@ -23,6 +23,20 @@ def add(x, y):
 
 	for incidente in incidentes:
 		#incidente = Incidente.objects.get(pk=each.pk)
-		na = Notificacion_alerta.objects.create(alerta=incidente.alerta, destinatario=incidente.relevador)
-		na.save()
-		send_mail_relevador(incidente.relevador.email, incidente.asunto_mail_relevador, incidente.cuerpo_mail_relevador)
+
+		pepe = Notificacion_alerta.objects.filter(incidente_id = incidente.pk).order_by('-pk').first()
+
+		if pepe.incidente.alerta.periodicidad == 'd':
+        
+	        d = timedelta(days=pepe.incidente.alerta.frecuencia)
+	        fecha = pepe.fecha_envio + d
+	    
+	    else:
+	        h = timedelta(hours=pepe.incidente.alerta.frecuencia)
+	        fecha = pepe.fecha_envio + h
+	    if timezone.now() > fecha:
+	    	na = Notificacion_alerta.objects.create(incidente=incidente)
+			na.save()
+			send_mail_relevador(incidente.relevador.email, incidente.asunto_mail_relevador, incidente.cuerpo_mail_relevador)    
+
+		

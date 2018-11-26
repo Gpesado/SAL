@@ -226,10 +226,6 @@ class Alerta(models.Model):
     def __str__(self):
         return "{0} - {1}".format(self.nombre, self.descripcion.__str__())
 
-class Notificacion_alerta(models.Model):
-    alerta = models.ForeignKey(Alerta, null = False,blank = False, on_delete=models.CASCADE)
-    destinatario = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)
-    fecha_envio = models.DateTimeField(auto_now=True, blank=False)
 
 class Configuracion_Mail(models.Model):
     asunto = models.CharField(max_length= 100)
@@ -306,3 +302,8 @@ class Incidente_Por_Usuario(models.Model):
 class Incidente_Reparador(models.Model):
     usuario = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)
     incidente = models.ForeignKey(Incidente, null = False,blank = False, on_delete=models.CASCADE)    
+
+class Notificacion_alerta(models.Model):
+    
+    incidente = models.ForeignKey(Incidente, null = True,blank = True, on_delete=models.CASCADE)
+    fecha_envio = models.DateTimeField(auto_now=True, blank=False)
