@@ -1260,23 +1260,53 @@ class incidenteAsignadosListView(ListView):
     template_name = 'app/incidente_reparador_asignados.html'    
     queryset = Incidente_Reparador.objects.all()  # Default: Model.objects.all()
 	
+
 def incidentes_reparador(request):
-    
-    """Renders the home page."""
-    #assert isinstance(request, HttpRequest)
-    incidentes = Incidente.objects.filter(estado='p') 
-    reparadores = Usuario.objects.filter(roles__nombre='Reparador')
-    return render(
-        request,
-        'app/incidente_reparador_list.html',
-        {
-        'incidentes': incidentes,
-        'reparadores': reparadores
-        }
-    )
+        if request.method == "POST":
+            form = RegisterIncidenteReparadorForm(request.POST)
+            if form.is_valid():
+                incidente = form.save(commit=False)
+                incidente.save()
+
+                #grabar_incidente_x_usuario(incidente.relevador)
+
+
+                #return HttpResponse('<script type="text/javascript">window.close()</script>')
+        else:
+            form = RegisterIncidenteReparadorForm()
+        return render(request, 'app/incidente_reparador_create.html', {'form': form})  
+
+def incidentes_reasignacion(request):
+        if request.method == "POST":
+            form = RegisterIncidenteReasignacionForm(request.POST)
+            if form.is_valid():
+                usuarioId = form.cleaned_data['usuario']
+                incidenteId = form.data.getlist("incidente")
+                usuario = Usuario.objects.get(pk=usuarioId)
+                for each in incidenteId:
+                    print(each)
+                    incidente = Incidente.objects.get(pk=each)
+                    incidente.relevador = usuario
+                    incidente.save(force_update=True)
+                    send_mail_relevador(usuario.email, incidente.asunto_mail_relevador, incidente.cuerpo_mail_relevador)
+                
+                #incidente = Incidente.objects.get(pk=incidenteId)
+                #usuario = Usuario.objects.get(pk=usuarioId)
+                
+                #incidente.relevador = usuario
+                #incidente.save(force_update=True)
+                #grabar_incidente_x_usuario(incidente.relevador)
+                
+                print(usuarioId)
+
+                #return HttpResponse('<script type="text/javascript">window.close()</script>')
+        else:
+            form = RegisterIncidenteReasignacionForm()
+        return render(request, 'app/incidente_reasignacion.html', {'form': form})
 
 def agregarIncidenteReparador(request):
-        print(request.POST)
+        print(request.POST.getlist('pepe', None))
+
         if request.method == "POST":
             form = agregarIncidente_Reparador(request.POST)
             if form.is_valid():
@@ -1301,49 +1331,42 @@ class mapView(ListView):
     context_object_name = 'marcadores_lumLed'
     template_name = 'app/marcador_luminaria_led_list.html'
     queryset = Marcador_Luminaria_Led.objects.all()  # Default: Model.objects.all()
-'''
-def marcadorCreate(request, pk):
-    luminaria = get_object_or_404(Nodo_NO_LED, pk=pk)
-    if request.method == 'POST':
-        form = RegisterMarcadorLEDForm(request.POST, instance = luminaria)
-    else:
-        form = RegisterMarcadorLEDForm(instance = luminaria)  
-    return save_marcador_form(request, form, 'app/marcador_grupo_luminaria_list.html')
- def marcador_update(request, pk):
-    marcador = get_object_or_404(Marcador_Grupo_Luminaria, pk=pk)
-    if request.method == 'POST':
-        form = RegisterMarcadorForm(request.POST, instance=marcador)
-    else:
-        form = RegisterMarcadorForm(instance=marcador)
-    return save_marcador_form(request, form, 'app/marcador_update.html')
- def marcador_delete(request, pk, template_name='app/marcador_confirm_delete.html'):
-    marcador = get_object_or_404(Marcador_Grupo_Luminaria, pk=pk)
-    data = dict()
-    if request.method == 'POST':
-        
-        marcador.delete()
-        data['form_is_valid'] = True
-        marcadores = Marcador_Grupo_Luminaria.objects.all()
-        data['html_marcador_list'] = render_to_string('app/marcador_list.html', {
-            'app': marcadores
-        })
-    else:
-        context = {'marcador': marcador}
-        data['html_form'] = render_to_string('app/marcador_confirm_delete.html', context, request=request)
-    return JsonResponse(data)
- def save_marcador_form(request, form, template_name):
-    data = dict()
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            data['form_is_valid'] = True
-            marcadores = Marcador_Grupo_Luminaria.objects.all()
-            data['html_marcador_list'] = render_to_string('app/marcador_grupo_luminaria_list.html', {
-                'app': marcadores
-            })
+
+class materialListView(ListView):
+    model = Material    
+    context_object_name = 'materiales'
+    template_name = 'material_list.html'    
+    queryset = Material.objects.all()  # Default: Model.objects.all()    
+
+def material_create(request):
+        if request.method == "POST":
+            form = RegisterMaterialForm(request.POST)
+            if form.is_valid():
+                incidente = form.save(commit=False)
+                incidente.save()
+
+                return HttpResponse('<script type="text/javascript">window.close()</script>')
         else:
-            data['form_is_valid'] = False
-    context = {'form': form}
-    data['html_form'] = render_to_string(template_name, context, request=request)
-    return JsonResponse(data)
-''' 
+            form = RegisterMaterialForm()
+        return render(request, 'app/material_create.html', {'form': form})  
+
+def incidente_materiales(request):
+    
+    """Renders the home page."""
+    #assert isinstance(request, HttpRequest)
+    incidentes = Incidente.objects.filter(incidente_reparador__isnull=False).exclude(estado='a')
+    return render(
+        request,
+        'app/incidente_material_list.html',
+        {
+        'incidentes': incidentes,
+        }
+    )    
+
+def incidente_material_update(request, pk):
+    incidente = get_object_or_404(Incidente, pk=pk)
+    if request.method == 'POST':
+        form = RegisterIncidenteFormEditReparador(request.POST, instance=incidente)
+    else:
+        form = RegisterIncidenteFormEditReparador(instance=incidente)
+    return save_incidente_form(request, form, 'app/incidente_update.html')

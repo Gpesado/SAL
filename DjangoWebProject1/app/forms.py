@@ -8,7 +8,8 @@ from app.models import *
 from bootstrap_datepicker.widgets import DatePicker
 from django.db.models import Count
 from django.db.models import F
-
+from django.db.models import Value as V
+from django.db.models.functions import Concat
 
 class agregarFallaForm(forms.ModelForm):
 
@@ -218,6 +219,16 @@ class RegisterIncidenteFormEdit(forms.ModelForm):
             super().__init__(*args, **kwargs)
             self.fields["descripcion"].widget = forms.Textarea()
 
+class RegisterIncidenteFormEditReparador(forms.ModelForm):
+
+        class Meta:
+            model = Incidente
+            fields = ('falla', 'luminaria', 'estado', 'descripcion', 'materiales')
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields["descripcion"].widget = forms.Textarea()
+
+
 class RegisterConfiguracionLuminariaForm(forms.ModelForm):
 
         class Meta:
@@ -234,3 +245,28 @@ class agregarIncidente_Reparador(forms.ModelForm):
         class Meta:
             model = Incidente_Reparador
             fields = ('usuario', 'incidente') 
+
+class RegisterIncidenteReparadorForm(forms.ModelForm):
+
+        class Meta:
+            model = Incidente_Reparador
+            fields = ('usuario', 'incidente')         
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields['usuario'].queryset = Usuario.objects.filter(roles__nombre='Reparador')
+            self.fields['incidente'].queryset = Incidente.objects.filter(estado='p') 
+
+class RegisterIncidenteReasignacionForm(forms.Form):
+        
+        usuario= forms.CharField(label='Usuario', widget=forms.Select(choices=Usuario.objects.filter
+            (roles__nombre='Administrador').values_list('id',Concat('first_name', V(' ') ,'last_name' ))))
+
+        incidente= forms.CharField(label='Incidente', widget=forms.SelectMultiple(choices=Incidente.objects.filter(estado='p')
+            .values_list('id','descripcion' )))
+
+class RegisterMaterialForm(forms.ModelForm):
+
+        class Meta:
+            model = Material
+            fields = ('descripcion', 'cantidad')         

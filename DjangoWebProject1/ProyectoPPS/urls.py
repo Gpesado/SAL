@@ -144,8 +144,15 @@ urlpatterns = [
     url(r'^tecnico/incidente/(?P<pk>\d+)/update/$', app.views.incidente_update, name='incidente_update'),
     url(r'^tecnico/incidente$', app.views.incidenteListView.as_view(), name='incidente'),
 	url(r'^tecnico/incidentes_reparador$', app.views.incidentes_reparador, name='incidentes_reparador'),
-    url(r'^tecnico/incidente_reparador$', app.views.agregarIncidenteReparador, name='incidente_reparador'),
+    url(r'^tecnico/incidente_reparador$', app.views.incidentes_reparador, name='incidente_reparador'),
+    url(r'^tecnico/incidente_reasignacion$', app.views.incidentes_reasignacion, name='incidente_reasignacion'),
+    url(r'^tecnico/incidente_material/(?P<pk>\d+)/update/$', app.views.incidente_material_update, name='incidente_material_update'),
     path('ajax/load_luminarias/', app.views.load_luminarias, name='ajax_load_luminarias'),  # <-- this one here
+
+    url(r'^tecnico/material$', app.views.materialListView.as_view(), name='material'),
+    url(r'^tecnico/material/create$', app.views.material_create, name='material_create'),
+
+    url(r'^tecnico/incidente_material$', app.views.incidente_materiales, name='incidente_material'),
 
     #urls Reset de Password
     #Login/Logout

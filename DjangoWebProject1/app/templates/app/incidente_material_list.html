@@ -7,17 +7,12 @@
 {% endblock %}
 {% block content %}
   <h1 class="page-header">Incidentes</h1>
-  <label >Reparadores</label>
-<form method="POST" class="post-form">{% csrf_token %}
-
-  <select class="form-control" name="pepe" id="sel1">
-    {% for reparador in reparadores %}
-	<option value="{{ reparador.pk }}">{{ reparador.username }}</option>
-	{% endfor %}
-  </select>
-  
-  <br/>
-  
+  <p>
+    <button type="button" class="btn btn-primary" onclick="myFunction()" data-url="{% url 'incidente_create' %}">
+      <span class="glyphicon glyphicon-plus"></span>
+      Nuevo Incidente
+    </button>
+  </p>
   <table class="table" id="book-table">
     <thead>
       <tr>
@@ -25,8 +20,8 @@
         <th>Falla</th>
         <th>Fecha</th>
         <th>Luminaria</th>
+        <th>Estado</th>
         <th>Relevador</th>
-        
           <th></th>
       </tr>
     </thead>
@@ -37,17 +32,21 @@
     <td>{{ incidente.falla }}</td>
     <td>{{ incidente.fecha }}</td>
     <td>{{ incidente.luminaria }}</td>
+    {% if incidente.estado == 'a' %}
+		<td>Arreglado</td>
+	{% elif incidente.estado == 'e' %}
+		<td>En reparacion</td>
+	{% else %}
+		<td>Pendiente</td>
+	{% endif %}
     <td>{{ incidente.relevador }}</td>
     <td style="width: 180px">
-      <form action="{% url 'incidente_reparador'  %}" method="post" style="display: inline;">
-            {% csrf_token %}
-            <button type="submit"
-              class="btn btn-warning btn-sm"
-              
-        <span class="glyphicon glyphicon-pencil"></span> Asignar
+      <button type="button" 
+              class="btn btn-warning btn-sm js-update-book"
+              data-url="{% url 'incidente_material_update' incidente.pk %}">
+        <span class="glyphicon glyphicon-pencil"></span> Editar
       </button>
-        </form>
-
+      
     </td>
   </tr>
 {% empty %}
@@ -61,9 +60,10 @@
           <th></th>
           <th><input type="text" style="width:80px" placeholder="falla" /></th>
           <th><input type="text" style="width:80px" placeholder="fecha" /></th>
-          <th><input type="text" style="width:80px" placeholder="luminaria" /></th>          
+          <th><input type="text" style="width:80px" placeholder="luminaria" /></th>
+          <th><input type="text" style="width:80px" placeholder="estado" /></th>
           <th><input type="text" style="width:80px" placeholder="relevador" /></th>
-          <th></th>
+		  <th></th>
               </tr>
         </tfoot>
   </table>
@@ -75,13 +75,15 @@
       </div>
     </div>
   </div>
-</form>
+
 <script>
 
     
 function myFunction() {
     window.open("{% url 'incidente_create' %}", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=300,left=500,width=600,height=600");
 }
+
+
 </script>
 
 {% endblock %}

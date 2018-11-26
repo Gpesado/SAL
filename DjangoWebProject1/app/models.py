@@ -229,7 +229,7 @@ class Alerta(models.Model):
 class Notificacion_alerta(models.Model):
     alerta = models.ForeignKey(Alerta, null = False,blank = False, on_delete=models.CASCADE)
     destinatario = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)
-    fecha_envio = models.DateField(default = datetime.date.today, blank=False)
+    fecha_envio = models.DateTimeField(auto_now=True, blank=False)
 
 class Configuracion_Mail(models.Model):
     asunto = models.CharField(max_length= 100)
@@ -273,7 +273,14 @@ class Configuracion_Luminaria(models.Model):
 	potencia_desde = models.FloatField(null = False,blank = False,default = 0)
 	potencia_hasta = models.FloatField(null = False,blank = False,default = 0)
 	imagen = models.ImageField(upload_to="imagenes/",null=True, blank=True)    
+
+class Material(models.Model):
+    descripcion = models.CharField(max_length= 1000, blank=False)
+    cantidad = models.PositiveIntegerField(null = False, default = 0)
     
+    def __str__(self):
+        return "{0}".format(self.descripcion)
+
     #INCIDENTES
 class Incidente(models.Model):
     falla = models.ForeignKey(Falla, null = False,blank = False, on_delete=models.CASCADE)
@@ -286,6 +293,7 @@ class Incidente(models.Model):
     relevador = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)	
     asunto_mail_relevador = models.CharField(max_length= 100, blank=True)
     cuerpo_mail_relevador = models.CharField(max_length= 1000, blank=True)
+    materiales = models.ManyToManyField(Material)
 
     def __str__(self):
         return "{2} (F: {0}/{1}{3})".format(self.falla,self.fecha,self.luminaria,self.estado)

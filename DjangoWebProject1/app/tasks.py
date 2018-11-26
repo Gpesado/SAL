@@ -6,18 +6,23 @@ from app.models import *
 logger = get_task_logger(__name__)
 
 
+def send_mail_relevador(x, y, z):
+    send_mail(
+    y,
+    z,
+    'enjeidevelopment@gmail.com',
+    [x],
+    fail_silently=False,
+)
+
 @task()
 def add(x, y):
 	
-	queryset = Incidente.objects.all().order_by(F('cantidad_asignados') - F('cantidad_cerrados'))[:1]   	
-	
-	for each in queryset:
-                self.fields['relevador'].queryset = Usuario.objects.filter(pk=each.usuario.pk)
-	
-	send_mail(
-    'Subject here',
-    'Here is the message.',
-    'enjeidevelopment@gmail.com',
-    ['nicolas.dibiase22@gmail.com'],
-    fail_silently=False,
-)
+
+	incidentes = Incidente.objects.exclude(estado='a')
+
+	for incidente in incidentes:
+		#incidente = Incidente.objects.get(pk=each.pk)
+		na = Notificacion_alerta.objects.create(alerta=incidente.alerta, destinatario=incidente.relevador)
+		na.save()
+		send_mail_relevador(incidente.relevador.email, incidente.asunto_mail_relevador, incidente.cuerpo_mail_relevador)

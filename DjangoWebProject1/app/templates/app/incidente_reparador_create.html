@@ -1,0 +1,36 @@
+﻿{% extends 'app/base_sin_header.html' %}
+{% load static %}
+{% block javascript %}
+
+<script src="{% static 'app/scripts/books.js' %}"></script>
+  
+{% endblock %}
+{% block content %}
+
+<form method="post" action="{% url 'incidentes_reparador' %}" class="js-book-create-form">
+  {% csrf_token %}
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">Nuevo alerta</h4>
+  </div>
+  <div class="modal-body">
+    {% load widget_tweaks %}
+
+{% for field in form %}
+  <div class="form-group{% if field.errors %} has-error{% endif %}">
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {% render_field field class="form-control" %}
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+  </div>
+{% endfor %}
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+  </div>
+</form>
+{% endblock %}    

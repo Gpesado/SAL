@@ -1,0 +1,79 @@
+﻿{% extends 'app/base_tecnico.html' %}
+{% load static %}
+{% block javascript %}
+
+<script src="{% static 'app/scripts/books.js' %}"></script>
+  
+{% endblock %}
+{% block content %}
+  <h1 class="page-header">Materiales</h1>
+  <p>
+    <button type="button" class="btn btn-primary" onclick="myFunction()" data-url="{% url 'material_create' %}">
+      <span class="glyphicon glyphicon-plus"></span>
+      Nuevo Material
+    </button>
+  </p>
+  <table class="table" id="book-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Descripción</th>
+        <th>Cantidad</th>
+          <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for material in materiales %}
+  <tr>
+    <td>{{ material.pk }}</td>
+    <td>{{ material.descripcion }}</td>
+    <td>{{ material.cantidad }}</td>
+    <td style="width: 180px">
+      <button type="button" 
+              class="btn btn-warning btn-sm js-update-book"
+              data-url="{% url 'incidente_update' material.pk %}">
+        <span class="glyphicon glyphicon-pencil"></span> Editar
+      </button>
+      <button type="button"
+              class="btn btn-danger btn-sm js-delete-book"
+              data-url="{% url 'incidente_delete' material.pk %}">
+        <span class="glyphicon glyphicon-trash"></span> Eliminar
+      </button>
+    </td>
+  </tr>
+{% empty %}
+  <tr>
+    <td colspan="8" class="text-center bg-warning">No existen Materiales</td>
+  </tr>
+{% endfor %}
+    </tbody>
+      <tfoot>
+              <tr>
+          <th></th>
+          <th><input type="text" style="width:80px" placeholder="Descripcion" /></th>
+          <th><input type="text" style="width:80px" placeholder="Cantidad" /></th>
+          
+		  <th></th>
+              </tr>
+        </tfoot>
+  </table>
+
+  <div class="modal fade" id="modal-book">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+      </div>
+    </div>
+  </div>
+
+<script>
+
+    
+function myFunction() {
+    window.open("{% url 'material_create' %}", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=300,left=500,width=600,height=600");
+}
+
+
+</script>
+
+{% endblock %}

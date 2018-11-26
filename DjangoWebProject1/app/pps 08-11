@@ -1,21 +1,3 @@
 roles distintos para cargar nodo led y asignarle ubicacion
 guardar imagen
 orden de reparacion
-
-
-(1)	¿Cuáles son las críticas que se le pueden realizar al artículo de Leishmann & Cook a partir del artículo del Departamento de Energía (USA) y el área de procesos de CMMI? 2 carillas max.
-(2)	¿Cómo se pueden relacionar las funciones o disciplinas de SCM entre sí? Proporcione ejemplos a través de los elementos de configuración que sugiere CMMI . 2 carillas max.
-
-
-
-El articulo de Leishmann & Cook no meciona que se debe definir una nomenclatura para identificar a los items o elementos de configuración, al mismo tiempo no proporciona ejemplos de cómo se puede identificar a cada uno de los items de configuración que pueden formar parte del proyecto.
-COn respecto al control de cambios, este artículo no menciona herramientas que permiten dicha acción, es decir, ¿cómo se va a realizar el control de cambios? ¿A partir de qué herramientas se puede hacer posible realizar este control?. En el artìculo del Departamento de Energía, por ejemplo, se menciona que existen herramientas automatizadas que permiten o facilitan el control de cambios, hace mención a una herramienta denominada SCR (Software Change Request) la cual permite identificar los cambios realizados sobre software y documentación. A su vez, no menciona herramientas de versionado ni repositorios que pueden facilitar estas tares. 
-Por otro lado, no se menciona qué cambios son los que deben controlarse y qué determina que los mismos deban ser controlados.
-Con lo que respecta a la función Estado de Configuración, se deja más en claro el concepto de para qué se utiliza y que es lo que se debe visualizar luego de realizar esta función con respecto a los otros artículos.
-Además, en el artículo "But I Only Changed One Line of Code!" no se hace tanto hincapié o le resta importancia al hecho de dejar registrado la línea base con los cambios sufridos y lo que contiene la versión actual, este tema se aborda muy por encima diciendo que se actualiza la línea base.
-Por último, Leishmann & Cook no hace mención a la participación del cliente, sino que establece la gestión de configuración netamente para el uso interno de quienes desarrollan el software.
-
-
-2) En primer instancia se seleccionan los elementos de configuración, por ejemplo el código fuente de la aplicación. Se establece la línea base de este elemento para que se pueda luego continuar con el resto de las funciones de SCM. 
-Al momento de solicitar nuevos requerimientos, se va a realizar una copia de la línea base del código fuente para poder realizar las modificaciones solicitadas. Una vez finalizadas estas modificaciones, se confirmarán estos cambios en la copia dejando asentados los archivos modificados y qué impactos tienen dichos cambios, para esto se puede utilizar una herramienta de versionado que facilite estas tareas. Una vez hecho esto el desarrollador solicitará que se aprueben los cambios realizados en el código, el comité evaluador o quién corresponda verificará si los cambios realizados respetan los estándares y si los mismos pueden pasar a formar parte de la línea base. Si se aprueba, estos nuevos cambios o la copia modificada pasará a ser la nueva línea base de código fuente.
-Para que se aprueben estos cambios, se debe enviar un documento que indique los cambios realizados, por quién o quiénes fueron solicitados dichos cambios y un identificador de los requerimientos involucrados en el desarrollado. Esto con motivo de poder mantener una trazabilidad para el momento de la auditoría
