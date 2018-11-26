@@ -55,29 +55,16 @@ def incidentesPorUsuario(x):
 def home(request):
     
     """Renders the home page."""
-    #assert isinstance(request, HttpRequest)
     
-    #pepe = Notificacion_alerta.objects.exclude(incidente__estado = 'a')
-    pepe = Notificacion_alerta.objects.filter(incidente_id = 2).order_by('-pk').first()
-
-    if pepe.incidente.alerta.periodicidad == 'k':
-        
-        d = timedelta(days=pepe.incidente.alerta.frecuencia)
-        fecha = pepe.fecha_envio + d
-    
-    else:
-        h = timedelta(hours=pepe.incidente.alerta.frecuencia)
-        fecha = pepe.fecha_envio + h
-    if timezone.now() < fecha:
-        print(fecha)     
-    print(pepe.incidente.alerta)
 
     incidentes = Incidente.objects.filter(estado='p') 
+    incidentes_reparador = Incidente_Por_Reparador.objects.all() 
     return render(
         request,
         'app/index.html',
         {
         'incidentes': incidentes,
+        'incidentes_reparador': incidentes_reparador,
         }
     )
 
@@ -1104,7 +1091,7 @@ def save_incidente_form(request, form, template_name):
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-            form.save_m2m()
+            #form.save_m2m()
             
             
             subject = form.cleaned_data['asunto_mail_relevador']
@@ -1290,8 +1277,8 @@ def incidentes_reparador(request):
 
 
                 #return HttpResponse('<script type="text/javascript">window.close()</script>')
-        else:
-            form = RegisterIncidenteReparadorForm()
+        #else:
+        form = RegisterIncidenteReparadorForm()        
         return render(request, 'app/incidente_reparador_create.html', {'form': form})  
 
 def incidentes_reasignacion(request):
@@ -1381,9 +1368,6 @@ def incidente_materiales(request):
         }
     )    
 
-
-
-
 def addMarcadorLed(request, pk):
     luminaria = get_object_or_404(Luminaria_LED, pk=pk)
     id = luminaria.id.__str__()
@@ -1398,12 +1382,17 @@ def addMarcadorLed(request, pk):
     return render(request, 'app/add_marcador_led.html', {'form': form})
 
 def incidente_material_update(request, pk):
-    incidente = get_object_or_404(Incidente, pk=pk)
-    if request.method == 'POST':
-        form = RegisterIncidenteFormEditReparador(request.POST, instance=incidente)
-    else:
-        form = RegisterIncidenteFormEditReparador(instance=incidente)
-    return save_incidente_form(request, form, 'app/incidente_update.html')
+        incidente = get_object_or_404(Incidente, pk=pk)
+        if request.method == "POST":
+            form = RegisterIncidenteFormEditReparador(request.POST, instance=incidente)
+            if form.is_valid():
+                incidente = form.save()
+                
+
+                return HttpResponse('<script type="text/javascript">window.close()</script>')
+        else:
+            form = RegisterIncidenteFormEditReparador(instance=incidente)
+        return render(request, 'app/incidente_material_update.html', {'form': form})  	
 
 def load_incidentes(request):
     country_id = request.GET.get('usuario')

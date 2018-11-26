@@ -1,7 +1,19 @@
 {% extends "app/base.html" %}
 {% block title %}
     Homepage - {{ block.super }}
+	
 {% endblock title %}
+{% load static %}
+{% block javascript %}
+
+<script src="{% static 'app/scripts/books.js' %}"></script>
+  <script>
+
+    
+
+
+</script>
+{% endblock %}
 {% block content %}
 	<h2>Incidentes Abiertos que tiene Asignado</h2>
     {% for incidente in incidentes %}
@@ -17,5 +29,32 @@
 	{% endif %}
     	
     {% endfor %}
+	
+	{% for incid in incidentes_reparador %}
+	
+    {% if incid.usuario.pk == user.pk %}
+	
+	{% for i in incid.incidente.all %}
+		
+		<div class="alert alert-info">REPARAR: Falla: {{ i.falla }} - Luminaria: {{ i.luminaria }} - Descripcion: {{ i.descripcion }} 
+		<button type="button" 
+              class="btn btn-warning btn-sm" onclick="javascript:window.open('{% url 'incidente_material_update' i.pk  %}', '_blank', 'toolbar=yes,scrollbars=yes,resizable=yes,top=25,left=400,width=600,height=600')"
+			  >
+        <span class="glyphicon glyphicon-pencil"></span> Asignar Materiales
+      </button>
+		</div>
+		
+	{% endfor %}
+    
 
+	{% endif %}
+    	
+    {% endfor %}
+	
 {% endblock content %}
+
+<script>
+
+    
+
+</script>
