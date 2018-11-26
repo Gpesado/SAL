@@ -1065,7 +1065,8 @@ def incidente_create(request):
             if form.is_valid():
                 incidente = form.save(commit=False)
                 incidente.save()
-
+                na = Notificacion_alerta.objects.create(incidente=incidente)
+                na.save()
                 grabar_incidente_x_usuario(incidente.relevador)
 
 
@@ -1272,18 +1273,18 @@ def save_falla_form(request, form, template_name):
 	
 
 class incidenteAsignadosListView(ListView):
-    model = Incidente_Reparador    
+    model = Incidente_Por_Reparador    
     context_object_name = 'incidentes_reparador'
     template_name = 'app/incidente_reparador_asignados.html'    
-    queryset = Incidente_Reparador.objects.all()  # Default: Model.objects.all()
+    queryset = Incidente_Por_Reparador.objects.all()  # Default: Model.objects.all()
 	
 
 def incidentes_reparador(request):
         if request.method == "POST":
+            print(request.POST)
             form = RegisterIncidenteReparadorForm(request.POST)
             if form.is_valid():
-                incidente = form.save(commit=False)
-                incidente.save()
+                incidente = form.save()
 
                 #grabar_incidente_x_usuario(incidente.relevador)
 
@@ -1370,8 +1371,8 @@ def material_create(request):
 def incidente_materiales(request):
     
     """Renders the home page."""
-    #assert isinstance(request, HttpRequest)
-    incidentes = Incidente.objects.filter(incidente_reparador__isnull=False).exclude(estado='a')
+    #assert isinstance(request, HttpRequest)incidente_reparador__isnull=False
+    incidentes = Incidente.objects.filter().exclude(estado='a')
     return render(
         request,
         'app/incidente_material_list.html',
@@ -1403,3 +1404,8 @@ def incidente_material_update(request, pk):
     else:
         form = RegisterIncidenteFormEditReparador(instance=incidente)
     return save_incidente_form(request, form, 'app/incidente_update.html')
+
+def load_incidentes(request):
+    country_id = request.GET.get('usuario')
+    incidente = Incidente.objects.filter(estado='p').exclude(relevador_id=country_id)
+    return render(request, 'incidente_dropdown_list_options.html', {'incidente': incidente})

@@ -299,9 +299,9 @@ class Incidente_Por_Usuario(models.Model):
     cantidad_asignados = models.PositiveIntegerField(null = False)
     cantidad_cerrados = models.PositiveIntegerField(null = False)
 	
-class Incidente_Reparador(models.Model):
+class Incidente_Por_Reparador(models.Model):
     usuario = models.ForeignKey(Usuario, null = False,blank = False, on_delete=models.CASCADE)
-    incidente = models.ForeignKey(Incidente, null = False,blank = False, on_delete=models.CASCADE)    
+    incidente = models.ManyToManyField(Incidente)    
 
 class Notificacion_alerta(models.Model):
     

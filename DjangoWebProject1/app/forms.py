@@ -243,26 +243,31 @@ class RegisterMarcadorLEDForm(forms.ModelForm):
 class agregarIncidente_Reparador(forms.ModelForm):
 
         class Meta:
-            model = Incidente_Reparador
+            model = Incidente_Por_Reparador
             fields = ('usuario', 'incidente') 
 
 class RegisterIncidenteReparadorForm(forms.ModelForm):
 
         class Meta:
-            model = Incidente_Reparador
+            model = Incidente_Por_Reparador
             fields = ('usuario', 'incidente')         
 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
+            self.fields["incidente"].widget = forms.SelectMultiple(choices=Incidente.objects.filter(estado='p',incidente_por_reparador__isnull=True)
+                .values_list('id',Concat('falla__descripcion', V(' - ') , 'luminaria__identificador',V(' - ') ,'descripcion' ) ))
             self.fields['usuario'].queryset = Usuario.objects.filter(roles__nombre='Reparador')
-            self.fields['incidente'].queryset = Incidente.objects.filter(estado='p') 
+            
+
+
+A = Usuario.objects.filter(roles__nombre='Administrador').first()
 
 class RegisterIncidenteReasignacionForm(forms.Form):
         
         usuario= forms.CharField(label='Usuario', widget=forms.Select(choices=Usuario.objects.filter
             (roles__nombre='Administrador').values_list('id',Concat('first_name', V(' ') ,'last_name' ))))
-
-        incidente= forms.CharField(label='Incidente', widget=forms.SelectMultiple(choices=Incidente.objects.filter(estado='p')
+        print(A.pk)
+        incidente= forms.CharField(label='Incidente', widget=forms.SelectMultiple(choices=Incidente.objects.filter(estado='p').exclude(relevador_id=A.pk)
             .values_list('id','descripcion' )))
 
 class RegisterMaterialForm(forms.ModelForm):
@@ -270,3 +275,4 @@ class RegisterMaterialForm(forms.ModelForm):
         class Meta:
             model = Material
             fields = ('descripcion', 'cantidad')         
+
