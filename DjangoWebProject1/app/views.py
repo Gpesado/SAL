@@ -1301,14 +1301,21 @@ class mapView(ListView):
     context_object_name = 'marcadores_lumLed'
     template_name = 'app/marcador_luminaria_led_list.html'
     queryset = Marcador_Luminaria_Led.objects.all()  # Default: Model.objects.all()
-'''
-def marcadorCreate(request, pk):
-    luminaria = get_object_or_404(Nodo_NO_LED, pk=pk)
-    if request.method == 'POST':
-        form = RegisterMarcadorLEDForm(request.POST, instance = luminaria)
+
+def addMarcadorLed(request, pk):
+    luminaria = get_object_or_404(Luminaria_LED, pk=pk)
+    if request.method == "POST":
+        form = RegisterMarcadorLEDForm(request.POST, instance=luminaria)
+        if form.is_valid():
+            print("soy valido")
+            marcador = form.save(commit=False)
+            marcador.save()
+            return redirect('luminarialed')
     else:
-        form = RegisterMarcadorLEDForm(instance = luminaria)  
-    return save_marcador_form(request, form, 'app/marcador_grupo_luminaria_list.html')
+        form = RegisterMarcadorLEDForm(instance=luminaria)
+    return render(request, 'app/add_marcador_led.html', {'form': form})
+
+'''
  def marcador_update(request, pk):
     marcador = get_object_or_404(Marcador_Grupo_Luminaria, pk=pk)
     if request.method == 'POST':

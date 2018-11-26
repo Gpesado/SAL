@@ -41,11 +41,7 @@
               data-url="{% url 'luminarialed_delete' luminarialed.pk %}">
         <span class="glyphicon glyphicon-trash"></span> Eliminar
       </button>
-      <button type="button"
-      class="btn btn-danger btn-sm js-update-book"
-      data-url="{% url 'marcadorCreate' %}">
-      <span class="glyphicon glyphicon-trash"></span> AGREGAR UBICACION
-      </button>
+      <a class="btn btn-default" href="{% url 'addMarcadorLed' pk=luminarialed.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
     </td>
   </tr>
 {% empty %}

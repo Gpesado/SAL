@@ -143,7 +143,7 @@ urlpatterns = [
     url(r'^tecnico/incidente/(?P<pk>\d+)/delete/$', app.views.incidente_delete, name='incidente_delete'),
     url(r'^tecnico/incidente/(?P<pk>\d+)/update/$', app.views.incidente_update, name='incidente_update'),
     url(r'^tecnico/incidente$', app.views.incidenteListView.as_view(), name='incidente'),
-	url(r'^tecnico/incidentes_reparador$', app.views.incidentes_reparador, name='incidentes_reparador'),
+	  url(r'^tecnico/incidentes_reparador$', app.views.incidentes_reparador, name='incidentes_reparador'),
     url(r'^tecnico/incidente_reparador$', app.views.agregarIncidenteReparador, name='incidente_reparador'),
     path('ajax/load_luminarias/', app.views.load_luminarias, name='ajax_load_luminarias'),  # <-- this one here
 
@@ -176,6 +176,7 @@ urlpatterns = [
     #urls Mapas (CREATE/DELETE/LIST)
     url(r'^visualizador/mapa_luminarias$', app.views.mapaView.as_view(), name='mapa_luminarias'),
     url(r'^visualizador/buscarMarcador$', app.views.mapView.as_view(), name='buscarMarcador'),
+    url(r'^tecnico/luminarialed/(?P<pk>\d+)/addMarcadorLed$', app.views.addMarcadorLed, name='addMarcadorLed'),
    #
 	
 ] 
