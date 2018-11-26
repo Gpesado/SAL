@@ -187,8 +187,8 @@ urlpatterns = [
 
     #urls Mapas (CREATE/DELETE/LIST)
     url(r'^visualizador/mapa_luminarias$', app.views.mapaView.as_view(), name='mapa_luminarias'),
-    url(r'^visualizador/buscarMarcador$', app.views.mapView.as_view(), name='buscarMarcador'),
     url(r'^tecnico/luminarialed/(?P<pk>\d+)/addMarcadorLed$', app.views.addMarcadorLed, name='addMarcadorLed'),
+    url(r'^visualizador/mapa_de_luminarias$', app.views.mapaView.as_view(), name='verLuminarias'),
    #
 	
 ] 

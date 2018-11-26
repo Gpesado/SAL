@@ -25,6 +25,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from queryset_sequence import QuerySetSequence
 from datetime import timedelta
 
 def send_mail_relevador(x, y, z):
@@ -1340,9 +1341,13 @@ def agregarIncidenteReparador(request):
 #Visualizador - ver mapa
 class mapaView(ListView):
     model = Marcador_Grupo_Luminaria    
-    context_object_name = 'marcadores_grupos'
-    template_name = 'marcador_grupo_luminaria_list.html'
-    queryset = Marcador_Grupo_Luminaria.objects.all()  # Default: Model.objects.all()
+    context_object_name = 'marcadores'
+    template_name = 'app/marcador_grupo_luminaria_list.html'
+    qsluminarialed = Marcador_Luminaria_Led.objects.all()
+    qsluminarianoled = Marcador_Luminaria_No_Led.objects.all()
+    matches = QuerySetSequence(qsluminarianoled, qsluminarialed)
+
+    queryset = matches  # Default: Model.objects.all()
 
 class mapView(ListView):
     model = Marcador_Luminaria_Led    
@@ -1409,3 +1414,11 @@ def load_incidentes(request):
     country_id = request.GET.get('usuario')
     incidente = Incidente.objects.filter(estado='p').exclude(relevador_id=country_id)
     return render(request, 'incidente_dropdown_list_options.html', {'incidente': incidente})
+
+
+
+def verLuminarias(request):
+    qsluminarialed = Marcador_Luminaria_Led.objects.all()
+    qsluminarianoled = Marcador_Luminaria_No_Led.objects.all()
+    matches = QuerySetSequence(qsluminarianoled, qsluminarialed)
+    return render(request, 'app/marcador_grupo_luminaria_list.html', {'marcadores': matches})
