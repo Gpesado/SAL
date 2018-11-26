@@ -1363,8 +1363,8 @@ def incidente_materiales(request):
         }
     )    
 
-def incidente_material_update(request, pk):
-    incidente = get_object_or_404(Incidente, pk=pk)
+
+
 
 def addMarcadorLed(request, pk):
     luminaria = get_object_or_404(Luminaria_LED, pk=pk)
@@ -1379,3 +1379,10 @@ def addMarcadorLed(request, pk):
         form = RegisterMarcadorLEDForm(instance=luminaria)
     return render(request, 'app/add_marcador_led.html', {'form': form})
 
+def incidente_material_update(request, pk):
+    incidente = get_object_or_404(Incidente, pk=pk)
+    if request.method == 'POST':
+        form = RegisterIncidenteFormEditReparador(request.POST, instance=incidente)
+    else:
+        form = RegisterIncidenteFormEditReparador(instance=incidente)
+    return save_incidente_form(request, form, 'app/incidente_update.html')
