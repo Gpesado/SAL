@@ -1365,8 +1365,17 @@ def incidente_materiales(request):
 
 def incidente_material_update(request, pk):
     incidente = get_object_or_404(Incidente, pk=pk)
-    if request.method == 'POST':
-        form = RegisterIncidenteFormEditReparador(request.POST, instance=incidente)
+
+def addMarcadorLed(request, pk):
+    luminaria = get_object_or_404(Luminaria_LED, pk=pk)
+    if request.method == "POST":
+        form = RegisterMarcadorLEDForm(request.POST, instance=luminaria)
+        if form.is_valid():
+            print("soy valido")
+            marcador = form.save(commit=False)
+            marcador.save()
+            return redirect('luminarialed')
     else:
-        form = RegisterIncidenteFormEditReparador(instance=incidente)
-    return save_incidente_form(request, form, 'app/incidente_update.html')
+        form = RegisterMarcadorLEDForm(instance=luminaria)
+    return render(request, 'app/add_marcador_led.html', {'form': form})
+
