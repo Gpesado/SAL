@@ -7,12 +7,6 @@
 {% endblock %}
 {% block content %}
   <h1 class="page-header">Incidentes</h1>
-  <p>
-    <button type="button" class="btn btn-primary" onclick="myFunction()" data-url="{% url 'incidente_create' %}">
-      <span class="glyphicon glyphicon-plus"></span>
-      Nuevo Incidente
-    </button>
-  </p>
   <table class="table" id="book-table">
     <thead>
       <tr>
@@ -78,10 +72,6 @@
 
 <script>
 
-    
-function myFunction() {
-    window.open("{% url 'incidente_create' %}", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=300,left=500,width=600,height=600");
-}
 
 
 </script>

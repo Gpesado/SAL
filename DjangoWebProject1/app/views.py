@@ -1104,7 +1104,7 @@ def save_incidente_form(request, form, template_name):
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-
+            form.save_m2m()
             
             
             subject = form.cleaned_data['asunto_mail_relevador']

@@ -223,7 +223,7 @@ class RegisterIncidenteFormEditReparador(forms.ModelForm):
 
         class Meta:
             model = Incidente
-            fields = ('falla', 'luminaria', 'estado', 'descripcion', 'materiales')
+            fields = ('falla', 'fecha','alerta', 'luminaria', 'estado','relevador', 'descripcion', 'materiales')
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.fields["descripcion"].widget = forms.Textarea()
@@ -265,12 +265,12 @@ class RegisterIncidenteReparadorForm(forms.ModelForm):
             
 
 
-A = Usuario.objects.filter(roles__nombre='Administrador').first()
+A = Usuario.objects.filter(roles__nombre='Administrador Luminaria').first()
 
 class RegisterIncidenteReasignacionForm(forms.Form):
         
         usuario= forms.CharField(label='Usuario', widget=forms.Select(choices=Usuario.objects.filter
-            (roles__nombre='Administrador').values_list('id',Concat('first_name', V(' ') ,'last_name' ))))
+            (roles__nombre='Administrador Luminaria').values_list('id',Concat('first_name', V(' ') ,'last_name' ))))
         print(A.pk)
         incidente= forms.CharField(label='Incidente', widget=forms.SelectMultiple(choices=Incidente.objects.filter(estado='p').exclude(relevador_id=A.pk)
             .values_list('id','descripcion' )))
