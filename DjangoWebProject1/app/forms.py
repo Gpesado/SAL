@@ -273,7 +273,7 @@ class RegisterIncidenteReasignacionForm(forms.Form):
             (roles__nombre='Administrador Luminaria').values_list('id',Concat('first_name', V(' ') ,'last_name' ))))
         print(A.pk)
         incidente= forms.CharField(label='Incidente', widget=forms.SelectMultiple(choices=Incidente.objects.filter(estado='p').exclude(relevador_id=A.pk)
-            .values_list('id','descripcion' )))
+            .values_list('id',Concat('falla__nombre', V(' - ') , 'luminaria__identificador',V(' - ') ,'descripcion' ) )))
 
 class RegisterMaterialForm(forms.ModelForm):
 

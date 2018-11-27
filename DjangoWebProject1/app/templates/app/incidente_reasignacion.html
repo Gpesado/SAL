@@ -39,15 +39,6 @@
   <div class="modal-body">
     {% load widget_tweaks %}
 
-	<select class="form-control" name="room" id="id_country">
-                            <option value="1">1</option>
-							<option value="2">2</option>
-                    </select>
-					
-						<select class="form-control" name="room" id="id_city">
-                            <option value="1">1</option>
-							<option value="2">2</option>
-                    </select>
 	
 {% for field in form %}
   <div class="form-group{% if field.errors %} has-error{% endif %}">
@@ -61,20 +52,6 @@
 
   
 {% endfor %}
-
-
-    <select name="selectcountries" id="selectcountries">
-        {% for item in usuarios %}
-            <option val="{{ item.name }}"> {{ item.username }} </option>    
-        {% endfor %}
-        </select>   
-
-
-        <select name ="selectcities" id="selectcities">
-
-
-        </select>
-
 
 
   
