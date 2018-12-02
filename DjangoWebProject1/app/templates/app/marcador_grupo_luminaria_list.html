@@ -85,13 +85,13 @@
 
 <script>
     $(document).ready(function() {
-        var latlng = new google.maps.LatLng(20,20);
+        var latlng = new google.maps.LatLng(-34.54206521138594,-58.72301568950195);
         var mapOptions = {
             zoom: 12,
             center: latlng,
             mapTypeControl: false,
             navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
-            mapTypeId: google.maps.MapTypeId.ROADMAP
+            mapTypeId: google.maps.MapTypeId.ROADMAP 
         };
         map = new google.maps.Map($('.map')[0], mapOptions);
          
@@ -101,12 +101,13 @@
                 var tipo = "{{marcador.luminaria.identificador}}"                
                 cortado = tipo.split("_")
 
+                //si falla
                 if ( "{{marcador.luminaria.estado}}" == "f")
                 {
                     image = {
-                    url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+                    url: 'https://www.dropbox.com/s/kvg50x1vw24wvyu/bombilla.png?dl=1',
                     // This marker is 20 pixels wide by 32 pixels high.
-                    size: new google.maps.Size(20, 20),
+                    size: new google.maps.Size(32, 32),
                     // The origin for this image is (0, 0).
                     origin: new google.maps.Point(0, 0),
                     // The anchor for this image is the base of the flagpole at (0, 32).
@@ -115,15 +116,33 @@
                 }
                 else 
                 {
+                  //si la estan arreglando
+                  if ( "{{marcador.luminaria.estado}}" == "d")
+                {
                     image = {
-                    url: 'https://image.shutterstock.com/image-vector/location-map-pin-sign-blue-450w-447957820.jpg',
+                    url: 'https://www.dropbox.com/s/tojucqlw4aexz4j/destornillador-y-llave-inglesa-cruzados.png?dl=1',
                     // This marker is 20 pixels wide by 32 pixels high.
-                    size: new google.maps.Size(20, 20),
+                    size: new google.maps.Size(32, 32),
+                    // The origin for this image is (0, 0).
+                    origin: new google.maps.Point(0, 0),
+                    // The anchor for this image is the base of the flagpole at (0, 32).
+                    anchor: new google.maps.Point(0, 0)
+                  };
+                }
+                else 
+                {
+                    //si funciona correctamente
+                    image = {
+                    url: 'https://www.dropbox.com/s/uzrda2zurze6zkr/lampara.png?dl=1',
+                    // This marker is 20 pixels wide by 32 pixels high.
+                    size: new google.maps.Size(32, 32),
                     // The origin for this image is (0, 0).
                     origin: new google.maps.Point(0, 0),
                     // The anchor for this image is the base of the flagpole at (0, 32).
                     anchor: new google.maps.Point(0, 0)
                     };
+                }
+                    
                 }
                 if ( cortado[0] == "LAMP" & cortado[1] == "LED")
                 {
@@ -146,5 +165,10 @@
 
 {% block content %}
 {% csrf_token %}
-<div class="map" style="width: 400px; height: 400px;"></div>
-{% endblock %}}
+ <div class="pac-card" id="pac-card">
+    <div id="title">
+      <label>Ver Luminarias</label>
+    </div>
+  <div class="map" style="height: 100%;"></div>
+</div>
+{% endblock %}
