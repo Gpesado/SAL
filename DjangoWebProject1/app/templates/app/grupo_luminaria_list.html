@@ -17,13 +17,13 @@
     <thead>
       <tr>
         <th>#</th>
-        <th>Nombre</th>
-        <th>Administrador</th>
-        <th>Luminarias_led</th>
+        <th><input type="text" style="width:80px" placeholder="Nombre" /></th>
+          <th><input type="text" style="width:150px" placeholder="Administrador" /></th>
+          <th>Luminarias_led</th>
         <th>Luminarias_NO_led</th>
-        <th>Observadores</th>
-        <th>Tecnicos</th>
-          <th></th>
+        <th><input type="text" style="width:110px" placeholder="Observadores" /></th>
+          <th><input type="text" style="width:80px" placeholder="Tecnicos" /></th>
+          <th class="no-sort"></th>
       </tr>
     </thead>
     <tbody>
@@ -71,19 +71,7 @@
   </tr>
 {% endfor %}
     </tbody>
-      <tfoot>
-              <tr>
-                  
-          <th></th>
-          <th><input type="text" style="width:80px" placeholder="Nombre" /></th>
-          <th><input type="text" style="width:80px" placeholder="Administrador" /></th>
-          <th></th>
-          <th></th>
-          <th><input type="text" style="width:80px" placeholder="Observadores" /></th>
-          <th><input type="text" style="width:80px" placeholder="Tecnicos" /></th>
-            <th></th>
-              </tr>
-        </tfoot>
+      
   </table>
 
   <div class="modal fade" id="modal-book">

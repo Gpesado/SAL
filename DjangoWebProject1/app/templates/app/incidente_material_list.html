@@ -11,12 +11,12 @@
     <thead>
       <tr>
         <th>#</th>
-        <th>Falla</th>
-        <th>Fecha</th>
-        <th>Luminaria</th>
-        <th>Estado</th>
-        <th>Relevador</th>
-          <th></th>
+        <th><input type="text" style="width:80px" placeholder="Falla" /></th>
+          <th><input type="text" style="width:80px" placeholder="Fecha" /></th>
+          <th><input type="text" style="width:80px" placeholder="Luminaria" /></th>
+          <th><input type="text" style="width:80px" placeholder="Estado" /></th>
+          <th><input type="text" style="width:80px" placeholder="Relevador" /></th>
+          <th class="no-sort"></th>
       </tr>
     </thead>
     <tbody>
@@ -49,17 +49,6 @@
   </tr>
 {% endfor %}
     </tbody>
-      <tfoot>
-              <tr>
-          <th></th>
-          <th><input type="text" style="width:80px" placeholder="falla" /></th>
-          <th><input type="text" style="width:80px" placeholder="fecha" /></th>
-          <th><input type="text" style="width:80px" placeholder="luminaria" /></th>
-          <th><input type="text" style="width:80px" placeholder="estado" /></th>
-          <th><input type="text" style="width:80px" placeholder="relevador" /></th>
-		  <th></th>
-              </tr>
-        </tfoot>
   </table>
 
   <div class="modal fade" id="modal-book">

@@ -17,9 +17,9 @@
     <thead>
       <tr>
         <th>#</th>
-        <th>Nombre</th>
-        <th>Origen</th>
-          <th></th>
+        <th><input type="text" style="width:80px" placeholder="Nombre" /></th>
+          <th><input type="text" style="width:80px" placeholder="Origen" /></th>
+          <th  class="no-sort"></th>
       </tr>
     </thead>
     <tbody>
@@ -47,15 +47,7 @@
   </tr>
 {% endfor %}
     </tbody>
-      <tfoot>
-              <tr>
-                  
-          <th></th>
-          <th><input type="text" style="width:80px" placeholder="nombre" /></th>
-          <th><input type="text" style="width:80px" placeholder="origen" /></th>
-            <th></th>
-              </tr>
-        </tfoot>
+      
   </table>
 
   <div class="modal fade" id="modal-book">

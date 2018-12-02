@@ -17,13 +17,13 @@
     <thead>
       <tr>           
         <th>#</th>
-        <th>identificador</th>
-        <th>concentrador</th>
-        <th>potencia_esperada</th>
-        <th>potencia_real</th>
-        <th>fecha_ult_medicion</th>
-        <th>lampara</th>
-          <th></th>
+        <th><input type="text" style="width:80px" placeholder="Identificador" /></th>
+          <th><input type="text" style="width:80px" placeholder="Concentrador" /></th>
+        <th>Potencia Esperada</th>
+        <th>Potencia Real</th>
+        <th><input type="text" style="width:80px" placeholder="Fecha últ. medición" /></th>
+          <th><input type="text" style="width:80px" placeholder="Lampara" /></th>
+          <th  class="no-sort"></th>
       </tr>
     </thead>
     <tbody>
@@ -55,18 +55,6 @@
   </tr>
 {% endfor %}
     </tbody>
-      <tfoot>
-              <tr>                  
-          <th></th>
-          <th><input type="text" style="width:80px" placeholder="identificador" /></th>
-          <th><input type="text" style="width:80px" placeholder="es_concentrador" /></th>
-          <th></th>
-          <th></th>
-          <th><input type="text" style="width:80px" placeholder="fecha_ult_medicion" /></th>
-          <th><input type="text" style="width:80px" placeholder="lampara" /></th>
-            <th></th>
-              </tr>
-        </tfoot>
   </table>
 
   <div class="modal fade" id="modal-book">

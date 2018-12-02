@@ -17,10 +17,10 @@
     <thead>
       <tr>
         <th>#</th>
-        <th>identificador</th>
-        <th>modeloLampara</th>
-        <th>estado</th>
-          <th></th>
+        <th><input type="text" style="width:80px" placeholder="Identificador" /></th>
+          <th><input type="text" style="width:80px" placeholder="Modelo" /></th>
+          <th><input type="text" style="width:80px" placeholder="Estado" /></th>
+          <th  class="no-sort"></th>
       </tr>
     </thead>
     <tbody>
@@ -50,15 +50,6 @@
   </tr>
 {% endfor %}
     </tbody>
-      <tfoot>
-              <tr>
-          <th></th>
-          <th><input type="text" style="width:80px" placeholder="identificador" /></th>
-          <th><input type="text" style="width:80px" placeholder="modelo" /></th>
-          <th><input type="text" style="width:80px" placeholder="estado" /></th>
-            <th></th>
-              </tr>
-        </tfoot>
   </table>
 
   <div class="modal fade" id="modal-book">

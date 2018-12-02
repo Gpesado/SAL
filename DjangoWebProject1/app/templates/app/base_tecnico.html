@@ -6,17 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SAL</title>
     <link href="{% static 'app/content/bootstrap.min.css' %}" rel="stylesheet">
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-      
-      <!--<script type="text/javascript" src="{% static 'app/scripts/jquery.js' %}" charset="UTF-8"></script>
-    <script type="text/javascript" src="{% static 'app/scripts/bootstrap.min.js' %}" charset="UTF-8"></script>
-    <script type="text/javascript" src="{% static 'app/scripts/jquery-ui.js' %}"></script>
-<script src="../../static/app/scripts/jquery-3.1.1.min.js"></script>
-      <script src="../../static/app/scripts/jquery.dataTables.min.js"></script>-->
-      
+    
+      <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">      
+      <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css" rel="stylesheet">      
+
       <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
       
@@ -34,20 +27,25 @@
 
           
 
-          $(document).ready(function() {
-    // Setup - add a text input to each footer cell
-   
+      $(document).ready(function() {
+
+        $('#book-table').DataTable({
+
+    "ordering": true,
+    columnDefs: [{
+      orderable: false,
+      targets: "no-sort"
+    }]
+
+  });
+        
+        var table = $('#book-table').DataTable();
  
-    // DataTable
-              var table = $('#book-table').DataTable(     
-							  
-              );
- 
-    // Apply the search
-    table.columns().every( function () {
+
+        table.columns().every( function () {
         var that = this;
  
-        $( 'input', this.footer() ).on( 'keyup change', function () {
+        $( 'input', this.header() ).on( 'keyup change', function () {
             if ( that.search() !== this.value ) {
                 that
                     .search( this.value )
@@ -56,7 +54,7 @@
         } );
               });
 
-} );
+      } );
       </script>
   
 	<style>
