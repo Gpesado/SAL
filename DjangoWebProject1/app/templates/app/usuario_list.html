@@ -14,15 +14,16 @@
   <table class="table" id="book-table">
     <thead>
       <tr>
-        <th>#</th>
-        <th>Usuario</th>
+                <th></th>
+        <th><input type="text" style="width:80px" placeholder="Usuario" /></th>
         <th>Apellido</th>
         <th>Nombre</th>
         <th>Activo</th>
-        <th>Email</th>
-        <th>Roles</th>
-          <th></th>
+        <th><input type="text" style="width:180px" placeholder="Email" /></th>
+        <th><input type="text" style="width:180px" placeholder="Roles" /></th>
+          <th  class="no-sort"></th>
       </tr>
+      
     </thead>
     <tbody>
       {% for usuario in usuarios %}
@@ -61,18 +62,7 @@
   </tr>
 {% endfor %}
     </tbody>
-      <tfoot>
-            <tr>
-                <th></th>
-        <th></th>
-        <th><input type="text" style="width:80px" placeholder="Usuario" /></th>
-        <th></th>
-        <th></th>
-        <th><input type="text" style="width:80px" placeholder="Email" /></th>
-        <th><input type="text" style="width:80px" placeholder="Roles" /></th>
-          <th></th>
-            </tr>
-        </tfoot>
+      
   </table>
 
   <div class="modal fade" id="modal-book">
