@@ -280,5 +280,11 @@ class RegisterMaterialForm(forms.ModelForm):
 
         class Meta:
             model = Material
-            fields = ('descripcion', 'cantidad')         
+            fields = ('descripcion', 'cantidad')
+
+class UpdateMarcadorLED(forms.ModelForm):
+
+        class Meta:
+            model = Marcador_Luminaria_Led
+            fields = ('nombre', 'luminaria','lat','lng')
 

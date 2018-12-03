@@ -1248,7 +1248,7 @@ def incidente_materiales(request):
         }
     )    
 
-def addMarcadorLed(request, pk):
+'''def addMarcadorLed(request, pk):
     luminaria = get_object_or_404(Luminaria_LED, pk=pk)
     id = luminaria.id.__str__()
     if request.method == "POST":
@@ -1259,7 +1259,7 @@ def addMarcadorLed(request, pk):
             return redirect('luminarialed')
     else:
         form = RegisterMarcadorLEDForm(id)
-    return render(request, 'app/add_marcador_led.html', {'form': form})
+    return render(request, 'app/add_marcador_led.html', {'form': form})'''
 
 def incidente_material_update(request, pk):
         incidente = get_object_or_404(Incidente, pk=pk)
@@ -1288,3 +1288,26 @@ def verLuminarias(request):
     matches = QuerySetSequence(qsluminarianoled, qsluminarialed)
     return render(request, 'app/marcador_grupo_luminaria_list.html', {'marcadores': matches})
 
+def addMarcadorLed(request, pk):
+    luminaria = get_object_or_404(Luminaria_LED, pk=pk)
+    try:
+        marcador = Marcador_Luminaria_Led.objects.get(luminaria = luminaria)
+    except Marcador_Luminaria_Led.DoesNotExist:   
+        id = luminaria.id.__str__()
+        if request.method == "POST":
+            form = RegisterMarcadorLEDForm(id, request.POST)
+            if form.is_valid():
+                marcador = form.save(commit=False)
+                return redirect('luminarialed')
+        else:
+            form = RegisterMarcadorLEDForm(id)
+        return render(request, 'app/add_marcador_led.html', {'form': form})
+    if request.method == "POST":
+        form = UpdateMarcadorLED(request.POST, instance = marcador)
+        if form.is_valid():
+            marcador = form.save()
+            marcador.save()
+            return redirect('luminarialed')
+    else:
+        form = UpdateMarcadorLED(instance = marcador)
+    return render(request, 'app/add_marcador_led.html', {'form': form})

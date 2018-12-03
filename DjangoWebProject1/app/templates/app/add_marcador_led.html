@@ -4,11 +4,11 @@
       <div id="title">
         <label>Nuevo Marcador Led</label>
       </div>
+    <span id="aux">Utilize la herramienta de busqueda por direcciones para ubicar su luminaria</span>
     <form method="POST" class="post-form">{% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="save btn btn-default">Guardar</button>
     </form>
-<!-- puede manejarse el imput como id_lat id_lng // lat lng -->
 
 <!--COSAS DE MAPAS -->
   <div class="pac-card" id="pac-card">
@@ -67,7 +67,29 @@
         draggable: true,
         anchorPoint: new google.maps.Point(0, -29)
       });
-  
+
+      //SI LA LUMINARIA YA TIENE UN MARCADOR, LO UBICO
+      //CON EL AUX ME FIJO QUE SEA APENAS CARGUE DE UBICARLO, CUANDO LO UBICO CAMBIO AUX Y EN LA 2DA VUELTA NO TOMA ESTE IF
+      if (document.getElementById('id_lat').value != '' && document.getElementById('id_lng').value != '' && document.getElementById('aux').innerHTML != 'posicion cargada con exito!')
+      {
+        latlng = new google.maps.LatLng(document.getElementById('id_lat').value , document.getElementById('id_lng').value);
+        map.setCenter(latlng);
+        map.setZoom(17);
+        marker.setPosition(latlng);
+        marker.setVisible(true);
+        var markerLatLng = marker.getPosition();
+        document.getElementById('id_lat').value = markerLatLng.lat();
+        document.getElementById('id_lng').value = markerLatLng.lng();
+        document.getElementById('aux').innerHTML = 'posicion cargada con exito!';
+
+        //cuando draggeo actualizo la posicion del marcador cargado en un principio
+        google.maps.event.addListener(marker, 'dragend', function(event) {
+        var markerLatLng = marker.getPosition();
+        document.getElementById('id_lat').value = markerLatLng.lat();
+        document.getElementById('id_lng').value = markerLatLng.lng();
+        });
+      }
+
       autocomplete.addListener('place_changed', function() {
         infowindow.close();
         marker.setVisible(false);
@@ -97,19 +119,15 @@
             (place.address_components[2] && place.address_components[2].short_name || '')
           ].join(' ');
         }
-  
-        //infowindowContent.children['place-icon'].src = place.icon;
-        //infowindowContent.children['place-name'].textContent = place.name;
-        //infowindowContent.children['place-address'].textContent = address;
         
         //DETERMINO POSICION CUANDO LO SETTEO, DESPUES ESTE SPAN LO TENGO QUE AGARRAR PARA PASARSELO AL FORM CREATE
         var markerLatLng = marker.getPosition();
+        alert(marker.getPosition())
         document.getElementById('id_lat').value = markerLatLng.lat();
         document.getElementById('id_lng').value = markerLatLng.lng();
         
         document.getElementById('id_lat').innerHTML = markerLatLng.lat();
         document.getElementById('id_lng').innerHTML = markerLatLng.lng();
-        //infowindow.open(map, marker);
         
         //cuando draggeo actualizo la posicion
         google.maps.event.addListener(marker, 'dragend', function(event) {
@@ -141,6 +159,10 @@ async defer></script>
       height: 100%;
       margin: 0;
       padding: 0;
+    }
+
+    #aux {
+      display: none;
     }
     #description {
       font-family: Roboto;
