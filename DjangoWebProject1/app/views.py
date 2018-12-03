@@ -1297,7 +1297,7 @@ def addMarcadorLed(request, pk):
         if request.method == "POST":
             form = RegisterMarcadorLEDForm(id, request.POST)
             if form.is_valid():
-                marcador = form.save(commit=False)
+                marcador = form.save()
                 return redirect('luminarialed')
         else:
             form = RegisterMarcadorLEDForm(id)
@@ -1311,3 +1311,27 @@ def addMarcadorLed(request, pk):
     else:
         form = UpdateMarcadorLED(instance = marcador)
     return render(request, 'app/add_marcador_led.html', {'form': form})
+
+def addMarcadorNoLed(request, pk):
+    luminaria = get_object_or_404(Lampara_No_LED, pk=pk)
+    try:
+        marcador = Marcador_Luminaria_No_Led.objects.get(luminaria = luminaria)
+    except Marcador_Luminaria_No_Led.DoesNotExist:   
+        id = luminaria.id.__str__()
+        if request.method == "POST":
+            form = RegisterMarcadorNOLEDForm(id, request.POST)
+            if form.is_valid():
+                marcador = form.save()
+                return redirect('luminarianoled')
+        else:
+            form = RegisterMarcadorNOLEDForm(id)
+        return render(request, 'app/add_marcador_no_led.html', {'form': form})
+    if request.method == "POST":
+        form = UpdateMarcadorNOLED(request.POST, instance = marcador)
+        if form.is_valid():
+            marcador = form.save()
+            marcador.save()
+            return redirect('luminarianoled')
+    else:
+        form = UpdateMarcadorNOLED(instance = marcador)
+    return render(request, 'app/add_marcador_no_led.html', {'form': form})

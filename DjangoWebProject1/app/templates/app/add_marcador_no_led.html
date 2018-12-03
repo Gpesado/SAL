@@ -2,14 +2,14 @@
 <div class="pac-card" id="pac-card">
     <div>
       <div id="title">
-        <label>Nuevo Marcador LED</label>
+        <label>Nuevo Marcador NO LED</label>
       </div>
     <span id="aux">Utilize la herramienta de busqueda por direcciones para ubicar su luminaria</span>
     <form method="POST" class="post-form">{% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="save btn btn-default">Guardar</button>
     </form>
-        <a href="{% url 'luminarialed' %}">Volver a la pantalla anterior</a>
+        <a href="{% url 'luminarianoled' %}">Volver a la pantalla anterior</a>
 <!--COSAS DE MAPAS -->
   <div class="pac-card" id="pac-card">
     <div>

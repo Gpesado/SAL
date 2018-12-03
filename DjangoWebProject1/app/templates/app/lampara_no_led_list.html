@@ -45,6 +45,7 @@
               data-url="{% url 'luminarianoled_delete' luminarianoled.pk %}">
         <span class="glyphicon glyphicon-trash"></span> Eliminar
       </button>
+      <a class="btn btn-default" href="{% url 'addMarcadorNoLed' pk=luminarianoled.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
     </td>
   </tr>
 {% empty %}
