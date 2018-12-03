@@ -3,7 +3,19 @@
 {% block javascript %}
 
 <script src="{% static 'app/scripts/books.js' %}"></script>
-  
+
+<script>
+function myFunction() {
+  usuario = document.getElementById('id_usuario').value;
+  incidente = document.getElementById('id_incidente').value;
+  if(usuario != '' && incidente != '')
+  {
+    //alert('Asignado reparador!' + usuario + " al incidente " + incidente)
+    alert('Reparador asignado!!!')  
+  }
+}
+</script>
+
 {% endblock %}
 {% block content %}
 
@@ -29,7 +41,7 @@
 {% endfor %}
   </div>
   <div class="modal-footer">
-    <button type="submit" class="btn btn-primary">Guardar</button>
+    <button type="submit" class="btn btn-primary" onclick="myFunction()"> Guardar</button>
   </div>
 </form>
 {% endblock %}    
