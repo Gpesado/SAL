@@ -79,128 +79,6 @@ def base(request):
         }
     )
 
-
-def agregarFalla(request):
-        if request.method == "POST":
-            form = agregarFallaForm(request.POST)
-            if form.is_valid():
-                falla = form.save(commit=False)
-                falla.save()
-                return redirect('vistaTecnico')
-        else:
-            form = agregarFallaForm()
-        return render(request, 'app/agregarFalla.html', {'form': form})
-
-def agregarGrupo(request):
-        if request.method == "POST":
-            form = agregarGrupoForm(request.POST)
-            if form.is_valid():
-                falla = form.save(commit=False)
-                falla.save()
-                return redirect('vistaAdministracion')
-        else:
-            form = agregarGrupoForm()
-        return render(request, 'app/agregarGrupo.html', {'form': form})
-
-def agregar_nodo_luminaria_led(request):
-        if request.method == "POST":
-            form = agregar_nodo_luminaria_ledForm(request.POST)
-            if form.is_valid():
-                falla = form.save(commit=False)
-                falla.save()
-                return redirect('vistaAdministracion')
-        else:
-            form = agregar_nodo_luminaria_ledForm()
-        return render(request, 'app/agregar_nodo_luminaria_led.html', {'form': form})
-
-def agregar_observador_grupo_led(request):
-        if request.method == "POST":
-            form = agregar_observador_grupo_ledForm(request.POST)
-            if form.is_valid():
-                falla = form.save(commit=False)
-                falla.save()
-                return redirect('vistaAdministracion')
-        else:
-            form = agregar_observador_grupo_ledForm()
-        return render(request, 'app/agregar_observador_grupo_led.html', {'form': form})
-
-def agregar_tecnico_grupo_led(request):
-        if request.method == "POST":
-            form = agregar_tecnico_grupo_ledForm(request.POST)
-            if form.is_valid():
-                falla = form.save(commit=False)
-                falla.save()
-                return redirect('vistaAdministracion')
-        else:
-            form = agregar_tecnico_grupo_ledForm()
-        return render(request, 'app/agregar_tecnico_grupo_led.html', {'form': form})
-
-def agregarOrdenReparacion(request):
-        if request.method == "POST":
-            form = agregarOrdenReparacionForm(request.POST)
-            if form.is_valid():
-                falla = form.save(commit=False)
-                falla.save()
-                return redirect('vistaTecnico')
-        else:
-            form = agregarOrdenReparacionForm()
-        return render(request, 'app/agregarOrdenReparacion.html', {'form': form})
-
-def observacion_Orden_Reparacion(request):
-        if request.method == "POST":
-            form = observacion_Orden_ReparacionForm(request.POST)
-            if form.is_valid():
-                falla = form.save(commit=False)
-                falla.save()
-                return redirect('vistaTecnico')
-        else:
-            form = observacion_Orden_ReparacionForm()
-        return render(request, 'app/observacion_Orden_Reparacion.html', {'form': form})
-
-def agregarNodo_LED(request):
-        if request.method == "POST":
-            form = agregarNodo_LEDForm(request.POST)
-            if form.is_valid():
-                falla = form.save(commit=False)
-                falla.save()
-                return redirect('vistaAdministracion')
-        else:
-            form = agregarNodo_LEDForm()
-        return render(request, 'app/agregarNodo_LED.html', {'form': form})
-
-def agregarLuminaria_LED(request):
-        if request.method == "POST":
-            form = agregarLuminaria_LEDForm(request.POST)
-            if form.is_valid():
-                falla = form.save(commit=False)
-                falla.save()
-                return redirect('vistaAdministracion')
-        else:
-            form = agregarLuminaria_LEDForm()
-        return render(request, 'app/agregarNodo_LED.html', {'form': form})
-
-def agregarModeloLED(request):
-        if request.method == "POST":
-            form = agregarModeloLEDForm(request.POST)
-            if form.is_valid():
-                falla = form.save(commit=False)
-                falla.save()
-                return redirect('vistaAdministracion')
-        else:
-            form = agregarModeloLEDForm()
-        return render(request, 'app/agregarModeloLED.html', {'form': form})
-
-def agregarMarcaLED(request):
-        if request.method == "POST":
-            form = agregarMarcaLEDForm(request.POST)
-            if form.is_valid():
-                falla = form.save(commit=False)
-                falla.save()
-                return redirect('vistaAdministracion')
-        else:
-            form = agregarMarcaLEDForm()
-        return render(request, 'app/agregarMarcaLED.html', {'form': form})
-
 # VENTANAS DE NAVEGACION DEPENDIENDO DEL ROL
 def vistaTecnico(request):
     return render(request,'app/vistaTecnico.html')
@@ -463,7 +341,7 @@ def orden_delete(request, pk, template_name='app/orden_confirm_delete.html'):
         orden.delete()
         data['form_is_valid'] = True
         ordenes = Orden_Reparacion.objects.all()
-        data['html_orden_list'] = render_to_string('app/orden_list.html', {
+        data['html_orden_list'] = render_to_string('app/orden_reparacion_list.html', {
             'app': ordenes
         })
     else:
@@ -478,7 +356,7 @@ def save_orden_form(request, form, template_name):
             form.save()
             data['form_is_valid'] = True
             ordenes = Orden_Reparacion.objects.all()
-            data['html_orden_list'] = render_to_string('app/orden_list.html', {
+            data['html_orden_list'] = render_to_string('app/orden_reparacion_list.html', {
                 'app': ordenes
             })
         else:
@@ -486,12 +364,11 @@ def save_orden_form(request, form, template_name):
     context = {'form': form}
     data['html_form'] = render_to_string(template_name, context, request=request)
     return JsonResponse(data)
-
-#TODO: PORQUE SI LO TENGO COMO orden_list en el archivo html no me lo toma? ademas esto me afecta a mis redirreciones  
+ 
 class OrdenListView(ListView):
     model = Orden_Reparacion    
     context_object_name = 'ordenes'
-    template_name = 'orden_list.html'    
+    template_name = 'orden_reparacion_list.html'    
     paginate_by = 10
     queryset = Orden_Reparacion.objects.all()  # Default: Model.objects.all()
 
@@ -629,7 +506,7 @@ def luminarianoled_delete(request, pk, template_name='app/luminarianoled_confirm
         luminarianoled.delete()
         data['form_is_valid'] = True
         luminarianoleds = Lampara_No_LED.objects.all()
-        data['html_luminarianoled_list'] = render_to_string('app/luminarianoled_list.html', {
+        data['html_luminarianoled_list'] = render_to_string('app/lampara_no_led_list.html', {
             'app': luminarianoleds
         })
     else:
@@ -644,7 +521,7 @@ def save_luminarianoled_form(request, form, template_name):
             form.save()
             data['form_is_valid'] = True
             luminarianoleds = Lampara_No_LED.objects.all()
-            data['html_luminarianoled_list'] = render_to_string('app/luminarianoled_list.html', {
+            data['html_luminarianoled_list'] = render_to_string('app/lampara_no_led_list.html', {
                 'app': luminarianoleds
             })
         else:
@@ -656,7 +533,7 @@ def save_luminarianoled_form(request, form, template_name):
 class luminarianoledListView(ListView):
     model = Lampara_No_LED    
     context_object_name = 'luminarianoleds'
-    template_name = 'luminarianoled_list.html'    
+    template_name = 'lampara_no_led_list.html'    
     paginate_by = 10
     queryset = Lampara_No_LED.objects.all()  # Default: Model.objects.all()
 
@@ -684,7 +561,7 @@ def marcaled_delete(request, pk, template_name='app/marcaled_confirm_delete.html
         marcaled.delete()
         data['form_is_valid'] = True
         marcaleds = Marca_Luminaria_LED.objects.all()
-        data['html_marcaled_list'] = render_to_string('app/marcaled_list.html', {
+        data['html_marcaled_list'] = render_to_string('app/marca_luminaria_led_list.html', {
             'app': marcaleds
         })
     else:
@@ -699,7 +576,7 @@ def save_marcaled_form(request, form, template_name):
             form.save()
             data['form_is_valid'] = True
             marcaleds = Marca_Luminaria_LED.objects.all()
-            data['html_marcaled_list'] = render_to_string('app/marcaled_list.html', {
+            data['html_marcaled_list'] = render_to_string('app/marca_luminaria_led_list.html', {
                 'app': marcaleds
             })
         else:
@@ -711,7 +588,7 @@ def save_marcaled_form(request, form, template_name):
 class marcaledListView(ListView):
     model = Marca_Luminaria_LED    
     context_object_name = 'marcaleds'
-    template_name = 'marcaled_list.html'    
+    template_name = 'marca_luminaria_led_list.html'    
     paginate_by = 10
     queryset = Marca_Luminaria_LED.objects.all()  # Default: Model.objects.all()
 
@@ -735,11 +612,10 @@ def marcanoled_delete(request, pk, template_name='app/marcanoled_confirm_delete.
     marcanoled = get_object_or_404(Marca_Luminaria_NO_LED, pk=pk)
     data = dict()
     if request.method == 'POST':
-        
         marcanoled.delete()
         data['form_is_valid'] = True
         marcanoleds = Marca_Luminaria_NO_LED.objects.all()
-        data['html_marcanoled_list'] = render_to_string('app/marcanoled_list.html', {
+        data['html_marcanoled_list'] = render_to_string('app/marca_luminaria_no_led_list.html', {
             'app': marcanoleds
         })
     else:
@@ -754,7 +630,7 @@ def save_marcanoled_form(request, form, template_name):
             form.save()
             data['form_is_valid'] = True
             marcanoleds = Marca_Luminaria_NO_LED.objects.all()
-            data['html_marcanoled_list'] = render_to_string('app/marcanoled_list.html', {
+            data['html_marcanoled_list'] = render_to_string('app/marca_luminaria_no_led_list.html', {
                 'app': marcanoleds
             })
         else:
@@ -766,7 +642,7 @@ def save_marcanoled_form(request, form, template_name):
 class marcanoledListView(ListView):
     model = Marca_Luminaria_NO_LED    
     context_object_name = 'marcanoleds'
-    template_name = 'marcanoled_list.html'    
+    template_name = 'marca_luminaria_no_led_list.html'    
     paginate_by = 10
     queryset = Marca_Luminaria_NO_LED.objects.all()  # Default: Model.objects.all()
 
@@ -776,7 +652,7 @@ def modeloled_create(request):
         form = RegisterModeloledForm(request.POST)
     else:
         form = RegisterModeloledForm()
-    return save_modeloled_form(request, form, 'app/modeloleds_create.html')
+    return save_modeloled_form(request, form, 'app/modeloled_create.html')
 
 def modeloled_update(request, pk):
     modeloled = get_object_or_404(Modelo_Luminaria_LED, pk=pk)
@@ -794,7 +670,7 @@ def modeloled_delete(request, pk, template_name='app/modeloled_confirm_delete.ht
         modeloled.delete()
         data['form_is_valid'] = True
         modeloleds = Modelo_Luminaria_LED.objects.all()
-        data['html_modeloled_list'] = render_to_string('app/modeloled_list.html', {
+        data['html_modeloled_list'] = render_to_string('app/modelo_luminaria_led_list.html', {
             'app': modeloleds
         })
     else:
@@ -809,7 +685,7 @@ def save_modeloled_form(request, form, template_name):
             form.save()
             data['form_is_valid'] = True
             modeloleds = Modelo_Luminaria_LED.objects.all()
-            data['html_modeloled_list'] = render_to_string('app/modeloled_list.html', {
+            data['html_modeloled_list'] = render_to_string('app/modelo_luminaria_led_list.html', {
                 'app': modeloleds
             })
         else:
@@ -821,7 +697,7 @@ def save_modeloled_form(request, form, template_name):
 class modeloledListView(ListView):
     model = Modelo_Luminaria_LED    
     context_object_name = 'modeloleds'
-    template_name = 'modeloled_list.html'    
+    template_name = 'modelo_luminaria_led_list.html'    
     paginate_by = 10
     queryset = Modelo_Luminaria_LED.objects.all()  # Default: Model.objects.all()
 
@@ -849,7 +725,7 @@ def modelonoled_delete(request, pk, template_name='app/modelonoled_confirm_delet
         modelonoled.delete()
         data['form_is_valid'] = True
         modelonoleds = Modelo_Luminaria_NO_LED.objects.all()
-        data['html_modelonoled_list'] = render_to_string('app/modelonoled_list.html', {
+        data['html_modelonoled_list'] = render_to_string('app/modelo_luminaria_no_led_list.html', {
             'app': modelonoleds
         })
     else:
@@ -864,7 +740,7 @@ def save_modelonoled_form(request, form, template_name):
             form.save()
             data['form_is_valid'] = True
             modelonoleds = Modelo_Luminaria_NO_LED.objects.all()
-            data['html_modelonoled_list'] = render_to_string('app/modelonoled_list.html', {
+            data['html_modelonoled_list'] = render_to_string('app/modelo_luminaria_no_led_list.html', {
                 'app': modelonoleds
             })
         else:
@@ -876,7 +752,7 @@ def save_modelonoled_form(request, form, template_name):
 class modelonoledListView(ListView):
     model = Modelo_Luminaria_NO_LED    
     context_object_name = 'modelonoleds'
-    template_name = 'modelonoled_list.html'    
+    template_name = 'modelo_luminaria_no_led_list.html'    
     paginate_by = 10
     queryset = Modelo_Luminaria_NO_LED.objects.all()  # Default: Model.objects.all()
 
@@ -904,7 +780,7 @@ def nodoled_delete(request, pk, template_name='app/nodoled_confirm_delete.html')
         nodoled.delete()
         data['form_is_valid'] = True
         nodoleds = Nodo_LED.objects.all()
-        data['html_nodoled_list'] = render_to_string('app/nodoled_list.html', {
+        data['html_nodoled_list'] = render_to_string('app/nodo_led_list.html', {
             'app': nodoleds
         })
     else:
@@ -919,7 +795,7 @@ def save_nodoled_form(request, form, template_name):
             form.save()
             data['form_is_valid'] = True
             nodoleds = Nodo_LED.objects.all()
-            data['html_nodoled_list'] = render_to_string('app/nodoled_list.html', {
+            data['html_nodoled_list'] = render_to_string('app/nodo_led_list.html', {
                 'app': nodoleds
             })
         else:
@@ -931,7 +807,7 @@ def save_nodoled_form(request, form, template_name):
 class nodoledListView(ListView):
     model = Nodo_LED    
     context_object_name = 'nodoleds'
-    template_name = 'nodoled_list.html'    
+    template_name = 'nodo_led_list.html'    
     paginate_by = 10
     queryset = Nodo_LED.objects.all()  # Default: Model.objects.all()
 
@@ -959,7 +835,7 @@ def nodonoled_delete(request, pk, template_name='app/nodonoled_confirm_delete.ht
         nodonoled.delete()
         data['form_is_valid'] = True
         nodonoleds = Nodo_NO_LED.objects.all()
-        data['html_nodonoled_list'] = render_to_string('app/nodonoled_list.html', {
+        data['html_nodonoled_list'] = render_to_string('app/nodo_no_led_list.html', {
             'app': nodonoleds
         })
     else:
@@ -974,7 +850,7 @@ def save_nodonoled_form(request, form, template_name):
             form.save()
             data['form_is_valid'] = True
             nodonoleds = Nodo_NO_LED.objects.all()
-            data['html_nodonoled_list'] = render_to_string('app/nodonoled_list.html', {
+            data['html_nodonoled_list'] = render_to_string('app/nodo_no_led_list.html', {
                 'app': nodonoleds
             })
         else:
@@ -986,7 +862,7 @@ def save_nodonoled_form(request, form, template_name):
 class nodonoledListView(ListView):
     model = Nodo_NO_LED    
     context_object_name = 'nodonoleds'
-    template_name = 'nodonoled_list.html'    
+    template_name = 'nodo_no_led_list.html'    
     paginate_by = 10
     queryset = Nodo_NO_LED.objects.all()  # Default: Model.objects.all()
 
@@ -1093,8 +969,6 @@ def save_incidente_form(request, form, template_name):
         if form.is_valid():
             form.save()
             #form.save_m2m()
-            
-            
             subject = form.cleaned_data['asunto_mail_relevador']
             message = form.cleaned_data['cuerpo_mail_relevador']
             usuario = Usuario.objects.get(pk=form['relevador'].value())

@@ -161,18 +161,7 @@ urlpatterns = [
 
     #urls Reset de Password
     #Login/Logout
-    url(r'^tecnico/agregarFalla/$', app.views.agregarFalla, name='agregarFalla'),
     url(r'^tecnico/falla/create$', app.views.falla_create, name='falla_create'),
-    url(r'^tecnico/agregarOrdenReparacion/$', app.views.agregarOrdenReparacion, name='agregarOrdenReparacion'),
-    url(r'^tecnico/agregarObservacion/$', app.views.observacion_Orden_Reparacion, name='observacion_Orden_Reparacion'),
-    url(r'^administracion/agregarGrupo/$', app.views.agregarGrupo, name='agregarGrupo'),
-    url(r'^administracion/agregar_nodo_luminaria_led/$', app.views.agregar_nodo_luminaria_led, name='agregar_nodo_luminaria_led'),
-    url(r'^administracion/agregar_observador_grupo_led/$', app.views.agregar_observador_grupo_led, name='agregar_observador_grupo_led'),
-    url(r'^administracion/agregar_tecnico_grupo_led/$', app.views.agregar_tecnico_grupo_led, name='agregar_tecnico_grupo_led'),
-    url(r'^administracion/agregarNodo_LED/$', app.views.agregarNodo_LED, name='agregarNodo_LED'),
-    url(r'^administracion/agregarLuminaria_LED/$', app.views.agregarLuminaria_LED, name='agregarLuminaria_LED'),
-    url(r'^administracion/agregarModeloLED/$', app.views.agregarModeloLED, name='agregarModeloLED'),
-    url(r'^administracion/agregarMarcaLED/$', app.views.agregarMarcaLED, name='agregarMarcaLED'),
     
     url(r'^tecnico/configuracion_luminaria/create$', app.views.configuracion_luminaria_create, name='configuracion_luminaria_create'),
     url(r'^tecnico/configuracion_luminaria/(?P<pk>\d+)/delete/$', app.views.configuracion_luminaria_delete, name='configuracion_luminaria_delete'),
