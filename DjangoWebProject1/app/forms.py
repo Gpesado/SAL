@@ -227,6 +227,7 @@ class RegisterIncidenteFormEditReparador(forms.ModelForm):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.fields["descripcion"].widget = forms.Textarea()
+            self.fields['materiales'].queryset = Material.objects.exclude(cantidad=0)
 
 
 class RegisterConfiguracionLuminariaForm(forms.ModelForm):

@@ -1317,6 +1317,7 @@ def agregarIncidenteReparador(request):
             form = agregarIncidente_Reparador(request.POST)
             if form.is_valid():
                 falla = form.save(commit=False)
+
                 falla.save()
                 return redirect('vistaTecnico')
             else:
@@ -1393,7 +1394,9 @@ def incidente_material_update(request, pk):
             if form.is_valid():
                 incidente = form.save()
                 
-
+                for mat in Material.objects.filter(incidente__id=incidente.pk):
+                    mat.cantidad = mat.cantidad - 1
+                    mat.save()
                 return HttpResponse('<script type="text/javascript">window.close()</script>')
         else:
             form = RegisterIncidenteFormEditReparador(instance=incidente)

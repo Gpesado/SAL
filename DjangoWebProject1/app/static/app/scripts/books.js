@@ -52,6 +52,6 @@ $(function () {
   // Delete book
   $("#book-table").on("click", ".js-delete-book", loadForm);
   $("#modal-book").on("submit", ".js-book-delete-form", saveForm);
-
+1
 
 });
