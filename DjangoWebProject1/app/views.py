@@ -43,10 +43,10 @@ def get_administrador_round_robin():
 
 def grabar_incidente_x_usuario(x):
     
-    aaa = Incidente_Por_Usuario.objects.get(usuario__pk=x.pk)
+    ixu = Incidente_Por_Usuario.objects.get(usuario__pk=x.pk)
 
-    aaa.cantidad_asignados =  aaa.cantidad_asignados + 1
-    aaa.save()
+    ixu.cantidad_asignados =  ixu.cantidad_asignados + 1
+    ixu.save()
 
 
 def incidentesPorUsuario(x):
@@ -1143,16 +1143,10 @@ class incidenteAsignadosListView(ListView):
 
 def incidentes_reparador(request):
         if request.method == "POST":
-            print(request.POST)
             form = RegisterIncidenteReparadorForm(request.POST)
             if form.is_valid():
                 incidente = form.save()
 
-                #grabar_incidente_x_usuario(incidente.relevador)
-
-
-                #return HttpResponse('<script type="text/javascript">window.close()</script>')
-        #else:
         form = RegisterIncidenteReparadorForm()        
         return render(request, 'app/incidente_reparador_create.html', {'form': form})  
 
@@ -1164,28 +1158,16 @@ def incidentes_reasignacion(request):
                 incidenteId = form.data.getlist("incidente")
                 usuario = Usuario.objects.get(pk=usuarioId)
                 for each in incidenteId:
-                    print(each)
                     incidente = Incidente.objects.get(pk=each)
                     incidente.relevador = usuario
                     incidente.save(force_update=True)
                     send_mail_relevador(usuario.email, incidente.asunto_mail_relevador, incidente.cuerpo_mail_relevador)
                 
-                #incidente = Incidente.objects.get(pk=incidenteId)
-                #usuario = Usuario.objects.get(pk=usuarioId)
-                
-                #incidente.relevador = usuario
-                #incidente.save(force_update=True)
-                #grabar_incidente_x_usuario(incidente.relevador)
-                
-                print(usuarioId)
-
-                #return HttpResponse('<script type="text/javascript">window.close()</script>')
         else:
             form = RegisterIncidenteReasignacionForm()
         return render(request, 'app/incidente_reasignacion.html', {'form': form})
 
 def agregarIncidenteReparador(request):
-        print(request.POST.getlist('pepe', None))
 
         if request.method == "POST":
             form = agregarIncidente_Reparador(request.POST)
@@ -1194,8 +1176,6 @@ def agregarIncidenteReparador(request):
 
                 falla.save()
                 return redirect('vistaTecnico')
-            else:
-                print('pepe')
         else:
             form = agregarIncidente_Reparador()
         return render(request, 'app/incidente_reparador_list.html', {'form': form})        
